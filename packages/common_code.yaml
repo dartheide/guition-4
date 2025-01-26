@@ -1,0 +1,203 @@
+substitutions:
+  play_pause_icon: "\U000F040E"
+  mute_icon: "\U000F075F"
+  volume_icon: "\U000F057F"
+  powerbutton: "\U000F0906"
+  home: "\U000F02DC"
+  desklamp: "\U000F095F"
+  stove: "\U000F04DE"
+  hammerscrewdriver: "\U000F1322"
+  countertop: "\U000F181C"
+  sofa: "\U000F04B9"
+
+
+
+  radio_url_stubru: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
+  radio_url_pinguin: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+# Enable logging
+logger:
+
+# LVGL configuration
+lvgl:
+
+  # Define styles with unique IDs
+  radius: 0
+  bg_color: 0x1c1c1c # zwart
+  style_definitions:
+    - id: bg_white
+      text_font: roboto20
+      bg_color: 0x2f3b52 # donkerblauw
+      border_color: 0x2f3b52  # donkerblauw
+      border_width: 0
+      radius: 10
+      text_color: tft_white
+      scrollbar_mode: "OFF"
+    - id: header_footer
+      text_font: mdi24
+      bg_color: 0x1a2942 # donkerblauw
+      text_color: tft_white
+      width: 100%
+      height: 50
+      border_color: 0x2f3b52
+      border_width: 0
+      radius: 10
+      shadow_color: 0x2f3b52
+
+  theme:
+    ${knop}:
+      bg_color: 0x1a2942 # donkerblauw
+      radius: 10
+      shadow_color: 0x1c1c1c
+      border_color: 0x1c1c1c
+      text_color: tft_white
+      pressed: # set some button colors to be different in pressed state
+        bg_color: dark_grey
+        text_color: tft_white
+    ${knop}matrix:
+      bg_color: 0x1a2942 # donkerblauw
+      pad_all: 5
+      items:
+        bg_color: 0x1a2942 # donkerblauw
+        radius: 3
+        height: 50
+        shadow_color: 0x1c1c1c
+        border_color: 0x1c1c1c
+        text_color: tft_white
+        text_font: mdi24
+
+        pressed: # set some button colors to be different in pressed state
+          bg_color: dark_grey
+          text_color: tft_white
+          
+
+
+  page_wrap: true
+
+
+# Define fonts
+font: 
+  - file: "gfonts://Roboto"
+    id: roboto20
+    size: 20
+    bpp: 4
+    extras:
+      - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
+        glyphs:
+          [
+            "\U000F004B", # mdi-arrow-down-drop-circle-outline
+            "\U000F0063", # mdi-arrow-up-drop-circle-outline
+            "\U000F006E", # mdi-backspace 
+            "\U000F012C", # mdi-check
+            "\U000F179B", # mdi-light-recessed
+            "\U000F0748", # mdi-wall-sconce-round
+            "\U000F1A1B", # mdi-gas-burner
+            "\U000F02DC", # mdi-home
+            "\U000F0A02", # mdi-menu-left-outline
+            "\U000F035F", # mdi-menu-right
+            "\U000F0156", # mdi-close
+            "\U000F0C5F", # mdi-close-network-outline
+            "\U000f0084", # mdi-battery-charging
+            "\U000f0091", # mdi-battery-unknown
+            "\U000F095F", # mdi-desk-lamp
+            "\U000F04DE", # mdi-stove
+            $hammerscrewdriver, # mdi-hammer-screwdriver
+            "\U000F181C", # mdi-countertop
+            "\U000F04B9", # mdi-sofa
+            "\U000F0EC0", # mdi-penguin
+            $play_pause_icon, # mdi-play-pause
+            $mute_icon, # mdi-volume-mute
+            $volume_icon, # mdi-volume-high
+            "\U000F0141", # mdi-chevron-left
+            "\U000F0142", # mdi-chevron-right
+            "\U000F0143", # mdi-chevron-up
+            "\U000F0140", # mdi-chevron-down
+            "\U000F1254", # mdi-lightbulb-group
+            "\U000F0336", # mdi-lightbulb-outline
+            "\U000F05A9", # mdi-wifi
+            "\U000F05AA", # mdi-wifi-off
+            "\U000F0E2E", # mdi-fireplace
+            "\U000F0238", # mdi-fire
+
+
+          ]
+
+    
+  - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
+    id: mdi24
+    size: 24
+    bpp: 4
+    glyphs:
+      [
+        "\U000F004B", # mdi-arrow-down-drop-circle-outline
+        "\U000F0063", # mdi-arrow-up-drop-circle-outline
+        "\U000F006E", # mdi-backspace 
+        "\U000F012C", # mdi-check
+        "\U000F179B", # mdi-light-recessed
+        "\U000F0748", # mdi-wall-sconce-round
+        "\U000F1A1B", # mdi-gas-burner
+        "\U000F02DC", # mdi-home
+        "\U000F0A02", # mdi-menu-left-outline
+        "\U000F035F", # mdi-menu-right
+        "\U000F0156", # mdi-close
+        "\U000F0C5F", # mdi-close-network-outline
+        "\U000f0084", # mdi-battery-charging
+        "\U000f0091", # mdi-battery-unknown
+        "\U000F095F", # mdi-desk-lamp
+        "\U000F04DE", # mdi-stove
+        $hammerscrewdriver, # mdi-hammer-screwdriver
+        "\U000F181C", # mdi-countertop
+        "\U000F04B9", # mdi-sofa
+        "\U000F0EC0", # mdi-penguin
+        $play_pause_icon, # mdi-play-pause
+        $mute_icon, # mdi-volume-mute
+        $volume_icon, # mdi-volume-high
+        "\U000F0141", # mdi-chevron-left
+        "\U000F0142", # mdi-chevron-right
+        "\U000F0143", # mdi-chevron-up
+        "\U000F0140", # mdi-chevron-down
+      ]
+
+
+    # gfonts://family[@weight]
+  - file: "gfonts://Roboto"
+    id: roboto16
+    size: 16
+    bpp: 4
+  - file: "gfonts://Roboto"
+    id: roboto14
+    size: 14
+    bpp: 4
+
+color:
+  - id: dark_blue 
+    red: 47% 
+    green: 59%
+    blue: 82%
+  - id: darker_blue #1a2942
+    red: 26%
+    green: 41%
+    blue: 66%
+  - id: tft_black
+    red: 28%
+    green: 28%
+    blue: 28%
+  - id: tft_white
+    red: 100%
+    green: 100%
+    blue: 100%
+  - id: dark_grey
+    red: 56%
+    green: 56%
+    blue: 56%
+  - id: tft_yellow 
+    # Golden yellow rgb(218, 165, 32) 
+    # Gold (#FFD700): rgb(255, 215, 0) 
+    # Bright Yellow (#FFFF00): rgb(255, 255, 0)
+    red: 100%
+    green: 84%
+    blue: 0%

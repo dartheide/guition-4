@@ -1,0 +1,20 @@
+substitutions:
+  knop: "button"
+
+# Host setting, uit voor flashen
+host:
+    mac_address: "06:35:69:ab:f6:79"
+
+
+#Enable SDL display
+display:
+  - platform: sdl
+    show_test_card: true
+    dimensions:
+      width: 480
+      height: 480
+    id: my_display
+    auto_clear_enabled: false
+
+touchscreen:
+  platform: sdl
