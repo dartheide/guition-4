@@ -60,7 +60,7 @@ The home screen provides a clear overview and system status:
 
 This project aims to deliver a user-friendly and visually appealing solution for smart room control and streamlined system information.  
 
-If you have any ideas, suggestions, or feedback, feel free to contact me!
+If you have any ideas or feedback, feel free to contact me!
 
 
 
