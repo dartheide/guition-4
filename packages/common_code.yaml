@@ -122,7 +122,8 @@ font:
             "\U000F05AA", # mdi-wifi-off
             "\U000F0E2E", # mdi-fireplace
             "\U000F0238", # mdi-fire
-
+            "\U000F075D", # mdi-volume-plus
+            "\U000F075E", # mdi-volume-minus
 
           ]
 
@@ -160,6 +161,8 @@ font:
         "\U000F0142", # mdi-chevron-right
         "\U000F0143", # mdi-chevron-up
         "\U000F0140", # mdi-chevron-down
+        "\U000F075D", # mdi-volume-plus
+        "\U000F075E", # mdi-volume-minus
       ]
 
 

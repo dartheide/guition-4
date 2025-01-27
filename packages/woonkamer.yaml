@@ -97,21 +97,39 @@ lvgl:
                         media_content_type: "music"
                         media_content_id: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
 
-            - slider: # volume
-                id: slider_media_player_sonos_woonkamer
-                align: bottom_left
-                width: 150
-                value: 5
-                min_value: 1
-                max_value: 70
-                y: -10
-                adv_hittest: true
-                on_value:
-                  - homeassistant.action:
-                      action: media_player.volume_set
-                      data:
-                        entity_id: media_player.woonkamer
-                        volume_level: !lambda return (x / 100);
+            - ${knop}: # volume up
+                height: 40
+                width: 50
+                align: bottom_left    
+                x: 5
+                id: sonos_${pagina}_volume_down
+                widgets:
+                  - label:
+                      text_font: mdi24
+                      text: "\U000F075E"
+                      align: center
+                on_click:
+                  - homeassistant.service:
+                      service: media_player.volume_down
+                      data_template:
+                        entity_id: media_player.${pagina}   
+            
+            - ${knop}: # volume down
+                height: 40
+                width: 50
+                align: bottom_left    
+                x: 65
+                id: sonos_${pagina}_volume_up
+                widgets:
+                  - label:
+                      text_font: mdi24
+                      text: "\U000F075D"
+                      align: center
+                on_click:
+                  - homeassistant.service:
+                      service: media_player.volume_up
+                      data_template:
+                        entity_id: media_player.${pagina}   
 
             - label: # Artist
                 id: display_sonos_${pagina}_media_artist
@@ -306,11 +324,6 @@ sensor:
   - platform: homeassistant
     id: media_player_volume_woonkamer
     entity_id: media_player.woonkamer
-    attribute: volume_level
-    on_value:
-      - lvgl.slider.update:
-          id: slider_media_player_sonos_woonkamer
-          value: !lambda return (x * 100);
 
   - platform: homeassistant
     id: cover_${pagina}_pos
@@ -442,9 +455,7 @@ text_sensor:
                 id: ${pagina}_lamp3_label
                 text: "\U000F1254 Plafond"
                 text_color: tft_white
-
-
-            
+          
   - platform: homeassistant
     id: sonos_${pagina}_media_title_text_sensor
     entity_id: media_player.${pagina}

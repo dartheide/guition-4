@@ -177,7 +177,5 @@ text_sensor:
           else:
             - lvgl.label.update:
                 id: afval_label
-                text: 
-                  format: "%.0f"
-                  args: [ 'x' ]
+                text: !lambda 'return x.c_str();'
                 
