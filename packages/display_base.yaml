@@ -48,7 +48,7 @@ lvgl:
   touchscreens:
     - touchscreen_id: my_touchscreen
   on_idle:
-    - timeout: 10s
+    - timeout: 30s
       then:
         - logger.log: idle timeout
         - if:
@@ -57,6 +57,9 @@ lvgl:
                 timeout: 5s
             then:
               - logger.log: LVGL is idle
+              - light.control: 
+                  id: backlight
+                  brightness: 35%
     - timeout: 15s
       then:
         - logger.log: idle 15s timeout
@@ -111,13 +114,19 @@ touchscreen:
     - logger.log:
           format: Touch at (%d, %d)
           args: [touch.x, touch.y]
-    - if:
-        condition:
-          - light.is_off: backlight
-        then:
-          - light.turn_on: 
-              id: backlight
-              brightness: 80%
+    - light.turn_on: 
+        id: backlight
+        brightness: 80%
+  on_release:
+      then:
+        - if:
+            condition: lvgl.is_paused
+            then:
+              - lvgl.resume:
+              - lvgl.widget.redraw:
+              - light.turn_off: backlight
+              - light.turn_on: backlight
+                
   
 #-------------------------------------------
 # Display st7701s spi
@@ -210,4 +219,43 @@ text_sensor:
     mac_address:
       name: "Mac Address"
       entity_category: diagnostic
+
+
+time:
+  - platform: homeassistant
+    on_time:
+      - hours: 2,3,4,5
+        minutes: 5
+        seconds: 0
+        then:
+          - switch.turn_on: switch_antiburn
+      - hours: 2,3,4,5
+        minutes: 35
+        seconds: 0
+        then:
+          - switch.turn_off: switch_antiburn
+
+switch:
+  - platform: template
+    name: Antiburn
+    id: switch_antiburn
+    icon: mdi:television-shimmer
+    optimistic: true
+    entity_category: "config"
+    turn_on_action:
+      - logger.log: "Starting Antiburn"
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - lvgl.resume:
+            - lvgl.widget.redraw:
+      - lvgl.pause:
+          show_snow: true
+    turn_off_action:
+      - logger.log: "Stopping Antiburn"
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - lvgl.resume:
+            - lvgl.widget.redraw:
 

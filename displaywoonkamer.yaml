@@ -83,6 +83,14 @@ lvgl:
                 id: stookwijzer_label
                 align: out_right_mid
               y: -10
+              id: afval_label2
+              text: " Morgen: "
+          
+          - label:
+              align_to:
+                id: afval_label2
+                align: out_right_mid
+              y: -10
               id: afval_label
           
               
@@ -174,8 +182,9 @@ text_sensor:
               return (0 == x.compare(std::string{"geen"})) ;
           then:
             - lvgl.widget.hide: afval_label
+            - lvgl.widget.hide: afval_label2
+            
           else:
             - lvgl.label.update:
                 id: afval_label
                 text: !lambda 'return x.c_str();'
-                
