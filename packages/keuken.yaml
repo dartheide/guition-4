@@ -162,7 +162,7 @@ lvgl:
                       - homeassistant.action:
                           action: light.toggle
                           data:
-                            entity_id: light.erker
+                            entity_id: light.aanrechtblad
               - ${knop}:
                   id: keuken_keuken_lamp3
                   align: top_right
@@ -179,7 +179,7 @@ lvgl:
                       - homeassistant.action:
                           action: light.toggle
                           data:
-                            entity_id: light.plafondlamp_woonkamer
+                            entity_id: light.keukenspotjes
               
         - obj: # Control card
             x: 10
@@ -192,7 +192,64 @@ lvgl:
                   text_font: roboto16
                   align: top_mid
                   y: -5
-                  text: "Gordijnen Erker"
+                  text: "Gordijnen eettafel"
+              - ${knop}:
+                  width: 50
+                  height: 40
+                  align: bottom_left
+                  widgets:
+                  - label:
+                      id: cov_up_eettafel
+                      text_font: mdi24
+                      align: CENTER
+                      text: "\U000F0143"
+                  on_press:
+                    - homeassistant.action:
+                        action: cover.open_cover
+                        data:
+                          entity_id: cover.plissegordijn_klapdeur_cover
+              - ${knop}:
+                  width: 65
+                  height: 40
+                  align: bottom_mid
+                  widgets:
+                  - label:
+                      id: cov_stop_eettafel
+                      align: CENTER
+                      text: STP
+                  on_press:
+                    - homeassistant.action:
+                        action: cover.stop_cover
+                        data:
+                          entity_id: cover.plissegordijn_klapdeur_cover
+              - ${knop}:
+                  width: 50
+                  height: 40
+                  align: bottom_right
+                  widgets:
+                  - label:
+                      id: cov_down_eettafel 
+                      text_font: mdi24
+                      align: CENTER
+                      text: "\U000F0140"
+                  on_press:
+                    - homeassistant.action:
+                        action: cover.close_cover
+                        data:
+                          entity_id: cover.plissegordijn_klapdeur_cover
+
+        - obj: # tweede gordijn
+            x: 245
+            y: 320
+            width: 225
+            height: 100
+            styles: bg_white
+            widgets:
+              - label:
+                  text_font: roboto16
+                  align: top_mid
+                  y: -5
+                  text: "Gordijn keuken"
               - ${knop}:
                   width: 50
                   height: 40
@@ -207,7 +264,7 @@ lvgl:
                     - homeassistant.action:
                         action: cover.open_cover
                         data:
-                          entity_id: cover.gordijnen_erker
+                          entity_id: cover.keukenraam_cover
               - ${knop}:
                   width: 65
                   height: 40
@@ -221,7 +278,7 @@ lvgl:
                     - homeassistant.action:
                         action: cover.stop_cover
                         data:
-                          entity_id: cover.gordijnen_erker
+                          entity_id: cover.keukenraam_cover
               - ${knop}:
                   width: 50
                   height: 40
@@ -236,74 +293,11 @@ lvgl:
                     - homeassistant.action:
                         action: cover.close_cover
                         data:
-                          entity_id: cover.gordijnen_erker
-
-        - obj: # Temperatuur
-                x: 245
-                y: 320
-                width: 225
-                height: 100
-                styles: bg_white
-                widgets:
-                    - ${knop}:
-                        width: 50
-                        height: 40
-                        align: bottom_left
-                        id: keuken_spin_down
-                        on_click:
-                            - lvgl.spinbox.decrement: spinbox_keuken
-                        widgets:
-                            - label:
-                                text: "-"
-                                align: center
-                    - spinbox:
-                        styles: bg_white
-                        id: spinbox_keuken
-                        align: bottom_mid 
-                        text_align: CENTER
-                        width: 50
-                        range_from: 21
-                        range_to: 35
-                        step: 0.5
-                        rollover: false
-                        digits: 3
-                        decimal_places: 1
-                        value: 22
-                        on_value:
-                            then:
-                                - homeassistant.action:
-                                    action: climate.set_temperature
-                                    data:
-                                        temperature: !lambda return x;
-                                        entity_id: climate.bosch_radiatorkraan_keuken_thermostat
-                    - ${knop}:
-                        width: 50
-                        height: 40
-                        align: bottom_right
-                        id: keuken_spin_up
-                        on_click:
-                            - lvgl.spinbox.increment: spinbox_keuken
-                        widgets:
-                            - label:
-                                text: "+"
-                                align: center
-                    - label:
-                        text_font: roboto16
-                        align: top_mid
-                        text: "Temperatuur"
+                          entity_id: cover.keukenraam_cover
                   
 
 sensor:
-  - platform: homeassistant
-    id: keuken_thermostat
-    entity_id: climate.bosch_radiatorkraan_keuken_thermostat
-    attribute: temperature
-    on_value:
-      - lvgl.spinbox.update:
-          id: spinbox_keuken
-          value: !lambda return x;
-
-  - platform: homeassistant
+  - platform: homeassistant # volume keuken
     id: media_player_volume_keuken
     entity_id: media_player.woonkeuken
     attribute: volume_level
@@ -312,9 +306,39 @@ sensor:
           id: slider_media_player_sonos_keuken
           value: !lambda return (x * 100);
 
-  - platform: homeassistant
+  - platform: homeassistant # gordijn klapdeur
+    id: cover_eettafel_pos
+    entity_id: cover.plissegordijn_klapdeur_cover
+    attribute: current_position
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return x == 100;
+          then:
+            - lvgl.widget.update:
+                id: cov_up_eettafel
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: cov_up_eettafel
+                text_opa: 100%
+      - if:
+          condition:
+            lambda: |-
+              return x == 0;
+          then:
+            - lvgl.widget.update:
+                id: cov_down_eettafel
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: cov_down_eettafel
+                text_opa: 100%
+
+  - platform: homeassistant # gordijnen keukenraam
     id: cover_keuken_pos
-    entity_id: cover.gordijnen_erker
+    entity_id: cover.keukenraam_cover
     attribute: current_position
     on_value:
       - if:
@@ -342,6 +366,7 @@ sensor:
                 id: cov_down_keuken
                 text_opa: 100%
 
+
 binary_sensor:
   - platform: homeassistant
     id: sonos_keuken_mute
@@ -366,7 +391,7 @@ text_sensor:
   # Gordijnen
   - platform: homeassistant
     id: cover_keuken_gordijnen
-    entity_id: cover.gordijnen_erker
+    entity_id: cover.keukenraam_cover
     on_value:
       - if:
           condition:
@@ -382,6 +407,27 @@ text_sensor:
                 text:
                   format: "%.0f%%"
                   args: [ 'id(cover_keuken_pos).get_state()' ]
+
+  # Gordijnen
+  - platform: homeassistant
+    id: cover_eettafel_gordijnen
+    entity_id: cover.plissegordijn_klapdeur_cover
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return ((0 == x.compare(std::string{"opening"})) or (0 == x.compare(std::string{"closing"})));
+          then:
+            - lvgl.label.update:
+                id: cov_stop_eettafel
+                text: "STOP"
+          else:
+            - lvgl.label.update:
+                id: cov_stop_eettafel
+                text:
+                  format: "%.0f%%"
+                  args: [ 'id(cover_keuken_pos).get_state()' ]
+
 
   # Groep lampen keuken lamp1
   - platform: homeassistant
@@ -403,10 +449,10 @@ text_sensor:
                 text: "\U000F1254 Eettafel"
                 text_color: tft_white
 
-  # groep lampen erker lamp2
+  # groep lampen keuken lamp2
   - platform: homeassistant
     id: remote_light2_keuken
-    entity_id: light.erker
+    entity_id: light.aanrechtblad
     on_value:
       - if:
           condition:
@@ -415,18 +461,18 @@ text_sensor:
           then:
             - lvgl.label.update:
                 id: keuken_lamp2_label
-                text: "\U000F1254 Erker"
+                text: "\U000F1254 Aanrecht"
                 text_color: tft_yellow
           else:
             - lvgl.label.update:
                 id: keuken_lamp2_label
-                text: "\U000F1254 Erker"
+                text: "\U000F1254 Aanrecht"
                 text_color: tft_white
 
-  # groep lampen plafond lamp3
+  # groep lampen keuken lamp3
   - platform: homeassistant
     id: remote_light3_keuken
-    entity_id: light.plafondlamp_woonkamer
+    entity_id: light.keukenspotjes
     on_value:
       - if:
           condition:
@@ -435,12 +481,12 @@ text_sensor:
           then:
             - lvgl.label.update:
                 id: keuken_lamp3_label
-                text: "\U000F1254 Plafond"
+                text: "\U000F1254 Spotjes"
                 text_color: tft_yellow
           else:
             - lvgl.label.update:
                 id: keuken_lamp3_label
-                text: "\U000F1254 Plafond"
+                text: "\U000F1254 Spotjes"
                 text_color: tft_white
 
 
