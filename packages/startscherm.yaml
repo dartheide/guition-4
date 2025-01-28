@@ -104,7 +104,22 @@ lvgl:
             width: 225
             height: 160
             styles: bg_white
-
+            widgets:
+              - ${knop}:
+                    id: start_lamp1
+                    align: top_mid
+                    width: 135
+                    height: 50
+                    widgets:
+                      - label:
+                          text_font: roboto20
+                          id: start_lamp1_label
+                          text: "\U000F0336 allemaal"
+                          align: left_mid
+                    on_press:
+                      then:
+                        - homeassistant.action:
+                            action: script.alle_lichten_uit
 
         - obj: # Status
                 x: 10
