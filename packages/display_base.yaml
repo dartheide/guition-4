@@ -126,7 +126,8 @@ touchscreen:
               - lvgl.widget.redraw:
               - light.turn_off: backlight
               - light.turn_on: backlight
-                
+              - lvgl.page.show: start_page
+            
   
 #-------------------------------------------
 # Display st7701s spi
