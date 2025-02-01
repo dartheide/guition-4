@@ -34,6 +34,9 @@ lvgl:
                   align: bottom_right
                   id: forecast_temperature_current
                   text: '"'
+            on_press:
+                then:
+                  lvgl.page.show: weather_page
  
         - obj: # Energiescherm
             x: 245
@@ -163,12 +166,12 @@ sensor:
     entity_id: weather.forecast_home
     attribute: uv_index
     on_value:
-      - lvgl.label.update:
+     - lvgl.label.update:
           id: label_uv_index
           text:
             format: "Uv index %.0f"
             args: [ 'x' ]
-
+      
 text_sensor:
   - platform: homeassistant
     id: weather_state_text_sensor
