@@ -124,6 +124,9 @@ font:
             "\U000F0238", # mdi-fire
             "\U000F075D", # mdi-volume-plus
             "\U000F075E", # mdi-volume-minus
+            "\U000F050F", # mdi-thermometer
+            "\U000F10C3", # mdi-thermometer-low
+            "\U000F10C2", # mdi-thermometer-high
 
           ]
 

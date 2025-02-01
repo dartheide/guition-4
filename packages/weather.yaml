@@ -5,207 +5,545 @@ lvgl:
     - id: weather_page
       styles: bg_white
       widgets:
-        - obj: # Weer
+        - obj: # achtergrond
             x: 10
             y: 40
             width: 460
             height: 375
             styles: bg_white
-            widgets
-              lambda: |-
-                it.filled_rectangle(0, 0, it.get_width(), it.get_height(), Color::BLACK); // Clear the screen
+            widgets:
+              - label:
+                  text_font: roboto20
+                  text: "Weersverwachting"
+                  align: top_left
+                  y: 20
+        - obj: # Dag 0
+            x: 25
+            y: 150
+            width: 100
+            height: 240
+            styles: bg_white
+            bg_color: 0x1a2942
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  id: text_dag_0
+                  text: "dag"
+                  align: top_mid
+              - label:
+                  text_font: weather_icons
+                  id: home_weather_icon_0
+                  text: "-"
+                  align: center
+                  y: -30
+              - label:
+                  id: text_temperature_high_0
+                  text: "-"
+                  align: center
+                  y: 20
+              - label:
+                  id: text_temperature_low_0
+                  text: "/-"
+                  align: center
+                  y: 50                  
+              - label:
+                  id: text_uv_index_0
+                  text: "uv "
+                  align: bottom_mid
 
-                // Arrays for day and month names
-                const char *day_array[] = {"", "Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"};
-                const char *day_array_ext[] = {"", "Domenica", "Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi", "Sabato"};
-                const char *month_array[] = {"", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"};
+        - obj: # Dag 1
+            x: 135
+            y: 150
+            width: 100
+            height: 240
+            styles: bg_white
+            bg_color: 0x1a2942
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  id: text_dag_1
+                  text: "dag"
+                  align: top_mid
+              - label:
+                  text_font: weather_icons
+                  id: home_weather_icon_1
+                  text: "-"
+                  align: center
+                  y: -30
+              - label:
+                  id: text_temperature_high_1
+                  text: "-"
+                  align: center
+                  y: 20
+              - label:
+                  id: text_temperature_low_1
+                  text: "/-"
+                  align: center
+                  y: 50                  
+              - label:
+                  id: text_uv_index_1
+                  text: "uv 6"
+                  align: bottom_mid
 
-                // Mapping weather conditions to images
-                static const std::map<std::string, image::Image *> image_dict = {
-                  {"clear-night", id(wpng_1)},
-                  {"cloudy", id(wpng_2)},
-                  {"fog", id(wpng_3)},
-                  {"hail", id(wpng_4)},
-                  {"lightning", id(wpng_5)},
-                  {"lightning-rainy", id(wpng_6)},
-                  {"partlycloudy", id(wpng_7)},
-                  {"pouring", id(wpng_8)},
-                  {"rainy", id(wpng_9)},
-                  {"snowy", id(wpng_10)},
-                  {"snowy-rainy", id(wpng_11)},
-                  {"sunny", id(wpng_12)},
-                  {"windy", id(wpng_13)},
-                  {"windy-variant", id(wpng_14)},
-                  {"exceptional", id(wpng_15)},
-                  {"", id(wpng_0)}
-                };
-
-                // Mapping weather conditions to descriptions
-                static const std::map<std::string, const char *> condition_dict = {
-                  {"clear-night", "Sereno"},
-                  {"cloudy", "Nuvoloso"},
-                  {"fog", "Nebbia"},
-                  {"hail", "Grandine"},
-                  {"lightning", "Fulmini"},
-                  {"lightning-rainy", "Fulmini/Pioggia"},
-                  {"partlycloudy", "Parz. nuvoloso"},
-                  {"pouring", "Piovoso"},
-                  {"rainy", "Pioggia"},
-                  {"snowy", "Neve"},
-                  {"snowy-rainy", "Neve/Pioggia"},
-                  {"sunny", "Soleggiato"},
-                  {"windy", "Ventoso"},
-                  {"windy-variant", "Vento forte"},
-                  {"exceptional", "Eccezionale"},
-                  {"", "Unknown"}
-                };
-
-                // Mapping weather conditions to icons
-                static const std::map<std::string, const char *> icon_dict = {
-                  {"clear-night", "\U000F0594"},       // Weather night icon
-                  {"cloudy", "\U000F0590"},            // Weather cloudy icon
-                  {"fog", "\U000F0591"},               // Weather fog icon
-                  {"hail", "\U000F0592"},              // Weather hail icon
-                  {"lightning", "\U000F0593"},         // Weather lightning icon
-                  {"lightning-rainy", "\U000F067E"},   // Weather lightning rainy icon
-                  {"partlycloudy", "\U000F0595"},      // Weather partly cloudy icon
-                  {"pouring", "\U000F0596"},           // Weather pouring icon
-                  {"rainy", "\U000F0597"},             // Weather rainy icon
-                  {"snowy", "\U000F0598"},             // Weather snowy icon
-                  {"snowy-rainy", "\U000F067F"},       // Weather snowy rainy icon
-                  {"sunny", "\U000F0599"},             // Weather sunny icon
-                  {"windy", "\U000F059D"},             // Weather windy icon
-                  {"windy-variant", "\U000F059E"},     // Weather windy variant icon
-                  {"exceptional", ""},                 // Exceptional weather (no icon)
-                  {"", ""}                             // Unknown weather (no icon)
-                };
-
-                // Get current date and time
-                int current_day = id(esptime).now().day_of_week;        // Current day of the week (1=Sunday)
-                int current_month = id(esptime).now().month;            // Current month
-                int day_of_month = id(esptime).now().day_of_month;      // Current day of the month
-
-                // (1) Date and Time Display
-                // Display the date and add the time
-                //it.printf(id(x)[16], id(y)[1], id(font_date), id(my_gray), TextAlign::CENTER, "%s %i %s %02i:%02i", day_array[current_day], day_of_month, month_array[current_month], id(esptime).now().hour, id(esptime).now().minute);
-                it.printf(id(x)[16], id(y)[1], id(font_date), id(my_gray), TextAlign::CENTER, "%s %i %s %02i:%02i", id(day_names)[current_day], day_of_month, id(month_names)[current_month], id(esptime).now().hour, id(esptime).now().minute);          
-
-                // (2) Weather Icon and Description
-                std::string weather_state = id(weather_condition).state;  // Current weather condition
-                image::Image *icon_img = image_dict.count(weather_state) ? image_dict.at(weather_state) : image_dict.at("");
-                const char *desc_str = condition_dict.count(weather_state) ? condition_dict.at(weather_state) : "Unknown";
-                it.image(id(x)[16], id(y)[5], icon_img, ImageAlign::CENTER); // Display weather icon
-
-                // (3) Location and Temperature Display
-                if (id(weather_location).has_state()) {
-                  it.printf(id(x)[4], 0, id(font_location), id(my_blue), TextAlign::TOP_CENTER, "%s", id(weather_location).state.c_str()); // Display location
-                }
-                if (id(weather_temperature).has_state()) {
-                  it.printf(id(x)[4], id(y)[1], id(font_temp), id(my_blue), TextAlign::TOP_CENTER, "%.0f°", id(weather_temperature).state); // Display external temperature
-                }
-                if (id(temp_int).has_state()) {
-                  it.printf(id(x)[27], 0, id(font_location), id(my_red), TextAlign::TOP_CENTER, "In Casa");               // Label for internal temperature
-                  it.printf(id(x)[27], id(y)[1], id(font_temp), id(my_red), TextAlign::TOP_CENTER, "%.0f°", id(temp_int).state); // Display internal temperature
-                }
-
-                // (4) Wind, Humidity, and Pressure Display
-                if (id(umidita_ext).has_state()) {
-                  it.printf(id(x)[4], id(y)[5], id(sensor_font), TextAlign::TOP_CENTER, "\U000F058E %.0f%%", id(umidita_ext).state); // Display external humidity with icon
-                }
-                if (id(umidita_int).has_state()) {
-                  it.printf(id(x)[27], id(y)[5], id(sensor_font), TextAlign::TOP_CENTER, "\U000F058E %.0f%%", id(umidita_int).state); // Display internal humidity with icon
-                }
-                if (id(vento).has_state()) {
-                  it.printf(id(x)[4], id(y)[7], id(sensor_font), TextAlign::CENTER, "\U000F059D %.0f km/h", id(vento).state); // Display wind speed with icon
-                }
-                if (id(pressione_int).has_state()) {
-                  it.printf(id(x)[27], id(y)[7], id(sensor_font), TextAlign::CENTER, "\U000F04C5 %.0fb", id(pressione_int).state); // Display pressure with icon
-                }
-
-                // (5) Horizontal Line Separator
-                it.line(0, id(y)[8], id(x)[32], id(y)[8], Color::WHITE); // Draw horizontal line
-
-                // (6) Forecast Display Using Global Variables
-                int forecast_day = current_day + 1;                  // Forecast starts from the next day
-                if (forecast_day == 8) forecast_day = 1;             // Wrap around to Sunday if necessary
-
-                for (int i = 1; i <= 5; ++i) {                       // Loop through 5-day forecast
-                  std::string condition = id(forecast_condition)[i]; // Forecast condition
-                  float precipitation   = id(forecast_precip)[i];    // Precipitation value
-                  float temp_max        = id(forecast_temp_max)[i];  // Maximum temperature
-                  float temp_min        = id(forecast_temp_min)[i];  // Minimum temperature
-
-                  // Display forecast day name
-                  it.printf(id(x_forecast)[i], id(y)[9], id(font_day), id(my_green), TextAlign::CENTER, "%s", day_array_ext[forecast_day]);
-
-                  // Display weather icon based on condition
-                  if (icon_dict.count(condition) > 0) {
-                    it.printf(id(x_forecast)[i], id(y)[12], id(symbols_font), TextAlign::CENTER, "%s", icon_dict.at(condition));
-                  }
-
-                  // Display temperature range
-                  it.printf(id(x_forecast)[i], id(y)[15], id(font_forecast), TextAlign::CENTER, "%.0f°|%.0f°", temp_min, temp_max);
-                  // Display precipitation
-                  it.printf(id(x_forecast)[i], id(y)[16], id(font_forecast), TextAlign::CENTER, "%.0f mm", precipitation);
-                  // Log weather conditions
-
-                  forecast_day += 1;                                  // Move to the next day
-                  if (forecast_day == 8) forecast_day = 1;           // Wrap around to Sunday if necessary
-                }
-                // Draw another horizontal line separator
-                it.line(0, id(y)[17], id(x)[32], id(y)[17], Color::WHITE);
-
-                // (7) Heating Icon Based on Thermostat Mode and Heater State
-                if (id(termostato1).mode == climate::CLIMATE_MODE_OFF) {
-                  it.printf(id(x_forecast)[3], id(y)[20], id(symbols_font), id(my_gray), TextAlign::CENTER, "\U000F0425"); // Display OFF icon
-                } else {
-                  if (id(sensor_caldaia).state) {
-                    it.printf(id(x_forecast)[3], id(y)[20], id(symbols_font), id(my_red), TextAlign::CENTER, "\U000F0238"); // Display active heater icon in red
-                  } else {
-                    it.printf(id(x_forecast)[3], id(y)[20], id(symbols_font), id(my_gray), TextAlign::CENTER, "\U000F0238"); // Display inactive heater icon in gray
-                  }
-                }
-
-                // (8) Target Temperature Display
-                it.printf(id(x_forecast)[3], id(y)[24], id(font_location), id(my_red), TextAlign::BASELINE_CENTER, "%.1f°", id(termostato1).target_temperature); // Display target temperature
-
-                // (9) Motion Sensor Indicators
-                if (id(movimento).state) {
-                  it.printf(id(x_forecast)[5], id(y)[21], id(symbols_font), id(my_red), TextAlign::CENTER, "\U000F06D0"); // Display active motion icon in red
-                  it.printf(id(x_forecast)[1],  id(y)[21], id(symbols_font), id(my_red), TextAlign::CENTER,  "\U000F06D0"); // Display active motion icon in red
-                } else {
-                  it.printf(id(x_forecast)[5], id(y)[21], id(symbols_font), id(my_gray), TextAlign::CENTER, "\U000F0415"); // Display inactive motion icon in gray
-                  it.printf(id(x_forecast)[1],  id(y)[21], id(symbols_font), id(my_gray), TextAlign::CENTER,  "\U000F0374"); // Display inactive motion icon in gray
-                }
-
-                // (10) Total Power Consumption Display
-                if (id(consumo_t).has_state()) {
-                  int icona_x = id(x)[6];
-                  if (id(consumo_t).state < 2800) {
-                    it.printf(id(x_forecast)[2], id(y)[20], id(symbols_font), id(my_gray), TextAlign::CENTER, "\U000F0241"); // Display low consumption icon in gray
-                    it.printf(id(x_forecast)[2], id(y)[24], id(font_location), id(my_blue), TextAlign::BASELINE_CENTER, "%.0f W", id(consumo_t).state); // Display consumption value in blue
-                  } else {
-                    it.printf(id(x_forecast)[2], id(y)[20], id(symbols_font), id(my_red), TextAlign::CENTER, "\U000F0241"); // Display high consumption icon in red
-                    it.printf(id(x_forecast)[2], id(y)[24], id(font_location), id(my_red), TextAlign::BASELINE_CENTER, "%.0f W", id(consumo_t).state); // Display consumption value in red
-                  }
-                }
-
-                // (11) Washing Machine Power Consumption Display
-                if (id(consumo_c).has_state()) {
-                  int icona_x = id(x)[18];
-                  if (id(consumo_c).state > 20) {
-                    it.printf(id(x_forecast)[4], id(y)[20], id(symbols_font), id(my_red), TextAlign::CENTER, "\U000F072A"); // Display washing machine on icon in red
-                    it.printf(id(x_forecast)[4], id(y)[24], id(font_location), id(my_red), TextAlign::BASELINE_CENTER, "%.0f W", id(consumo_c).state); // Display consumption value in red
-                  } else {
-                    it.printf(id(x_forecast)[4], id(y)[20], id(symbols_font), id(my_gray), TextAlign::CENTER, "\U000F11BD"); // Display washing machine off icon in gray
-                    it.printf(id(x_forecast)[4], id(y)[24], id(font_location), id(my_blue), TextAlign::BASELINE_CENTER, "%.0f W", id(consumo_c).state); // Display consumption value in blue
-                  }
-                }
+        - obj: # Dag 2
+            x: 245
+            y: 150
+            width: 100
+            height: 240
+            styles: bg_white
+            bg_color: 0x1a2942
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  id: text_dag_2
+                  text: "dag"
+                  align: top_mid
+              - label:
+                  text_font: weather_icons
+                  id: home_weather_icon_2
+                  text: "-"
+                  align: center
+                  y: -30
+              - label:
+                  id: text_temperature_high_2
+                  text: "-"
+                  align: center
+                  y: 20
+              - label:
+                  id: text_temperature_low_2
+                  text: "/-"
+                  align: center
+                  y: 50                  
+              - label:
+                  id: text_uv_index_2
+                  text: "uv 6"
+                  align: bottom_mid
+                  
+                  
+        - obj: # Dag 3
+            x: 355
+            y: 150
+            width: 100
+            height: 240
+            styles: bg_white
+            bg_color: 0x1a2942
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  id: text_dag_3
+                  text: "dag"
+                  align: top_mid
+              - label:
+                  text_font: weather_icons
+                  id: home_weather_icon_3
+                  text: "-"
+                  align: center
+                  y: -30
+              - label:
+                  id: text_temperature_high_3
+                  text: "-"
+                  align: center
+                  y: 20
+              - label:
+                  id: text_temperature_low_3
+                  text: "/-"
+                  align: center
+                  y: 50                  
+              - label:
+                  id: text_uv_index_3
+                  text: "uv 6"
+                  align: bottom_mid
 
 
 
-                  # - label:
-                  #     text: !lambda |-
-                  #       return id(sensor_forecast).state
-                  #     align: center
+sensor:
+  - platform: homeassistant
+    id: temperature_state_sensor
+    entity_id: sensor.home_outdoor_temperature
+    on_value:
+      - lvgl.label.update:
+          id: label_temperature_now
+          text:
+            format: "Temperatuur %.0f C"
+            args: [ 'x' ]
+
+  - platform: homeassistant
+    id: uv_index_state_sensor
+    entity_id: weather.forecast_home
+    attribute: uv_index
+    on_value:
+     - lvgl.label.update:
+          id: label_uv_index_now
+          text:
+            format: "Uv index %.0f"
+            args: [ 'x' ]
+
+  - platform: homeassistant
+    id: weather_temperature_0_sensor
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_0
+    on_value:
+     - lvgl.label.update:
+          id: forecast_temperature_current_high
+          text:
+            format: "H %.0f C"
+            args: [ 'x' ]
+
+  - platform: homeassistant
+    id: weather_temperature_low_0_sensor
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_0
+    on_value:
+     - lvgl.label.update:
+          id: forecast_temperature_current_low
+          text:
+            format: "L %.0f C"
+            args: [ 'x' ]
+
+text_sensor:
+  - platform: homeassistant
+    id: weather_week_dag_0
+    entity_id: sensor.weather_data
+    attribute: weather_week_dag_0
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_dag_0), (id(weather_week_dag_0).state).c_str());
+  - platform: homeassistant
+    id: weather_week_dag_1
+    entity_id: sensor.weather_data
+    attribute: weather_week_dag_1
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_dag_1), (id(weather_week_dag_1).state).c_str());
+  - platform: homeassistant
+    id: weather_week_dag_2
+    entity_id: sensor.weather_data
+    attribute: weather_week_dag_2
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_dag_2), (id(weather_week_dag_2).state).c_str());
+  - platform: homeassistant
+    id: weather_week_dag_3
+    entity_id: sensor.weather_data
+    attribute: weather_week_dag_3
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_dag_3), (id(weather_week_dag_3).state).c_str());
+
+  - platform: homeassistant
+    id: weather_uv_index_0
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_uv_index_0
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_uv_index_0), ("uv " + (id(weather_uv_index_0).state)).c_str());
+
+  - platform: homeassistant
+    id: weather_uv_index_1
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_uv_index_1
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_uv_index_1), ("uv " + (id(weather_uv_index_1).state)).c_str());
+
+  - platform: homeassistant
+    id: weather_uv_index_2
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_uv_index_2
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_uv_index_2), ("uv " + (id(weather_uv_index_2).state)).c_str());
+
+  - platform: homeassistant
+    id: weather_uv_index_3
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_uv_index_3
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_uv_index_3), ("uv " + (id(weather_uv_index_3).state)).c_str());
+
+  - platform: homeassistant
+    id: weather_temp_high_0
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_0
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_high_0), ("\U000F10C2 " + (id(weather_temp_high_0).state) + "°").c_str());
+  - platform: homeassistant
+    id: weather_temp_high_1
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_1
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_high_1), ("\U000F10C2 " + (id(weather_temp_high_1).state) + "°").c_str());
+
+  - platform: homeassistant
+    id: weather_temp_high_2
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_2
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_high_2), ("\U000F10C2 " + (id(weather_temp_high_2).state) + "°").c_str());
+
+  - platform: homeassistant
+    id: weather_temp_high_3
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_3
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_high_3), ("\U000F10C2 " + (id(weather_temp_high_3).state) + "°").c_str());
+
+  - platform: homeassistant
+    id: weather_temp_low_0
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_0
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_low_0), ("\U000F10C3 " + (id(weather_temp_low_0).state) + "°").c_str());
+  - platform: homeassistant
+    id: weather_temp_low_1
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_1
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_low_1), ("\U000F10C3 " + (id(weather_temp_low_1).state) + "°").c_str());
+
+  - platform: homeassistant
+    id: weather_temp_low_2
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_2
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_low_2), ("\U000F10C3 " + (id(weather_temp_low_2).state) + "°").c_str());
+  - platform: homeassistant
+    id: weather_temp_low_3
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_3
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_temperature_low_3), ("\U000F10C3 " + (id(weather_temp_low_3).state) + "°").c_str());
+
+  - platform: homeassistant
+    id: weather_condition_now
+    entity_id: sensor.weather_data
+    attribute: weather_condition_now
+    on_value:
+      then:
+        - lambda: |-
+            std::string condition;  
+            std::string icon;          
+            if (id(weather_condition_now).state == "sunny") {
+              condition = "Zonnig";
+              icon = "\U000F0599";  // MDI:weather-sunny
+            } else if (id(weather_condition_now).state == "clear-night") {
+              condition = "Heldere nacht";
+              icon = "\U000F0594";  // MDI:weather-night
+            } else if (id(weather_condition_now).state == "partlycloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0595";  // MDI:weather-partly-cloudy
+            } else if (id(weather_condition_now).state == "cloudy") {
+              condition = "Bewolkt";
+              icon = "\U000F0590";  // MDI:weather-cloudy
+            } else if (id(weather_condition_now).state == "rainy") {
+              condition = "Regenachtig";
+              icon = "\U000F058E";  // MDI:weather-rainy
+            } else if (id(weather_condition_now).state == "lightning") {
+              condition = "Onweer";
+              icon = "\U000F0596";  // MDI:weather-lightning
+            } else if (id(weather_condition_now).state == "snowy") {
+              condition = "Sneeuw";
+              icon = "\U000F0598";  // MDI:weather-snowy
+            } else if (id(weather_condition_now).state == "fog") {
+              condition = "Mistig";
+              icon = "\U000F0591";  // MDI:weather-fog
+            } else {
+              condition = "Onbekend";
+              icon = "\U000F05A9";  // MDI:help-circle
+            }
+            lv_label_set_text(id(text_weather_condition_now), (condition).c_str());
+            lv_label_set_text(id(home_weather_icon_now), (icon).c_str());
+            lv_label_set_text(id(home_weather_icon_0), (icon).c_str());
+
+  - platform: homeassistant
+    id: weather_condition_1
+    entity_id: sensor.weather_data
+    attribute: weather_condition_1
+    on_value:
+      then:
+        - lambda: |-
+            std::string condition;  
+            std::string icon;          
+            if (id(weather_condition_1).state == "sunny") {
+              condition = "Zonnig";
+              icon = "\U000F0599";  // MDI:weather-sunny
+            } else if (id(weather_condition_1).state == "clear-night") {
+              condition = "Heldere nacht";
+              icon = "\U000F0594";  // MDI:weather-night
+            } else if (id(weather_condition_1).state == "partlycloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0595";  // MDI:weather-partly-cloudy
+            } else if (id(weather_condition_1).state == "cloudy") {
+              condition = "Bewolkt";
+              icon = "\U000F0590";  // MDI:weather-cloudy
+            } else if (id(weather_condition_1).state == "rainy") {
+              condition = "Regenachtig";
+              icon = "\U000F058E";  // MDI:weather-rainy
+            } else if (id(weather_condition_1).state == "lightning") {
+              condition = "Onweer";
+              icon = "\U000F0596";  // MDI:weather-lightning
+            } else if (id(weather_condition_1).state == "snowy") {
+              condition = "Sneeuw";
+              icon = "\U000F0598";  // MDI:weather-snowy
+            } else if (id(weather_condition_1).state == "fog") {
+              condition = "Mistig";
+              icon = "\U000F0591";  // MDI:weather-fog
+            } else {
+              condition = "Onbekend";
+              icon = "\U000F05A9";  // MDI:help-circle
+            }
+            // lv_label_set_text(id(text_weather_condition_1), (condition).c_str());
+            lv_label_set_text(id(home_weather_icon_1), (icon).c_str());
+
+  - platform: homeassistant
+    id: weather_condition_2
+    entity_id: sensor.weather_data
+    attribute: weather_condition_2
+    on_value:
+      then:
+        - lambda: |-
+            std::string condition;  
+            std::string icon;          
+            if (id(weather_condition_2).state == "sunny") {
+              condition = "Zonnig";
+              icon = "\U000F0599";  // MDI:weather-sunny
+            } else if (id(weather_condition_2).state == "clear-night") {
+              condition = "Heldere nacht";
+              icon = "\U000F0594";  // MDI:weather-night
+            } else if (id(weather_condition_2).state == "partlycloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0595";  // MDI:weather-partly-cloudy
+            } else if (id(weather_condition_2).state == "cloudy") {
+              condition = "Bewolkt";
+              icon = "\U000F0590";  // MDI:weather-cloudy
+            } else if (id(weather_condition_2).state == "rainy") {
+              condition = "Regenachtig";
+              icon = "\U000F058E";  // MDI:weather-rainy
+            } else if (id(weather_condition_2).state == "lightning") {
+              condition = "Onweer";
+              icon = "\U000F0596";  // MDI:weather-lightning
+            } else if (id(weather_condition_2).state == "snowy") {
+              condition = "Sneeuw";
+              icon = "\U000F0598";  // MDI:weather-snowy
+            } else if (id(weather_condition_2).state == "fog") {
+              condition = "Mistig";
+              icon = "\U000F0591";  // MDI:weather-fog
+            } else {
+              condition = "Onbekend";
+              icon = "\U000F05A9";  // MDI:help-circle
+            }
+            // lv_label_set_text(id(text_weather_condition_2), (condition).c_str());
+            lv_label_set_text(id(home_weather_icon_2), (icon).c_str());
+
+  - platform: homeassistant
+    id: weather_condition_3
+    entity_id: sensor.weather_data
+    attribute: weather_condition_3
+    on_value:
+      then:
+        - lambda: |-
+            std::string condition;  
+            std::string icon;          
+            if (id(weather_condition_3).state == "sunny") {
+              condition = "Zonnig";
+              icon = "\U000F0599";  // MDI:weather-sunny
+            } else if (id(weather_condition_3).state == "clear-night") {
+              condition = "Heldere nacht";
+              icon = "\U000F0594";  // MDI:weather-night
+            } else if (id(weather_condition_3).state == "partlycloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0595";  // MDI:weather-partly-cloudy
+            } else if (id(weather_condition_3).state == "cloudy") {
+              condition = "Bewolkt";
+              icon = "\U000F0590";  // MDI:weather-cloudy
+            } else if (id(weather_condition_3).state == "rainy") {
+              condition = "Regenachtig";
+              icon = "\U000F058E";  // MDI:weather-rainy
+            } else if (id(weather_condition_3).state == "lightning") {
+              condition = "Onweer";
+              icon = "\U000F0596";  // MDI:weather-lightning
+            } else if (id(weather_condition_3).state == "snowy") {
+              condition = "Sneeuw";
+              icon = "\U000F0598";  // MDI:weather-snowy
+            } else if (id(weather_condition_3).state == "fog") {
+              condition = "Mistig";
+              icon = "\U000F0591";  // MDI:weather-fog
+            } else {
+              condition = "Onbekend";
+              icon = "\U000F05A9";  // MDI:help-circle
+            }
+            // lv_label_set_text(id(text_weather_condition_3), (condition).c_str());
+            lv_label_set_text(id(home_weather_icon_3), (icon).c_str());
+
+
+
+substitutions:
+  clearnight: "\U000F0594"
+  cloudy: "\U000F0590"
+  exceptional: "\U000F0F2F"
+  fog: "\U000F0591"
+  hail: "\U000F0592"
+  lightning: "\U000F0593"
+  lightningrainy: "\U000F067E"
+  partlycloudy: "\U000F0595"
+  pouring: "\U000F0596"
+  rainy: "\U000F0597"
+  snowy: "\U000F0598"
+  snowyrainy: "\U000F067F"
+  sunny: "\U000F0599"
+  windy: "\U000F059D"
+  windyvariant: "\U000F059E"
+  sunnyoff: "\U000F14E4"
+
+
+
+font:
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: weather_icons
+    size: 48
+    bpp: 4
+    glyphs: [
+      "\U000F0594", # clear-night
+      "\U000F0590", # cloudy
+      "\U000F0F2F", # exceptional
+      "\U000F0591", # fog
+      "\U000F0592", # hail
+      "\U000F0593", # lightning
+      "\U000F067E", # lightning-rainy
+      "\U000F0595", # partlycloudy
+      "\U000F0596", # pouring
+      "\U000F0597", # rainy
+      "\U000F0598", # snowy
+      "\U000F067F", # snowy-rainy
+      "\U000F0599", # sunny
+      "\U000F059D", # windy
+      "\U000F059E", # windy-variant
+      "\U000F14E4", # sunny-off
+      ]
+
 

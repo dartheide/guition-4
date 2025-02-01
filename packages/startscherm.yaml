@@ -15,25 +15,38 @@ lvgl:
             widgets:
               - label:
                   text_font: weather_icons
-                  id: home_weather_icon
+                  id: home_weather_icon_now
                   text: "\U000F0599"
               - label:
                   text_font: roboto16
                   align: bottom_left
                   y: -30
-                  id: label_temperature
+                  id: label_temperature_now
                   text: "-"
               - label:
                   text_font: roboto16
                   align: bottom_left
                   y: -5
-                  id: label_uv_index
+                  id: label_uv_index_now
                   text: "-"
               - label:
                   text_font: roboto16
                   align: bottom_right
-                  id: forecast_temperature_current
+                  id: forecast_temperature_current_high
                   text: '"'
+                  y: -30
+              - label:
+                  text_font: roboto16
+                  align: bottom_right
+                  id: forecast_temperature_current_low
+                  text: '"'
+                  y: -5
+              - label:
+                  text_font: roboto16
+                  id: text_weather_condition_now
+                  text: ""
+                  align: top_right
+
             on_press:
                 then:
                   lvgl.page.show: weather_page
@@ -149,156 +162,3 @@ sensor:
           text:
             format: "%.0f W"
             args: [ 'x' ]
-
-
-  - platform: homeassistant
-    id: temperature_state_sensor
-    entity_id: sensor.home_outdoor_temperature
-    on_value:
-      - lvgl.label.update:
-          id: label_temperature
-          text:
-            format: "Temperatuur %.0f C"
-            args: [ 'x' ]
-
-  - platform: homeassistant
-    id: uv_index_state_sensor
-    entity_id: weather.forecast_home
-    attribute: uv_index
-    on_value:
-     - lvgl.label.update:
-          id: label_uv_index
-          text:
-            format: "Uv index %.0f"
-            args: [ 'x' ]
-      
-text_sensor:
-  - platform: homeassistant
-    id: weather_state_text_sensor
-    entity_id: weather.forecast_home
-    on_value:
-      - if:
-          condition:
-            or:
-              - lambda: 'return id(weather_state_text_sensor).state == "sunny";'
-              - lambda: 'return id(weather_state_text_sensor).state == "clear";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${sunny}
-      - if:
-          condition:
-            or:
-              - lambda: 'return id(weather_state_text_sensor).state == "clear-night";'
-              - lambda: 'return id(weather_state_text_sensor).state == "night";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${clearnight}
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "partlycloudy";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${partlycloudy}
-      - if:
-          condition:            
-            and:              
-              - lambda: 'return id(weather_state_text_sensor).state == "cloudy";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${cloudy}
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "rainy";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${rainy}
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "pouring";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${pouring} 
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "hail";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${hail}   
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "snowy";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${snowy}
-      - if:
-          condition:
-            - lambda: 'return id(weather_state_text_sensor).state == "windy";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${windy}
-      - if:
-          condition:
-            or:
-              - lambda: 'return id(weather_state_text_sensor).state == "lightning";'
-              - lambda: 'return id(weather_state_text_sensor).state == "lightning-rainy";'
-              - lambda: 'return id(weather_state_text_sensor).state == "thender";'
-          then:
-            - lvgl.label.update:
-                id: home_weather_icon
-                text: ${lightning}
-
-
-substitutions:
-  clearnight: "\U000F0594"
-  cloudy: "\U000F0590"
-  exceptional: "\U000F0F2F"
-  fog: "\U000F0591"
-  hail: "\U000F0592"
-  lightning: "\U000F0593"
-  lightningrainy: "\U000F067E"
-  partlycloudy: "\U000F0595"
-  pouring: "\U000F0596"
-  rainy: "\U000F0597"
-  snowy: "\U000F0598"
-  snowyrainy: "\U000F067F"
-  sunny: "\U000F0599"
-  windy: "\U000F059D"
-  windyvariant: "\U000F059E"
-  sunnyoff: "\U000F14E4"
-
-
-
-font:
-  - file: "fonts/materialdesignicons-webfont.ttf"
-    id: weather_icons
-    size: 48
-    bpp: 4
-    glyphs: [
-      "\U000F0594", # clear-night
-      "\U000F0590", # cloudy
-      "\U000F0F2F", # exceptional
-      "\U000F0591", # fog
-      "\U000F0592", # hail
-      "\U000F0593", # lightning
-      "\U000F067E", # lightning-rainy
-      "\U000F0595", # partlycloudy
-      "\U000F0596", # pouring
-      "\U000F0597", # rainy
-      "\U000F0598", # snowy
-      "\U000F067F", # snowy-rainy
-      "\U000F0599", # sunny
-      "\U000F059D", # windy
-      "\U000F059E", # windy-variant
-      "\U000F14E4", # sunny-off
-      ]
-
-
