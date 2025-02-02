@@ -127,7 +127,8 @@ font:
             "\U000F050F", # mdi-thermometer
             "\U000F10C3", # mdi-thermometer-low
             "\U000F10C2", # mdi-thermometer-high
-
+            "\U000F0D3E", # mdi-transmission-tower
+            "\U000F0A72", # mdi-solar-power
           ]
 
     
