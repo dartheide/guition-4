@@ -23,7 +23,7 @@ lvgl:
             width: 100
             height: 240
             styles: bg_white
-            bg_color: 0x1a2942
+            bg_color: 0x1a237e
             scrollbar_mode: "OFF"
             widgets:
               - label:
@@ -57,7 +57,7 @@ lvgl:
             width: 100
             height: 240
             styles: bg_white
-            bg_color: 0x1a2942
+            bg_color: 0x1a237e
             scrollbar_mode: "OFF"
             widgets:
               - label:
@@ -91,7 +91,7 @@ lvgl:
             width: 100
             height: 240
             styles: bg_white
-            bg_color: 0x1a2942
+            bg_color: 0x1a237e
             scrollbar_mode: "OFF"
             widgets:
               - label:
@@ -126,7 +126,7 @@ lvgl:
             width: 100
             height: 240
             styles: bg_white
-            bg_color: 0x1a2942
+            bg_color: 0x1a237e
             scrollbar_mode: "OFF"
             widgets:
               - label:
@@ -164,7 +164,7 @@ sensor:
       - lvgl.label.update:
           id: label_temperature_now
           text:
-            format: "Temperatuur %.0f C"
+            format: "Temp buiten %.0f °"
             args: [ 'x' ]
 
   - platform: homeassistant
@@ -176,28 +176,6 @@ sensor:
           id: label_uv_index_now
           text:
             format: "Uv index %.0f"
-            args: [ 'x' ]
-
-  - platform: homeassistant
-    id: weather_temperature_0_sensor
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_0
-    on_value:
-     - lvgl.label.update:
-          id: forecast_temperature_current_high
-          text:
-            format: "H %.0f C"
-            args: [ 'x' ]
-
-  - platform: homeassistant
-    id: weather_temperature_low_0_sensor
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_low_0
-    on_value:
-     - lvgl.label.update:
-          id: forecast_temperature_current_low
-          text:
-            format: "L %.0f C"
             args: [ 'x' ]
 
 text_sensor:
@@ -278,6 +256,8 @@ text_sensor:
       then:
         - lambda: |-
             lv_label_set_text(id(text_temperature_high_0), ("\U000F10C2 " + (id(weather_temp_high_0).state) + "°").c_str());
+            lv_label_set_text(id(forecast_temperature_current_high), ("\U000F10C2 " + (id(weather_temp_high_0).state) + "°").c_str());
+
   - platform: homeassistant
     id: weather_temp_high_1
     entity_id: sensor.weather_data
@@ -313,6 +293,8 @@ text_sensor:
       then:
         - lambda: |-
             lv_label_set_text(id(text_temperature_low_0), ("\U000F10C3 " + (id(weather_temp_low_0).state) + "°").c_str());
+            lv_label_set_text(id(forecast_temperature_current_low), ("\U000F10C3 " + (id(weather_temp_low_0).state) + "°").c_str());
+
   - platform: homeassistant
     id: weather_temp_low_1
     entity_id: sensor.weather_data
@@ -357,6 +339,9 @@ text_sensor:
             } else if (id(weather_condition_now).state == "partlycloudy") {
               condition = "Gedeeltelijk bewolkt";
               icon = "\U000F0595";  // MDI:weather-partly-cloudy
+            } else if (id(weather_condition_now).state == "night-partly-cloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0F31";  // MDI:weather-partly-cloudy            
             } else if (id(weather_condition_now).state == "cloudy") {
               condition = "Bewolkt";
               icon = "\U000F0590";  // MDI:weather-cloudy
@@ -544,6 +529,8 @@ font:
       "\U000F059D", # windy
       "\U000F059E", # windy-variant
       "\U000F14E4", # sunny-off
+      "\U000F0F31", # mdi-weather-night-partly-cloudy
+      "\U000F05A9", # mdi-wifi
       ]
 
 

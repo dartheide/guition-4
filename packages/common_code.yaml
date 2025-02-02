@@ -167,6 +167,13 @@ font:
         "\U000F0140", # mdi-chevron-down
         "\U000F075D", # mdi-volume-plus
         "\U000F075E", # mdi-volume-minus
+        "\U000F0238", # mdi-fire
+        "\U000F0D3E", # mdi-transmission-tower
+        "\U000F0A72", # mdi-solar-power
+        "\U000F1A44", # mdi-heat-pump-outline
+        "\U000F001B", # mdi-air-conditioner
+        "\U000F0050", # mdi-arrow-left-bold-circle-outline
+        "\U000F0057", # mdi-arrow-right-bold-circle-outline
       ]
 
 
@@ -175,6 +182,14 @@ font:
     id: roboto16
     size: 16
     bpp: 4
+    extras:
+      - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
+        glyphs:
+          [
+            "\U000F10C3", # mdi-thermometer-low
+            "\U000F10C2", # mdi-thermometer-high
+          ]
+
   - file: "gfonts://Roboto"
     id: roboto14
     size: 14

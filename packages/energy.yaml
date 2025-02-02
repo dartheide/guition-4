@@ -1,0 +1,378 @@
+#esphome:
+#  includes: std_includes.h
+
+# LVGL configuration
+lvgl:
+  pages:
+    - id: energy_page
+      styles: bg_white
+      widgets:
+        - obj: # achtergrond
+            x: 10
+            y: 40
+            width: 460
+            height: 375
+            styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  text_font: roboto20
+                  text: "Energie verbruik vandaag"
+                  align: top_left
+                  y: 0
+              - line:
+                  points:
+                    - 130, 200
+                    - 300, 200
+                  line_width: 2
+                  line_color: tft_yellow 
+                  line_rounded: false   
+
+              - line:
+                  points:
+                    - 130, 170
+                    - 200, 170
+                    - 200, 115
+                  line_width: 2
+                  line_color: tft_yellow 
+                  line_rounded: true   
+
+              - line:
+                  points:
+                    - 300, 170
+                    - 230, 170
+                    - 230, 115
+                  line_width: 2
+                  line_color: tft_yellow 
+                  line_rounded: true   
+
+              - line:
+                  points:
+                    - 360, 115
+                    - 360, 300
+                  line_width: 2
+                  line_color: tft_yellow 
+                  line_rounded: true   
+
+
+              - obj: # Grid
+                  align: left_mid
+                  x: 0
+                  y: 15
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F0050" # uit
+                        align: bottom_left
+                        y: -20
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F0057" # in
+                        align: bottom_left 
+                        y: 5                       
+                    - label:
+                        text_font: roboto16
+                        text: "Liander"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_up
+                        text: "- kWh"
+                        align: bottom_left
+                        y: -20
+                        x: 30
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_down
+                        text: "- kWh"
+                        align: bottom_left
+                        x: 30
+                        y: 5
+
+              - obj: # Zon
+                  align: top_mid
+                  y: 25
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F0A72"
+                        align: bottom_left
+                    - label:
+                        text_font: roboto16
+                        text: "Zon"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_zon
+                        text: "- kWh"
+                        align: bottom_left
+                        x: 30
+                  
+              - obj: # Warmtepomp
+                  align: top_right
+                  y: 25
+                  x: 0
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F1A44"
+                        align: bottom_left
+                    - label:
+                        text_font: roboto16
+                        text: "Warmtepomp"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_wp
+                        text: "- kWh"
+                        align: bottom_left
+                        x: 30
+                                  
+              - obj: # Huis
+                  align: right_mid
+                  y: 15
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F02DC"
+                        align: bottom_left
+                    - label:
+                        text_font: roboto16
+                        text: "Huis"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_home
+                        text: "- kWh"
+                        align: bottom_left
+                        x: 30
+                  
+              - obj: # AC
+                  align: bottom_right
+                  x: 0
+                  y: 5
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F001B"
+                        align: bottom_left
+                    - label:
+                        text_font: roboto16
+                        text: "Airco"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_ac
+                        text: "- kWh"
+                        align: bottom_left
+                        x: 30
+
+              - obj: # Gas
+                  align: bottom_left
+                  x: 0
+                  y: 5
+                  width: 130
+                  height: 100
+                  styles: bg_white
+                  bg_color: 0x1a237e
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F0238"
+                        align: bottom_left                        
+                    - label:
+                        text_font: roboto16
+                        text: "Gas"
+                        align: top_mid
+                        y: -5
+                    - label:
+                        text_font: roboto16
+                        id: energy_text_gas
+                        text: "- m3"
+                        align: bottom_left
+                        x: 30
+                   
+sensor:
+  - platform: homeassistant
+    id: gas_per_dag
+    entity_id: sensor.gas_per_dag
+    on_value:
+      - lvgl.label.update:
+          id: energy_text_gas
+          text:
+            format: "%.2f  m3"
+            args: [ 'x' ]
+
+  - platform: homeassistant
+    id: panasonic_ac_total_daily_energy
+    entity_id: sensor.panasonic_ac_total_daily_energy
+    on_value:
+      - lvgl.label.update:
+          id: energy_text_ac
+          text:
+            format: "%.0f  kWH"
+            args: [ 'x' ]
+
+  - platform: homeassistant
+    id: warmtepomp2
+    entity_id: sensor.warmtepomp2
+    on_value:
+      - lvgl.label.update:
+          id: energy_text_wp
+          text:
+            format: "%.0f  kWH"
+            args: [ 'x' ]
+
+
+  - platform: homeassistant
+    id: lever_energie_tarief_1
+    entity_id: sensor.dag_lever_energie_tarief_1
+    on_value:
+      - script.execute: update_grid_up
+      - script.execute: update_home
+
+  - platform: homeassistant
+    id: lever_energie_tarief_2
+    entity_id: sensor.dag_lever_energie_tarief_2
+    on_value:
+      - script.execute: update_grid_up
+      - script.execute: update_home
+  
+  - platform: homeassistant
+    id: verbruik_energie_tarief_1
+    entity_id: sensor.dag_verbruik_energie_tarief_1
+    on_value:
+      - script.execute: update_grid_down
+      - script.execute: update_home
+
+  - platform: homeassistant
+    id: verbruik_energie_tarief_2
+    entity_id: sensor.dag_verbruik_energie_tarief_2
+    on_value:
+      - script.execute: update_grid_down
+      - script.execute: update_home
+
+  - platform: homeassistant
+    id: dag_envoy
+    entity_id: sensor.envoy_122229057507_today_s_energy_production
+    on_value:
+      - script.execute: update_zon
+      - script.execute: update_home
+
+  - platform: homeassistant
+    id: dag_schuur
+    entity_id: sensor.dag_zon_schuur
+    on_value:
+      - script.execute: update_zon
+      - script.execute: update_home
+
+script:
+  - id: update_zon
+    then:
+      - lambda: |- 
+          float tariefsun1 = id(dag_schuur).state;
+          float tariefsun2 = id(dag_envoy).state;
+
+          // Controleer of de sensorwaarden geldig zijn
+          if (isnan(tariefsun1)) tariefsun1 = 0.0;
+          if (isnan(tariefsun2)) tariefsun2 = 0.0;
+
+          float power_sun = (tariefsun1 + tariefsun2) / 1000;
+          // Format the power value as a string with 1 decimal place
+          char power_sun_str[10];  // Buffer to hold the formatted string
+          snprintf(power_sun_str, sizeof(power_sun_str), "%.1f kWh", power_sun);
+
+          lv_label_set_text(id(energy_text_zon), power_sun_str);
+          
+  - id: update_grid_up
+    then:
+      - lambda: |- 
+          float tariefup1 = id(lever_energie_tarief_1).state;
+          float tariefup2 = id(lever_energie_tarief_2).state;
+
+          // Controleer of de sensorwaarden geldig zijn
+          if (isnan(tariefup1)) tariefup1 = 0.0;
+          if (isnan(tariefup2)) tariefup2 = 0.0;
+
+          float power_up = tariefup1 + tariefup2;
+          // Format the power value as a string with 1 decimal place
+          char power_up_str[10];  // Buffer to hold the formatted string
+          snprintf(power_up_str, sizeof(power_up_str), "%.1f kWh", power_up);
+
+          lv_label_set_text(id(energy_text_up), power_up_str);
+
+  - id: update_grid_down
+    then:
+      - lambda: |- 
+          float tariefdown1 = id(verbruik_energie_tarief_1).state;
+          float tariefdown2 = id(verbruik_energie_tarief_2).state;
+
+          // Controleer of de sensorwaarden geldig zijn
+          if (isnan(tariefdown1)) tariefdown1 = 0.0;
+          if (isnan(tariefdown2)) tariefdown2 = 0.0;
+
+          float power_down = tariefdown1 + tariefdown2;
+
+          // Format the power value as a string with 1 decimal place
+          char power_down_str[10];  // Buffer to hold the formatted string
+          snprintf(power_down_str, sizeof(power_down_str), "%.1f kWh", power_down);
+
+          lv_label_set_text(id(energy_text_down), power_down_str);
+
+  - id: update_home
+    then:
+      - lambda: |- 
+          float tariefdown1 = id(verbruik_energie_tarief_1).state;
+          float tariefdown2 = id(verbruik_energie_tarief_2).state;
+          float tariefup1 = id(lever_energie_tarief_1).state;
+          float tariefup2 = id(lever_energie_tarief_2).state;
+          float tariefsun1 = id(dag_schuur).state;
+          float tariefsun2 = id(dag_envoy).state;
+
+          // Controleer of de sensorwaarden geldig zijn
+          if (isnan(tariefsun1)) tariefsun1 = 0.0;
+          if (isnan(tariefsun2)) tariefsun2 = 0.0;
+          if (isnan(tariefup1)) tariefup1 = 0.0;
+          if (isnan(tariefup2)) tariefup2 = 0.0;
+          if (isnan(tariefdown1)) tariefdown1 = 0.0;
+          if (isnan(tariefdown2)) tariefdown2 = 0.0;
+
+          float power_home = ((tariefsun1 + tariefsun2)/1000) - (tariefup1 + tariefup2) + (tariefdown1 + tariefdown2);
+
+          // Format the power value as a string with 1 decimal place
+          char power_home_str[10];  // Buffer to hold the formatted string
+          snprintf(power_home_str, sizeof(power_home_str), "%.1f kWh", power_home);
+
+          lv_label_set_text(id(energy_text_home), power_home_str);
+

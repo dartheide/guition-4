@@ -89,23 +89,38 @@ lvgl:
                             width: 31
                             start_value: 0
                             end_value: 2000
+
               - obj: # to cover the middle part of meter indicator line
                   radius: 70
                   styles: bg_white
                   pad_all: 0
                   align: CENTER
                   y: 40
+                  on_press:
+                    then:
+                      lvgl.page.show: energy_page
+
               - label: # gauge numeric indicator
                   id: val_text
                   text_font: roboto20
                   align: bottom_mid
                   y: -20
                   text: 0
+                  on_press:
+                    then:
+                      lvgl.page.show: energy_page
+
               - label: # 
                   text_font: roboto14
                   align: bottom_mid
                   y: 10
                   text: Grid
+                  on_press:
+                    then:
+                      lvgl.page.show: energy_page
+            on_press:
+                then:
+                  lvgl.page.show: energy_page
 
         - obj: # Agenda
             x: 10

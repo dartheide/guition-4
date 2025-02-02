@@ -33,6 +33,13 @@ packages:
     file: packages/weather.yaml
     vars:
       knop: "${knop}" 
+
+  energy_page: !include
+    file: packages/energy.yaml
+    vars:
+      knop: "${knop}" 
+
+
     
 
 
@@ -158,55 +165,55 @@ script:
             return time_buf;      
 
 text_sensor:
-  - platform: homeassistant
-    id: sensor_forecast
-    entity_id: sensor.forecast
-    attribute: forecast
-    internal: true
-    on_value:
-      then:
-        - lambda: |-
-            // Check if the sensor has a valid state
-            if (id(sensor_forecast).state.empty()) {
-              ESP_LOGE("forecast_parse", "Forecast sensor state is empty.");
-              return;
-            }
+  # - platform: homeassistant
+  #   id: sensor_forecast
+  #   entity_id: sensor.forecast
+  #   attribute: forecast
+  #   internal: true
+  #   on_value:
+  #     then:
+  #       - lambda: |-
+  #           // Check if the sensor has a valid state
+  #           if (id(sensor_forecast).state.empty()) {
+  #             ESP_LOGE("forecast_parse", "Forecast sensor state is empty.");
+  #             return;
+  #           }
 
-            // Log the raw JSON
-            ESP_LOGD("forecast_parse", "Raw Forecast JSON: %s", id(sensor_forecast).state.c_str());
+  #           // Log the raw JSON
+  #           ESP_LOGD("forecast_parse", "Raw Forecast JSON: %s", id(sensor_forecast).state.c_str());
 
-            // Deserialize JSON forecast data
-            DynamicJsonDocument doc(4096);
-            auto err = deserializeJson(doc, id(sensor_forecast).state.c_str());
-            if (err) {
-              ESP_LOGE("forecast_parse", "Deserialization error: %s", err.c_str());
-              return;
-            }
+  #           // Deserialize JSON forecast data
+  #           DynamicJsonDocument doc(4096);
+  #           auto err = deserializeJson(doc, id(sensor_forecast).state.c_str());
+  #           if (err) {
+  #             ESP_LOGE("forecast_parse", "Deserialization error: %s", err.c_str());
+  #             return;
+  #           }
 
-            JsonArray root = doc.as<JsonArray>();
-            for (int i = 0; i < 5; i++) {  // Zero-based
-              if (i < root.size()) {
-                JsonObject forecast_data = root[i];
-                if (!forecast_data.isNull()) {
-                  // Assign data to global variables
-                  id(forecast_condition)[i + 1] = forecast_data["condition"].as<std::string>();
-                  id(forecast_precip)[i + 1]    = forecast_data["precipitation"] | 0.0f;
-                  id(forecast_temp_max)[i + 1]  = forecast_data["temperature"]   | 0.0f;
-                  id(forecast_temp_min)[i + 1]  = forecast_data["templow"]       | 0.0f;
+  #           JsonArray root = doc.as<JsonArray>();
+  #           for (int i = 0; i < 5; i++) {  // Zero-based
+  #             if (i < root.size()) {
+  #               JsonObject forecast_data = root[i];
+  #               if (!forecast_data.isNull()) {
+  #                 // Assign data to global variables
+  #                 id(forecast_condition)[i + 1] = forecast_data["condition"].as<std::string>();
+  #                 id(forecast_precip)[i + 1]    = forecast_data["precipitation"] | 0.0f;
+  #                 id(forecast_temp_max)[i + 1]  = forecast_data["temperature"]   | 0.0f;
+  #                 id(forecast_temp_min)[i + 1]  = forecast_data["templow"]       | 0.0f;
 
-                  // Log individual forecasts
-                  ESP_LOGD("forecast_parse", "Forecast Day %d: Condition='%s', Precipitation=%.1f mm, Temp Max=%.1f°C, Temp Min=%.1f°C", 
-                           i + 1, id(forecast_condition)[i + 1].c_str(), 
-                           id(forecast_precip)[i + 1], 
-                           id(forecast_temp_max)[i + 1], 
-                           id(forecast_temp_min)[i +1 ]);
-                } else {
-                  ESP_LOGW("forecast_parse", "Forecast Day %d: Data is null.", i + 1);
-                }
-              } else {
-                ESP_LOGW("forecast_parse", "Forecast Day %d: Index out of array bounds.", i + 1);
-              }
-            }
+  #                 // Log individual forecasts
+  #                 ESP_LOGD("forecast_parse", "Forecast Day %d: Condition='%s', Precipitation=%.1f mm, Temp Max=%.1f°C, Temp Min=%.1f°C", 
+  #                          i + 1, id(forecast_condition)[i + 1].c_str(), 
+  #                          id(forecast_precip)[i + 1], 
+  #                          id(forecast_temp_max)[i + 1], 
+  #                          id(forecast_temp_min)[i +1 ]);
+  #               } else {
+  #                 ESP_LOGW("forecast_parse", "Forecast Day %d: Data is null.", i + 1);
+  #               }
+  #             } else {
+  #               ESP_LOGW("forecast_parse", "Forecast Day %d: Index out of array bounds.", i + 1);
+  #             }
+  #           }
       
   - platform: homeassistant
     id: sensor_stookwijzer
@@ -247,53 +254,4 @@ text_sensor:
                 id: afval_label
                 text: !lambda 'return x.c_str();'
 
-globals:
- 
-  # Initialize x positions for forecast icons (1-5)
-  - id: x_forecast
-    type: int[6]
-    restore_value: no
-    initial_value: '{0,0,0,0,0,0}'
-
-  # Initialize forecast condition strings (1-5)
-  - id: forecast_condition
-    type: std::array<std::string, 6>
-    restore_value: no
-    initial_value: '{"","","","","",""}'
-
-  # Initialize forecast precipitation values (1-5)
-  - id: forecast_precip
-    type: float[6]
-    restore_value: no
-    initial_value: '{0.0,0.0,0.0,0.0,0.0,0.0}'
-
-  # Initialize forecast minimum temperatures (1-5)
-  - id: forecast_temp_min
-    type: float[6]
-    restore_value: no
-    initial_value: '{0.0,0.0,0.0,0.0,0.0,0.0}'
-
-  # Initialize forecast maximum temperatures (1-5)
-  - id: forecast_temp_max
-    type: float[6]
-    restore_value: no
-    initial_value: '{0.0,0.0,0.0,0.0,0.0,0.0}'
-
-  # Day names (short)
-  - id: day_names
-    type: std::array<const char *, 8>
-    restore_value: no
-    initial_value: '{"", "Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"}'
-
-  # Day names (extended)
-  - id: day_names_ext
-    type: std::array<const char *, 8>
-    restore_value: no
-    initial_value: '{"", "Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"}'
-
-  # Month names
-  - id: month_names
-    type: std::array<const char *, 13>
-    restore_value: no
-    initial_value: '{"", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"}'
 
