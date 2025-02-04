@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 
 # Replace with your actual API key
-API_KEY = "ee64ed40cfe841399dc580c89192bca1"
+API_KEY = YOUR KEY
 URL = "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v2/departures?station=hd"
 
 # Format the actualDateTime to a more readable format
