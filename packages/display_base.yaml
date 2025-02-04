@@ -57,7 +57,7 @@ lvgl:
                 timeout: 5s
             then:
               - logger.log: LVGL is idle
-              - lvgl.pause:
+#              - lvgl.pause:
               - light.control: 
                   id: backlight
                   brightness: 35%
@@ -115,19 +115,33 @@ touchscreen:
     - logger.log:
           format: Touch at (%d, %d)
           args: [touch.x, touch.y]
-  on_release:
-      then:
-        - if:
-            condition: lvgl.is_paused
-            then:
-              - logger.log: LVGL is paused and awake
-              - lvgl.resume:
-              - lvgl.widget.redraw:
-              - light.turn_on: 
-                  id: backlight
-                  brightness: 80%
+  # on_release:
+  #     then:
+  #       - if:
+  #           condition: lvgl.is_paused
+  #           then:
+  #             - logger.log: LVGL is paused and awake
+  #             - lvgl.resume:
+  #             - lvgl.widget.redraw:
+  #             - light.turn_on: 
+  #                 id: backlight
+  #                 brightness: 80%
             
-  
+  on_release:
+    then:
+      - if:
+          condition:
+            lambda: 'return id(backlight).current_values.get_brightness() <= 0.35;'
+          then:
+            - logger.log: "Backlight is at or below 35%, resuming LVGL"
+            - lvgl.resume:
+            - lvgl.widget.redraw:
+            - light.turn_on:
+                id: backlight
+                brightness: 80%
+    
+
+
 #-------------------------------------------
 # Display st7701s spi
 #-------------------------------------------

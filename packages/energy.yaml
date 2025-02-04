@@ -94,6 +94,9 @@ lvgl:
                         align: bottom_left
                         x: 30
                         y: 5
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
 
               - obj: # Zon
                   align: top_mid
@@ -119,6 +122,9 @@ lvgl:
                         text: "- kWh"
                         align: bottom_left
                         x: 30
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
                   
               - obj: # Warmtepomp
                   align: top_right
@@ -145,6 +151,9 @@ lvgl:
                         text: "- kWh"
                         align: bottom_left
                         x: 30
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
                                   
               - obj: # Huis
                   align: right_mid
@@ -170,6 +179,9 @@ lvgl:
                         text: "- kWh"
                         align: bottom_left
                         x: 30
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
                   
               - obj: # AC
                   align: bottom_right
@@ -196,6 +208,9 @@ lvgl:
                         text: "- kWh"
                         align: bottom_left
                         x: 30
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
 
               - obj: # Gas
                   align: bottom_left
@@ -222,6 +237,13 @@ lvgl:
                         text: "- m3"
                         align: bottom_left
                         x: 30
+                  on_press:
+                      then:
+                        lvgl.page.show: start_page
+
+            on_press:
+                then:
+                  lvgl.page.show: start_page
                    
 sensor:
   - platform: homeassistant

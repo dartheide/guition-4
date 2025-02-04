@@ -29,6 +29,11 @@ packages:
     vars:
       knop: "${knop}" 
 
+  kluskamer__page: !include
+    file: packages/kluskamer.yaml
+    vars:
+      knop: "${knop}" 
+
   weather_page: !include
     file: packages/weather.yaml
     vars:
@@ -135,11 +140,11 @@ lvgl:
                 on_press:
                   then:
                     lvgl.page.show: studeer_page
-              - id: page_overig
+              - id: page_kluskamer
                 text: "${hammerscrewdriver}"
-                # on_press:
-                #   then:
-                #     lvgl.page.show: overig_page
+                on_press:
+                  then:
+                    lvgl.page.show: kluskamer_page
 
 time:
   - platform: homeassistant
@@ -164,57 +169,7 @@ script:
             snprintf(time_buf, sizeof(time_buf), "%2d:%02d ", now.hour, now.minute );
             return time_buf;      
 
-text_sensor:
-  # - platform: homeassistant
-  #   id: sensor_forecast
-  #   entity_id: sensor.forecast
-  #   attribute: forecast
-  #   internal: true
-  #   on_value:
-  #     then:
-  #       - lambda: |-
-  #           // Check if the sensor has a valid state
-  #           if (id(sensor_forecast).state.empty()) {
-  #             ESP_LOGE("forecast_parse", "Forecast sensor state is empty.");
-  #             return;
-  #           }
-
-  #           // Log the raw JSON
-  #           ESP_LOGD("forecast_parse", "Raw Forecast JSON: %s", id(sensor_forecast).state.c_str());
-
-  #           // Deserialize JSON forecast data
-  #           DynamicJsonDocument doc(4096);
-  #           auto err = deserializeJson(doc, id(sensor_forecast).state.c_str());
-  #           if (err) {
-  #             ESP_LOGE("forecast_parse", "Deserialization error: %s", err.c_str());
-  #             return;
-  #           }
-
-  #           JsonArray root = doc.as<JsonArray>();
-  #           for (int i = 0; i < 5; i++) {  // Zero-based
-  #             if (i < root.size()) {
-  #               JsonObject forecast_data = root[i];
-  #               if (!forecast_data.isNull()) {
-  #                 // Assign data to global variables
-  #                 id(forecast_condition)[i + 1] = forecast_data["condition"].as<std::string>();
-  #                 id(forecast_precip)[i + 1]    = forecast_data["precipitation"] | 0.0f;
-  #                 id(forecast_temp_max)[i + 1]  = forecast_data["temperature"]   | 0.0f;
-  #                 id(forecast_temp_min)[i + 1]  = forecast_data["templow"]       | 0.0f;
-
-  #                 // Log individual forecasts
-  #                 ESP_LOGD("forecast_parse", "Forecast Day %d: Condition='%s', Precipitation=%.1f mm, Temp Max=%.1f°C, Temp Min=%.1f°C", 
-  #                          i + 1, id(forecast_condition)[i + 1].c_str(), 
-  #                          id(forecast_precip)[i + 1], 
-  #                          id(forecast_temp_max)[i + 1], 
-  #                          id(forecast_temp_min)[i +1 ]);
-  #               } else {
-  #                 ESP_LOGW("forecast_parse", "Forecast Day %d: Data is null.", i + 1);
-  #               }
-  #             } else {
-  #               ESP_LOGW("forecast_parse", "Forecast Day %d: Index out of array bounds.", i + 1);
-  #             }
-  #           }
-      
+text_sensor:    
   - platform: homeassistant
     id: sensor_stookwijzer
     entity_id: sensor.stookwijzer

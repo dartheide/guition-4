@@ -1,0 +1,69 @@
+template:
+  - sensor:
+      - name: "NS Departure 1"
+        unique_id: ns_departure_1
+        state: >-
+          {% set departures = state_attr('sensor.ns_departures', 'payload').departures if state_attr('sensor.ns_departures', 'payload') is defined else [] %}
+          {% if departures | length > 0 %}
+            {% set trein_info = departures[0].actualDateTime | as_timestamp | timestamp_custom('%H:%M', true) ~ " - " ~ departures[0].direction %}
+            {% if departures[0].cancelled %}{{ trein_info ~ " 🚫 Trein rijdt niet" }}{% else %}{{ trein_info }}{% endif %}
+          {% else %}
+            Geen treinen
+          {% endif %}
+
+  - sensor:
+      - name: "NS Departure 2"
+        unique_id: ns_departure_2
+        state: >-
+          {% set departures = state_attr('sensor.ns_departures', 'payload').departures if state_attr('sensor.ns_departures', 'payload') is defined else [] %}
+          {% if departures | length > 1 %}
+            {% set trein_info = departures[1].actualDateTime | as_timestamp | timestamp_custom('%H:%M', true) ~ " - " ~ departures[1].direction %}
+            {% if departures[1].cancelled %}{{ trein_info ~ " 🚫 Trein rijdt niet" }}{% else %}{{ trein_info }}{% endif %}
+          {% else %}
+            Geen treinen
+          {% endif %}
+
+      - name: "NS Departure 3"
+        unique_id: ns_departure_3
+        state: >-
+          {% set departures = state_attr('sensor.ns_departures', 'payload').departures if state_attr('sensor.ns_departures', 'payload') is defined else [] %}
+          {% if departures | length > 2 %}
+            {% set trein_info = departures[2].actualDateTime | as_timestamp | timestamp_custom('%H:%M', true) ~ " - " ~ departures[2].direction %}
+            {% if departures[2].cancelled %}{{ trein_info ~ " 🚫 Trein rijdt niet" }}{% else %}{{ trein_info }}{% endif %}
+          {% else %}
+            Geen treinen
+          {% endif %}
+
+      - name: "NS Departure 4"
+        unique_id: ns_departure_4
+        state: >-
+          {% set departures = state_attr('sensor.ns_departures', 'payload').departures if state_attr('sensor.ns_departures', 'payload') is defined else [] %}
+          {% if departures | length > 3 %}
+            {% set trein_info = departures[3].actualDateTime | as_timestamp | timestamp_custom('%H:%M', true) ~ " - " ~ departures[3].direction %}
+            {% if departures[3].cancelled %}{{ trein_info ~ " 🚫 Trein rijdt niet" }}{% else %}{{ trein_info }}{% endif %}
+          {% else %}
+            Geen treinen
+          {% endif %}
+
+      - name: "NS Departure 5"
+        unique_id: ns_departure_5
+        state: >-
+          {% set departures = state_attr('sensor.ns_departures', 'payload').departures if state_attr('sensor.ns_departures', 'payload') is defined else [] %}
+          {% if departures | length > 4 %}
+            {% set trein_info = departures[4].actualDateTime | as_timestamp | timestamp_custom('%H:%M', true) ~ " - " ~ departures[4].direction %}
+            {% if departures[4].cancelled %}{{ trein_info ~ " 🚫 Trein rijdt niet" }}{% else %}{{ trein_info }}{% endif %}
+          {% else %}
+            Geen treinen
+          {% endif %}
+
+# Base NS Departures REST Sensor
+sensor:
+  - platform: rest
+    name: ns_departures
+    resource: https://gateway.apiportal.ns.nl/reisinformatie-api/api/v2/departures?station=hd
+    headers:
+      Ocp-Apim-Subscription-Key: !secret ns_api
+    scan_interval: 180  # Runs every 3 minutes
+    json_attributes:
+      - payload
+    value_template: "{{ value_json.payload.departures | length }}"

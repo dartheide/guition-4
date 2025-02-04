@@ -129,6 +129,7 @@ font:
             "\U000F10C2", # mdi-thermometer-high
             "\U000F0D3E", # mdi-transmission-tower
             "\U000F0A72", # mdi-solar-power
+            "\U000F1239", # mdi-desk
           ]
 
     
@@ -174,6 +175,7 @@ font:
         "\U000F001B", # mdi-air-conditioner
         "\U000F0050", # mdi-arrow-left-bold-circle-outline
         "\U000F0057", # mdi-arrow-right-bold-circle-outline
+        "\U000F052C", # mdi-train
       ]
 
 
@@ -188,6 +190,7 @@ font:
           [
             "\U000F10C3", # mdi-thermometer-low
             "\U000F10C2", # mdi-thermometer-high
+            "\U000F0336",
           ]
 
   - file: "gfonts://Roboto"

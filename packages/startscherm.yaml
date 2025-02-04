@@ -122,42 +122,76 @@ lvgl:
                 then:
                   lvgl.page.show: energy_page
 
-        - obj: # Agenda
+        - obj: # Treinlijst
             x: 10
             y: 200
-            width: 225
+            width: 460
             height: 160
             styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  text_font: weather_icons
+                  text: "\U000F052C" # train 
+                  align: left_mid            
+              - label:
+                  text_font: roboto16
+                  id: text_ns_1
+                  text: "-"
+                  align: top_left
+                  x: 75
+              - label:
+                  text_font: roboto16
+                  id: text_ns_2
+                  text: "-"
+                  align: top_left
+                  x: 75
+                  y: 25
+              - label:
+                  text_font: roboto16
+                  id: text_ns_3
+                  text: "-"
+                  align: top_left
+                  x: 75
+                  y: 50
+              - label:
+                  text_font: roboto16
+                  id: text_ns_4
+                  text: "-"
+                  align: top_left
+                  x: 75
+                  y: 75
+              - label:
+                  text_font: roboto16
+                  id: text_ns_5
+                  text: "-"
+                  align: top_left
+                  x: 75
+                  y: 100
               
-        - obj: # Trein lijst
-            x: 245
-            y: 200
-            width: 225
-            height: 160
+        - obj: # Status
+            x: 10
+            y: 370
+            width: 460
+            height: 50
             styles: bg_white
+            scrollbar_mode: "OFF"
             widgets:
               - ${knop}:
                     id: start_lamp1
-                    align: top_mid
-                    width: 135
-                    height: 50
+                    align: left_mid 
+                    width: 150
+                    height: 30
                     widgets:
                       - label:
-                          text_font: roboto20
+                          text_font: roboto16
                           id: start_lamp1_label
-                          text: "\U000F0336 allemaal"
+                          text: "\U000F0336 Alle lichten uit"
                           align: left_mid
                     on_press:
                       then:
                         - homeassistant.action:
                             action: script.alle_lichten_uit
-
-        - obj: # Status
-                x: 10
-                y: 370
-                width: 460
-                height: 50
-                styles: bg_white
 
 binary_sensor:
   - platform: status
@@ -177,3 +211,46 @@ sensor:
           text:
             format: "%.0f W"
             args: [ 'x' ]
+
+
+text_sensor:
+  - platform: homeassistant
+    id: ns_departure1
+    entity_id: sensor.ns_departure_1
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_ns_1), (id(ns_departure1).state).c_str());
+
+  - platform: homeassistant
+    id: ns_departure2
+    entity_id: sensor.ns_departure_2
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_ns_2), (id(ns_departure2).state).c_str());
+
+  - platform: homeassistant
+    id: ns_departure3
+    entity_id: sensor.ns_departure_3
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_ns_3), (id(ns_departure3).state).c_str());
+
+  - platform: homeassistant
+    id: ns_departure4
+    entity_id: sensor.ns_departure_4
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_ns_4), (id(ns_departure4).state).c_str());
+
+  - platform: homeassistant
+    id: ns_departure5
+    entity_id: sensor.ns_departure_5
+    on_value:
+      then:
+        - lambda: |-
+            lv_label_set_text(id(text_ns_5), (id(ns_departure5).state).c_str());
+

@@ -17,6 +17,10 @@ lvgl:
                   text: "Weersverwachting"
                   align: top_left
                   y: 20
+            on_press:
+                then:
+                  lvgl.page.show: start_page
+
         - obj: # Dag 0
             x: 25
             y: 150
@@ -50,6 +54,9 @@ lvgl:
                   id: text_uv_index_0
                   text: "uv "
                   align: bottom_mid
+            on_press:
+                then:
+                  lvgl.page.show: start_page
 
         - obj: # Dag 1
             x: 135
@@ -84,6 +91,9 @@ lvgl:
                   id: text_uv_index_1
                   text: "uv 6"
                   align: bottom_mid
+            on_press:
+                then:
+                  lvgl.page.show: start_page
 
         - obj: # Dag 2
             x: 245
@@ -118,6 +128,9 @@ lvgl:
                   id: text_uv_index_2
                   text: "uv 6"
                   align: bottom_mid
+            on_press:
+                then:
+                  lvgl.page.show: start_page
                   
                   
         - obj: # Dag 3
@@ -153,6 +166,9 @@ lvgl:
                   id: text_uv_index_3
                   text: "uv 6"
                   align: bottom_mid
+            on_press:
+                then:
+                  lvgl.page.show: start_page
 
 
 
@@ -531,6 +547,7 @@ font:
       "\U000F14E4", # sunny-off
       "\U000F0F31", # mdi-weather-night-partly-cloudy
       "\U000F05A9", # mdi-wifi
+      "\U000F052C", # mdi-train
       ]
 
 

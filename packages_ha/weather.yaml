@@ -1,0 +1,115 @@
+template:
+  trigger:
+    - trigger: time_pattern
+      hours: /1
+      # minutes: /1
+  action:
+    - action: weather.get_forecasts
+      data:
+        type: daily
+      target:
+        entity_id:
+          - weather.tomorrow_io_home_nowcast
+          - weather.forecast_home
+      response_variable: forecast_data
+  sensor:
+    - name: "Forecast"
+      state: "{{ now().isoformat() }}"
+      unique_id: forecast
+      attributes:
+        forecast: "{{ forecast_data['weather.forecast_home'].forecast }}"
+# Jina2 code
+    - name: Weather Data
+      state: "OK"
+      attributes:
+        weather_condition_now: >
+          {% set cond_now = states('weather.forecast_home') %}
+          {% if states('sun.sun') == 'below_horizon' %}
+              {% if cond_now == 'sunny' %} night {% elif cond_now == 'partlycloudy' %} night-partly-cloudy {% else %} {{ cond_now }} {% endif %}
+          {% else %}
+              {{ cond_now }}
+          {% endif %}
+
+        weather_week_dag_0: >
+          {% set dagen = {
+              'Mon': 'Maandag',
+              'Tue': 'Dinsdag',
+              'Wed': 'Woensdag',
+              'Thu': 'Donderdag',
+              'Fri': 'Vrijdag',
+              'Sat': 'Zaterdag',
+              'Sun': 'Zondag'
+          } %}
+          {% set d0_week_dag = as_datetime(forecast_data["weather.forecast_home"].forecast[0].datetime).strftime('%a') %}
+          {{ dagen[d0_week_dag] if d0_week_dag in dagen else d0_week_dag }}
+        weather_condition_0: >
+          {{ forecast_data["weather.forecast_home"].forecast[0].condition}}        
+        weather_temperature_0: >
+          {{ forecast_data["weather.forecast_home"].forecast[0].temperature | round }}
+        weather_temperature_low_0: >
+          {{ forecast_data["weather.forecast_home"].forecast[0].templow | round }}
+        weather_temperature_uv_index_0: >
+          {{ forecast_data["weather.forecast_home"].forecast[0].uv_index | round }}
+
+        weather_week_dag_1: >
+          {% set dagen = {
+              'Mon': 'Maandag',
+              'Tue': 'Dinsdag',
+              'Wed': 'Woensdag',
+              'Thu': 'Donderdag',
+              'Fri': 'Vrijdag',
+              'Sat': 'Zaterdag',
+              'Sun': 'Zondag'
+          } %}
+          {% set d1_week_dag = as_datetime(forecast_data["weather.forecast_home"].forecast[1].datetime).strftime('%a') %}
+          {{ dagen[d1_week_dag] if d1_week_dag in dagen else d1_week_dag }}
+        weather_condition_1: >
+          {{ forecast_data["weather.forecast_home"].forecast[1].condition}}
+        weather_temperature_1: >
+          {{ forecast_data["weather.forecast_home"].forecast[1].temperature | round }}
+        weather_temperature_low_1: >
+          {{ forecast_data["weather.forecast_home"].forecast[1].templow | round }}
+        weather_temperature_uv_index_1: >
+          {{ forecast_data["weather.forecast_home"].forecast[1].uv_index | round }}
+
+        weather_week_dag_2: >
+          {% set dagen = {
+              'Mon': 'Maandag',
+              'Tue': 'Dinsdag',
+              'Wed': 'Woensdag',
+              'Thu': 'Donderdag',
+              'Fri': 'Vrijdag',
+              'Sat': 'Zaterdag',
+              'Sun': 'Zondag'
+          } %}
+          {% set d2_week_dag = as_datetime(forecast_data["weather.forecast_home"].forecast[2].datetime).strftime('%a') %}
+          {{ dagen[d2_week_dag] if d2_week_dag in dagen else d2_week_dag }}
+        weather_condition_2: >
+          {{ forecast_data["weather.forecast_home"].forecast[2].condition}}        
+        weather_temperature_2: >
+          {{ forecast_data["weather.forecast_home"].forecast[2].temperature | round }}
+        weather_temperature_low_2: >
+          {{ forecast_data["weather.forecast_home"].forecast[2].templow | round }}
+        weather_temperature_uv_index_2: >
+          {{ forecast_data["weather.forecast_home"].forecast[2].uv_index | round }}
+
+        weather_week_dag_3: >
+          {% set dagen = {
+              'Mon': 'Maandag',
+              'Tue': 'Dinsdag',
+              'Wed': 'Woensdag',
+              'Thu': 'Donderdag',
+              'Fri': 'Vrijdag',
+              'Sat': 'Zaterdag',
+              'Sun': 'Zondag'
+          } %}
+          {% set d3_week_dag = as_datetime(forecast_data["weather.forecast_home"].forecast[3].datetime).strftime('%a') %}
+          {{ dagen[d3_week_dag] if d3_week_dag in dagen else d3_week_dag }}
+        weather_condition_3: >
+          {{ forecast_data["weather.forecast_home"].forecast[3].condition}}        
+        weather_temperature_3: >
+          {{ forecast_data["weather.forecast_home"].forecast[3].temperature | round }}
+        weather_temperature_low_3: >
+          {{ forecast_data["weather.forecast_home"].forecast[3].templow | round }}
+        weather_temperature_uv_index_3: >
+          {{ forecast_data["weather.forecast_home"].forecast[3].uv_index | round }}

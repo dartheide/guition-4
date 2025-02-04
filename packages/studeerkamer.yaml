@@ -29,7 +29,7 @@ lvgl:
                         text_font: mdi24
                         text: "${volume_icon}"
                         align: center
-                on_click:
+                on_press:
                   - homeassistant.service:
                       service: media_player.volume_mute
                       data:
@@ -49,7 +49,7 @@ lvgl:
                       text_font: mdi24
                       text: "${play_pause_icon}"
                       align: center
-                on_click:
+                on_press:
                   - homeassistant.action:
                       action: media_player.media_play_pause
                       data_template:
@@ -89,7 +89,7 @@ lvgl:
                       text_font: mdi24
                       text: "\U000F0EC0"
                       align: center
-                on_click:
+                on_press:
                   - homeassistant.service:
                       service: media_player.play_media
                       data_template:
@@ -150,15 +150,25 @@ lvgl:
                     - label:
                         text: "Lamp 2"
                         align: left_mid
-              - ${knop}:
-                  id: lamp3
+
+              - ${knop}:  # Nieuw: Bureau-knop met dynamische tekst
+                  id: desk_toggle
                   align: top_right
                   width: 135
                   height: 50
                   widgets:
                     - label:
-                        text: "Lamp 3"
+                        id: desk_label
+                        text: "\U000F1239 Bureau..."
                         align: left_mid
+                  on_press:
+                    - homeassistant.service:
+                          service: cover.set_cover_position
+                          data:
+                            position: !lambda |-
+                              return (id(desk_position).state == 23) ? 82 : 23;
+                            entity_id: cover.desk_4728
+
               
         - obj: # Control card
             x: 10
@@ -229,7 +239,7 @@ lvgl:
                         height: 40
                         align: bottom_left
                         id: spin_down
-                        on_click:
+                        on_press:
                             - lvgl.spinbox.decrement: spinbox_studeerkamer
                         widgets:
                             - label:
@@ -260,7 +270,7 @@ lvgl:
                         height: 40
                         align: bottom_right
                         id: spin_up
-                        on_click:
+                        on_press:
                             - lvgl.spinbox.increment: spinbox_studeerkamer
                         widgets:
                             - label:
@@ -274,6 +284,21 @@ lvgl:
                   
 
 sensor:
+
+  - platform: homeassistant
+    entity_id: cover.desk_4728
+    attribute: current_position
+    id: desk_position
+    on_value:
+      - lambda: |-
+          if (id(desk_position).state <= 23) {
+              lv_label_set_text(id(desk_label), ("\U000F1239 Omhoog"));
+          } else if (id(desk_position).state >= 82) {
+              lv_label_set_text(id(desk_label), ("\U000F1239 Omlaag"));
+          } else {
+              lv_label_set_text(id(desk_label), ("\U000F1239 Bezig..."));
+          }
+
   - platform: homeassistant
     id: studeerkamer_thermostat
     entity_id: climate.bosch_radiatorkraan_studeerkamer_thermostat
@@ -291,10 +316,6 @@ sensor:
       - lvgl.slider.update:
           id: slider_media_player_sonos_studeerkamer
           value: !lambda return (x * 100);
-      # - lvgl.label.update:
-      #     id: volume_media_player_sonos_woonkamer
-      #     text: !lambda return std::to_string(static_cast<int>(x * 100)) + "%";
-
 
   - platform: homeassistant
     id: cover_studeerkamer_pos

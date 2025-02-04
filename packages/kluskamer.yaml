@@ -1,0 +1,321 @@
+
+# LVGL configuration
+lvgl:
+  pages:
+    - id: kluskamer_page
+      styles: bg_white
+      widgets:
+        - obj: # Media Player
+            x: 10
+            y: 40
+            width: 460
+            height: 170
+            styles: bg_white
+
+            widgets:
+            - label:
+                text: "Kluskamer"
+                align: top_right
+                styles: bg_white
+            - ${knop}: # Mute
+                height: 40
+                width: 50
+                align: bottom_right
+                widgets:
+                    - label:
+                        id: sonos_kluskamer_mute_button
+                        text_font: mdi24
+                        text: "${volume_icon}"
+                        align: center
+                on_press:
+                  - homeassistant.service:
+                      service: media_player.volume_mute
+                      data:
+                        entity_id: media_player.kluskamer
+                        is_volume_muted: !lambda 'return !id(sonos_kluskamer_mute).state;'
+
+            - ${knop}: # play/pause
+                height: 40
+                width: 50
+                id: sonos_kluskamer_play_pause_button
+                align_to:
+                    id: sonos_kluskamer_mute_button
+                    align: out_left_mid
+                    x: -20
+                widgets:
+                  - label:
+                      text_font: mdi24
+                      text: "${play_pause_icon}"
+                      align: center
+                on_press:
+                  - homeassistant.action:
+                      action: media_player.media_play_pause
+                      data_template:
+                        entity_id: media_player.kluskamer
+            - ${knop}: # stubru
+                height: 40
+                width: 50
+                align_to:
+                    id: sonos_kluskamer_play_pause_button
+                    align: out_left_mid
+                    x: -15
+                id: sonos_kluskamer_stubru_button
+                widgets:
+                  - label:
+                      text_font: roboto20
+                      text: "stu\nbru"
+                      align: center
+                on_press:
+                  then:
+                    - homeassistant.action:
+                        action: media_player.play_media
+                        data_template:
+                          entity_id: media_player.kluskamer   
+                          media_content_type: "music"
+                          media_content_id: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
+
+            - ${knop}: # pinguin
+                height: 40
+                width: 50
+                align_to:
+                    id: sonos_kluskamer_stubru_button
+                    align: out_left_mid
+                    x: -15
+                id: sonos_kluskamer_pinguin_button
+                widgets:
+                  - label:
+                      text_font: mdi24
+                      text: "\U000F0EC0"
+                      align: center
+                on_press:
+                  - homeassistant.service:
+                      service: media_player.play_media
+                      data_template:
+                        entity_id: media_player.kluskamer   
+                        media_content_type: "music"
+                        media_content_id: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
+
+            - slider: # volume
+                id: slider_media_player_sonos_kluskamer
+                align: bottom_left
+                width: 150
+                value: 5
+                min_value: 1
+                max_value: 70
+                y: -10
+                adv_hittest: true
+                on_value:
+                  - homeassistant.action:
+                      action: media_player.volume_set
+                      data:
+                        entity_id: media_player.kluskamer
+                        volume_level: !lambda return (x / 100);
+
+            - label: # Artist
+                id: display_sonos_kluskamer_media_artist
+                text: "Artiest"
+                align: left_mid
+                y: -30
+            - label: # Title
+                id: display_sonos_kluskamer_title
+                text: "Titel"
+                align: left_mid
+                y: -5
+                                               
+        - obj: # Lampen
+            x: 10
+            y: 220
+            width: 460
+            height: 90
+            styles: bg_white
+            widgets:
+              - ${knop}:
+                  id: lamp1_kluskamer
+                  align: top_left
+                  width: 135
+                  height: 50
+                  widgets:
+                    - label:
+                        text_font: roboto20
+                        id: kluskamer_lamp1_label
+                        text: "\U000F0336 Badkamer"
+                        align: left_mid
+                  on_press:
+                    then:
+                      - homeassistant.action:
+                          action: light.toggle
+                          data:
+                            entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light
+                    
+              - ${knop}:
+                  id: lamp2_kluskamer
+                  align: top_mid
+                  width: 135
+                  height: 50
+                  widgets:
+                    - label:
+                        text: "Lamp 2"
+                        align: left_mid
+
+              # - ${knop}:  # Nieuw: Bureau-knop met dynamische tekst
+              #     id: desk_toggle
+              #     align: top_right
+              #     width: 135
+              #     height: 50
+              #     widgets:
+              #       - label:
+              #           id: desk_label
+              #           text: "\U000F1239 Bureau..."
+              #           align: left_mid
+              #     on_press:
+              #       - homeassistant.service:
+              #             service: cover.set_cover_position
+              #             data:
+              #               position: !lambda |-
+              #                 return (id(desk_position).state == 23) ? 82 : 23;
+              #               entity_id: cover.desk_4728
+
+              
+        - obj: # Control card
+            x: 10
+            y: 320
+            width: 225
+            height: 100
+            styles: bg_white
+
+        - obj: # Temperatuur
+                x: 245
+                y: 320
+                width: 225
+                height: 100
+                styles: bg_white
+                widgets:
+                    - ${knop}:
+                        width: 50
+                        height: 40
+                        align: bottom_left
+                        id: spin_down_kluskamer
+                        on_press:
+                            - lvgl.spinbox.decrement: spinbox_kluskamer
+                        widgets:
+                            - label:
+                                text: "-"
+                                align: center
+                    - spinbox:
+                        styles: bg_white
+                        id: spinbox_kluskamer
+                        align: bottom_mid 
+                        text_align: CENTER
+                        width: 50
+                        range_from: 15
+                        range_to: 35
+                        value: 22
+                        step: 1
+                        rollover: false
+                        digits: 3
+                        decimal_places: 1
+                        on_value:
+                            then:
+                                - homeassistant.action:
+                                    action: climate.set_temperature
+                                    data:
+                                        temperature: !lambda return x;
+                                        entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat
+                    - ${knop}:
+                        width: 50
+                        height: 40
+                        align: bottom_right
+                        id: spin_up_kluskamer
+                        on_press:
+                            - lvgl.spinbox.increment: spinbox_kluskamer
+                        widgets:
+                            - label:
+                                text: "+"
+                                align: center
+                    - label:
+                        text_font: roboto16
+                        align: top_mid
+                        text: "Temperatuur"
+                        y: -5
+                  
+
+sensor:
+  - platform: homeassistant
+    id: kluskamer_thermostat
+    entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat
+    attribute: temperature
+    on_value:
+      - lvgl.spinbox.update:
+          id: spinbox_kluskamer
+          value: !lambda return x;
+
+  - platform: homeassistant
+    id: media_player_volume_kluskamer
+    entity_id: media_player.kluskamer
+    attribute: volume_level
+    on_value:
+      - lvgl.slider.update:
+          id: slider_media_player_sonos_kluskamer
+          value: !lambda return (x * 100);
+
+binary_sensor:
+  - platform: homeassistant
+    id: sonos_kluskamer_mute
+    entity_id: media_player.kluskamer
+    attribute: is_volume_muted
+    publish_initial_state: true
+    on_state:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(sonos_kluskamer_mute).state == true;'  # Controleer of de media player gemute is
+            then:
+              - lvgl.label.update:
+                  id: sonos_kluskamer_mute_button
+                  text: "${mute_icon}"
+            else:
+              - lvgl.label.update:
+                  id: sonos_kluskamer_mute_button
+                  text: "${volume_icon}"
+
+text_sensor:
+  - platform: homeassistant
+    id: sonos_kluskamer_media_title_text_sensor
+    entity_id: media_player.kluskamer
+    attribute: media_title
+    on_value:
+      then:
+        - lvgl.label.update:
+            id: display_sonos_kluskamer_title
+            text: !lambda |-
+              return id(sonos_kluskamer_media_title_text_sensor).state.c_str();
+
+  - platform: homeassistant
+    id: sonos_kluskamer_media_artist_text_sensor
+    entity_id: media_player.kluskamer
+    attribute: media_artist
+    on_value:
+      then:
+        - lvgl.label.update:
+            id: display_sonos_kluskamer_media_artist
+            text: !lambda |-
+              return id(sonos_kluskamer_media_artist_text_sensor).state.c_str();
+
+  - platform: homeassistant
+    id: remote_light1_kluskamer
+    entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return (0 == x.compare(std::string{"on"})) ;
+          then:
+            - lvgl.label.update:
+                id: kluskamer_lamp1_label
+                text: "\U000F1254 Badkamer"
+                text_color: tft_yellow
+          else:
+            - lvgl.label.update:
+                id: kluskamer_lamp1_label
+                text: "\U000F1254 Badkamer"
+                text_color: tft_white
