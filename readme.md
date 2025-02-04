@@ -54,6 +54,16 @@ The home screen provides a clear overview and system status:
 
 ![IMG_3556 (1)](https://github.com/user-attachments/assets/fc645864-e4b9-489c-a01c-b7a5ff6dab9e)
 
+#### Layout 3: weather forecast  
+  
+![Weer](https://github.com/user-attachments/assets/cdb01602-ed6e-4847-95c3-bf4181457b81)
+
+#### Layout 4: energy overview 
+![IMG_3569](https://github.com/user-attachments/assets/b2e7114d-58bd-4ed6-8e20-922579b25d9b)
+
+  
+
+
 ### Inspiration and Resources  
 - [Home Assistant Forum: Guition 4 480x480 Project](https://community.home-assistant.io/t/guition-4-480x480-esp32-s3-4848s040-smart-display-with-lvgl/729271/1)  
 - ESPhome Cookbook LVGL: **Tips and Tricks**  
