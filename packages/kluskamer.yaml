@@ -104,12 +104,17 @@ lvgl:
                 max_value: 70
                 y: -10
                 adv_hittest: true
-                on_value:
-                  - homeassistant.action:
-                      action: media_player.volume_set
-                      data:
-                        entity_id: media_player.kluskamer
-                        volume_level: !lambda return (x / 100);
+                on_value: 
+                  - if:
+                      condition: 
+                        lambda: 'return not id(from_sensor_flag_kluskamer);'
+                      then:
+                        - homeassistant.action:
+                            action: media_player.volume_set
+                            data:
+                              entity_id: media_player.kluskamer
+                              volume_level: !lambda "return (x / 100);"
+                  - lambda: 'id(from_sensor_flag_kluskamer) = false;'
 
             - label: # Artist
                 id: display_sonos_kluskamer_media_artist
@@ -148,32 +153,22 @@ lvgl:
                             entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light
                     
               - ${knop}:
-                  id: lamp2_kluskamer
+                  id: deken_hans
                   align: top_mid
                   width: 135
                   height: 50
                   widgets:
                     - label:
-                        text: "Lamp 2"
+                        id: text_deken_hans
+                        text: "Deken Hans"
                         align: left_mid
+                  on_press:
+                    then:
+                      - homeassistant.action:
+                          action: switch.toggle
+                          data:
+                            entity_id: switch.ikea_of_sweden_tradfri_control_outlet_switch_4
 
-              # - ${knop}:  # Nieuw: Bureau-knop met dynamische tekst
-              #     id: desk_toggle
-              #     align: top_right
-              #     width: 135
-              #     height: 50
-              #     widgets:
-              #       - label:
-              #           id: desk_label
-              #           text: "\U000F1239 Bureau..."
-              #           align: left_mid
-              #     on_press:
-              #       - homeassistant.service:
-              #             service: cover.set_cover_position
-              #             data:
-              #               position: !lambda |-
-              #                 return (id(desk_position).state == 23) ? 82 : 23;
-              #               entity_id: cover.desk_4728
 
               
         - obj: # Control card
@@ -254,9 +249,12 @@ sensor:
     entity_id: media_player.kluskamer
     attribute: volume_level
     on_value:
-      - lvgl.slider.update:
-          id: slider_media_player_sonos_kluskamer
-          value: !lambda return (x * 100);
+      - lambda: 'id(from_sensor_flag_kluskamer) = true;'
+      - lvgl.slider.update: 
+          id: slider_media_player_sonos_studeerkamer
+          value: !lambda "return (x * 100);"
+      - lambda: 'id(from_sensor_flag_kluskamer) = false;'
+
 
 binary_sensor:
   - platform: homeassistant
@@ -318,4 +316,23 @@ text_sensor:
             - lvgl.label.update:
                 id: kluskamer_lamp1_label
                 text: "\U000F1254 Badkamer"
+                text_color: tft_white
+
+  - platform: homeassistant
+    id: remote_switch_deken_hans
+    entity_id: switch.ikea_of_sweden_tradfri_control_outlet_switch_4
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return (0 == x.compare(std::string{"on"})) ;
+          then:
+            - lvgl.label.update:
+                id: text_deken_hans
+                text: "Deken Hans"
+                text_color: tft_yellow
+          else:
+            - lvgl.label.update:
+                id: text_deken_hans
+                text: "Deken Hans"
                 text_color: tft_white

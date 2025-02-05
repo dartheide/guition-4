@@ -15,6 +15,21 @@ substitutions:
   radio_url_stubru: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
   radio_url_pinguin: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
 
+globals:
+  - id: from_sensor_flag_studeerkamer
+    type: bool
+    initial_value: 'false'
+  - id: from_sensor_flag_woonkamer
+    type: bool
+    initial_value: 'false'
+  - id: from_sensor_flag_keuken
+    type: bool
+    initial_value: 'false'
+  - id: from_sensor_flag_kluskamer
+    type: bool
+    initial_value: 'false'
+
+
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
@@ -85,24 +100,35 @@ font:
     id: roboto20
     size: 20
     bpp: 4
+    glyphs: [
+      0123456789áÁéÉabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,
+      (,),+,-,_,.,°,•,µ,
+      "\u0020", # space
+      "\u002C", # ,
+      "\u0021", # !
+      "\u0022", # "
+      "\u0027", # '
+      "\u003A", # :
+      "\u0025", # %
+      ]
     extras:
       - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
         glyphs:
           [
-            "\U000F004B", # mdi-arrow-down-drop-circle-outline
-            "\U000F0063", # mdi-arrow-up-drop-circle-outline
-            "\U000F006E", # mdi-backspace 
-            "\U000F012C", # mdi-check
-            "\U000F179B", # mdi-light-recessed
-            "\U000F0748", # mdi-wall-sconce-round
-            "\U000F1A1B", # mdi-gas-burner
+#            "\U000F004B", # mdi-arrow-down-drop-circle-outline
+#            "\U000F0063", # mdi-arrow-up-drop-circle-outline
+#            "\U000F006E", # mdi-backspace 
+#            "\U000F012C", # mdi-check
+#            "\U000F179B", # mdi-light-recessed
+#            "\U000F0748", # mdi-wall-sconce-round
+#            "\U000F1A1B", # mdi-gas-burner
             "\U000F02DC", # mdi-home
             "\U000F0A02", # mdi-menu-left-outline
             "\U000F035F", # mdi-menu-right
-            "\U000F0156", # mdi-close
-            "\U000F0C5F", # mdi-close-network-outline
-            "\U000f0084", # mdi-battery-charging
-            "\U000f0091", # mdi-battery-unknown
+#            "\U000F0156", # mdi-close
+#            "\U000F0C5F", # mdi-close-network-outline
+#            "\U000f0084", # mdi-battery-charging
+#            "\U000f0091", # mdi-battery-unknown
             "\U000F095F", # mdi-desk-lamp
             "\U000F04DE", # mdi-stove
             $hammerscrewdriver, # mdi-hammer-screwdriver
@@ -119,15 +145,15 @@ font:
             "\U000F1254", # mdi-lightbulb-group
             "\U000F0336", # mdi-lightbulb-outline
             "\U000F05A9", # mdi-wifi
-            "\U000F05AA", # mdi-wifi-off
+#            "\U000F05AA", # mdi-wifi-off
             "\U000F0E2E", # mdi-fireplace
             "\U000F0238", # mdi-fire
             "\U000F075D", # mdi-volume-plus
             "\U000F075E", # mdi-volume-minus
-            "\U000F050F", # mdi-thermometer
+#            "\U000F050F", # mdi-thermometer
             "\U000F10C3", # mdi-thermometer-low
             "\U000F10C2", # mdi-thermometer-high
-            "\U000F0D3E", # mdi-transmission-tower
+#            "\U000F0D3E", # mdi-transmission-tower
             "\U000F0A72", # mdi-solar-power
             "\U000F1239", # mdi-desk
           ]
@@ -139,20 +165,20 @@ font:
     bpp: 4
     glyphs:
       [
-        "\U000F004B", # mdi-arrow-down-drop-circle-outline
-        "\U000F0063", # mdi-arrow-up-drop-circle-outline
-        "\U000F006E", # mdi-backspace 
-        "\U000F012C", # mdi-check
-        "\U000F179B", # mdi-light-recessed
-        "\U000F0748", # mdi-wall-sconce-round
+#        "\U000F004B", # mdi-arrow-down-drop-circle-outline
+#        "\U000F0063", # mdi-arrow-up-drop-circle-outline
+#        "\U000F006E", # mdi-backspace 
+#        "\U000F012C", # mdi-check
+#        "\U000F179B", # mdi-light-recessed
+#        "\U000F0748", # mdi-wall-sconce-round
         "\U000F1A1B", # mdi-gas-burner
         "\U000F02DC", # mdi-home
         "\U000F0A02", # mdi-menu-left-outline
         "\U000F035F", # mdi-menu-right
-        "\U000F0156", # mdi-close
-        "\U000F0C5F", # mdi-close-network-outline
-        "\U000f0084", # mdi-battery-charging
-        "\U000f0091", # mdi-battery-unknown
+#        "\U000F0156", # mdi-close
+#        "\U000F0C5F", # mdi-close-network-outline
+#        "\U000f0084", # mdi-battery-charging
+#        "\U000f0091", # mdi-battery-unknown
         "\U000F095F", # mdi-desk-lamp
         "\U000F04DE", # mdi-stove
         $hammerscrewdriver, # mdi-hammer-screwdriver
@@ -184,6 +210,17 @@ font:
     id: roboto16
     size: 16
     bpp: 4
+    glyphs: [
+      0123456789áÁéÉabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,
+      (,),+,-,_,.,°,•,µ,
+      "\u0020", # space
+      "\u002C", # ,
+      "\u0021", # !
+      "\u0022", # "
+      "\u0027", # '
+      "\u003A", # :
+      "\u0025", # %
+      ]
     extras:
       - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
         glyphs:
@@ -197,6 +234,17 @@ font:
     id: roboto14
     size: 14
     bpp: 4
+    glyphs: [
+      0123456789áÁéÉabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,
+      (,),+,-,_,.,°,•,µ,
+      "\u0020", # space
+      "\u002C", # ,
+      "\u0021", # !
+      "\u0022", # "
+      "\u0027", # '
+      "\u003A", # :
+      "\u0025", # %
+      ]
 
 color:
   - id: dark_blue 

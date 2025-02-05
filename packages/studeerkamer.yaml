@@ -1,6 +1,8 @@
 substitutions:
   pagina: "studeerkamer"
 
+
+
 # LVGL configuration
 lvgl:
   pages:
@@ -106,13 +108,18 @@ lvgl:
                 max_value: 70
                 y: -10
                 adv_hittest: true
-                on_value:
-                  - homeassistant.action:
-                      action: media_player.volume_set
-                      data:
-                        entity_id: media_player.studeerkamer
-                        volume_level: !lambda return (x / 100);
-
+                on_value: 
+                  - if:
+                      condition: 
+                        lambda: 'return not id(from_sensor_flag_studeerkamer);'
+                      then:
+                        - homeassistant.action:
+                            action: media_player.volume_set
+                            data:
+                              entity_id: media_player.studeerkamer
+                              volume_level: !lambda "return (x / 100);"
+                  - lambda: 'id(from_sensor_flag_studeerkamer) = false;'
+                  
             - label: # Artist
                 id: display_sonos_studeerkamer_media_artist
                 text: "Artiest"
@@ -168,8 +175,7 @@ lvgl:
                             position: !lambda |-
                               return (id(desk_position).state == 23) ? 82 : 23;
                             entity_id: cover.desk_4728
-
-              
+           
         - obj: # Control card
             x: 10
             y: 320
@@ -313,9 +319,11 @@ sensor:
     entity_id: media_player.studeerkamer
     attribute: volume_level
     on_value:
-      - lvgl.slider.update:
+      - lambda: 'id(from_sensor_flag_studeerkamer) = true;'
+      - lvgl.slider.update: 
           id: slider_media_player_sonos_studeerkamer
-          value: !lambda return (x * 100);
+          value: !lambda "return (x * 100);"
+      - lambda: 'id(from_sensor_flag_studeerkamer) = false;'
 
   - platform: homeassistant
     id: cover_studeerkamer_pos

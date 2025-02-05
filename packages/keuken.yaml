@@ -104,12 +104,17 @@ lvgl:
                 max_value: 70
                 y: -10
                 adv_hittest: true
-                on_value:
-                  - homeassistant.action:
-                      action: media_player.volume_set
-                      data:
-                        entity_id: media_player.woonkeuken
-                        volume_level: !lambda return (x / 100);
+                on_value: 
+                  - if:
+                      condition: 
+                        lambda: 'return not id(from_sensor_flag_keuken);'
+                      then:
+                        - homeassistant.action:
+                            action: media_player.volume_set
+                            data:
+                              entity_id: media_player.keuken
+                              volume_level: !lambda "return (x / 100);"
+                  - lambda: 'id(from_sensor_flag_keuken) = false;'
 
             - label: # Artist
                 id: display_sonos_keuken_media_artist
@@ -302,9 +307,11 @@ sensor:
     entity_id: media_player.woonkeuken
     attribute: volume_level
     on_value:
-      - lvgl.slider.update:
+      - lambda: 'id(from_sensor_flag_keuken) = true;'
+      - lvgl.slider.update: 
           id: slider_media_player_sonos_keuken
-          value: !lambda return (x * 100);
+          value: !lambda "return (x * 100);"
+      - lambda: 'id(from_sensor_flag_keuken) = false;'
 
   - platform: homeassistant # gordijn klapdeur
     id: cover_eettafel_pos
