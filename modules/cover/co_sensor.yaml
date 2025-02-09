@@ -1,0 +1,55 @@
+# id:
+# entity_id
+
+sensor:
+  - platform: homeassistant
+    id: cover_${id}_pos
+    entity_id: ${entity_id}
+    attribute: current_position
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return x == 100;
+          then:
+            - lvgl.widget.update:
+                id: cov_up_${id}
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: cov_up_${id}
+                text_opa: 100%
+      - if:
+          condition:
+            lambda: |-
+              return x == 0;
+          then:
+            - lvgl.widget.update:
+                id: cov_down_${id}
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: cov_down_${id}
+                text_opa: 100%
+
+text_sensor:
+  # Gordijnen
+  - platform: homeassistant
+    id: cover_${id}_gordijnen
+    entity_id: ${entity_id}
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return ((0 == x.compare(std::string{"opening"})) or (0 == x.compare(std::string{"closing"})));
+          then:
+            - lvgl.label.update:
+                id: cov_stop_${id}
+                text: "STOP"
+          else:
+            - lvgl.label.update:
+                id: cov_stop_${id}
+                text:
+                  format: "%.0f%%"
+                  args: [ 'id(cover_${id}_pos).get_state()' ]
+  

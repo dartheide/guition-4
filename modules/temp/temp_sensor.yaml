@@ -1,0 +1,12 @@
+#id
+# entity_id
+
+sensor:
+  - platform: homeassistant
+    id: ${id}_thermostat
+    entity_id: ${entity_id}
+    attribute: temperature
+    on_value:
+      - lvgl.spinbox.update:
+          id: spinbox_${id}
+          value: !lambda return x;

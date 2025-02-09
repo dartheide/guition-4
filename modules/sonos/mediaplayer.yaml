@@ -1,0 +1,123 @@
+
+#- obj: # Media Player
+    x: 10
+    y: 40
+    width: 460
+    height: 170
+    styles: bg_white
+
+    widgets:
+    - label:
+        text: "${id}"
+        align: top_right
+        styles: bg_white
+    - ${knop}: # Mute
+        height: 40
+        width: 50
+        align: bottom_right
+        widgets:
+            - label:
+                id: sonos_${id}_mute_button
+                text_font: mdi24
+                text: "${volume_icon}"
+                align: center
+        on_click:
+            - homeassistant.service:
+                service: media_player.volume_mute
+                data:
+                    entity_id: media_player.${id}
+                    is_volume_muted: !lambda 'return !id(sonos_${id}_mute).state;'
+
+    - ${knop}: # play/pause
+        height: 40
+        width: 50
+        id: sonos_${id}_play_pause_button
+        align_to:
+            id: sonos_${id}_mute_button
+            align: out_left_mid
+            x: -20
+        widgets:
+            - label:
+                text_font: mdi24
+                text: "${play_pause_icon}"
+                align: center
+        on_click:
+            - homeassistant.action:
+                action: media_player.media_play_pause
+                data_template:
+                    entity_id: media_player.${id}
+    - ${knop}: # stubru
+        height: 40
+        width: 50
+        align_to:
+            id: sonos_${id}_play_pause_button
+            align: out_left_mid
+            x: -15
+        id: sonos_${id}_stubru_button
+        widgets:
+            - label:
+                text_font: roboto20
+                text: "stu\nbru"
+                align: center
+        on_press:
+            then:
+            - homeassistant.action:
+                action: media_player.play_media
+                data_template:
+                    entity_id: media_player.${id}   
+                    media_content_type: "music"
+                    media_content_id: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
+
+    - ${knop}: # pinguin
+        height: 40
+        width: 50
+        align_to:
+            id: sonos_${id}_stubru_button
+            align: out_left_mid
+            x: -15
+        id: sonos_${id}_pinguin_button
+        widgets:
+            - label:
+                text_font: mdi24
+                text: "\U000F0EC0"
+                align: center
+        on_click:
+            - homeassistant.service:
+                service: media_player.play_media
+                data_template:
+                    entity_id: media_player.${id}   
+                    media_content_type: "music"
+                    media_content_id: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
+
+    - slider: # volume
+        id: slider_media_player_sonos_${id}
+        align: bottom_left
+        width: 150
+        value: 5
+        min_value: 1
+        max_value: 70
+        y: -10
+        adv_hittest: true
+        on_value: 
+            - if:
+                condition: 
+                    lambda: 'return not id(from_sensor_flag_${id});'
+                then:
+                - homeassistant.action:
+                    action: media_player.volume_set
+                    data:
+                        entity_id: media_player.${id}
+                        volume_level: !lambda "return (x / 100);"
+            - lambda: 'id(from_sensor_flag_${id}) = false;'
+
+    - label: # Artist
+        id: display_sonos_${id}_media_artist
+        text: "Artiest"
+        align: left_mid
+        y: -30
+    - label: # Title
+        id: display_sonos_${id}_title
+        text: "Titel"
+        align: left_mid
+        y: -5
+                                    

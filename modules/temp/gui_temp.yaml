@@ -1,0 +1,55 @@
+#id
+# entity_id
+#- obj: # Temperatuur
+        x: 245
+        y: 320
+        width: 225
+        height: 100
+        styles: bg_white
+        widgets:
+            - ${knop}:
+                width: 50
+                height: 40
+                align: bottom_left
+                id: ${id}_spin_down
+                on_click:
+                    - lvgl.spinbox.decrement: spinbox_${id}
+                widgets:
+                    - label:
+                        text: "-"
+                        align: center
+            - spinbox:
+                styles: bg_white
+                id: spinbox_${id}
+                align: bottom_mid 
+                text_align: CENTER
+                width: 50
+                range_from: 21
+                range_to: 35
+                step: 0.5
+                rollover: false
+                digits: 3
+                decimal_places: 1
+                value: 22
+                on_value:
+                    then:
+                        - homeassistant.action:
+                            action: climate.set_temperature
+                            data:
+                                temperature: !lambda return x;
+                                entity_id: ${entity_id}
+            - ${knop}:
+                width: 50
+                height: 40
+                align: bottom_right
+                id: ${id}_spin_up
+                on_click:
+                    - lvgl.spinbox.increment: spinbox_${id}
+                widgets:
+                    - label:
+                        text: "+"
+                        align: center
+            - label:
+                text_font: roboto16
+                align: top_mid
+                text: "Temperatuur"

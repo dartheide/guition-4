@@ -1,0 +1,61 @@
+
+# id: naam van de kamer
+# ha_id: naam van de media player
+
+sensor:
+
+  - platform: homeassistant # volume ${id}
+    id: media_player_volume_${id}
+    entity_id: media_player.${id}
+    attribute: volume_level
+    on_value:
+      - lambda: 'id(from_sensor_flag_${id}) = true;'
+      - lvgl.slider.update: 
+          id: slider_media_player_sonos_${id}
+          value: !lambda "return (x * 100);"
+      - lambda: 'id(from_sensor_flag_${id}) = false;'
+
+
+
+binary_sensor:
+  - platform: homeassistant
+    id: sonos_${id}_mute
+    entity_id: media_player.${id}
+    attribute: is_volume_muted
+    publish_initial_state: true
+    on_state:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(sonos_${id}_mute).state == true;'  # Controleer of de media player gemute is
+            then:
+              - lvgl.label.update:
+                  id: sonos_${id}_mute_button
+                  text: "${mute_icon}"
+            else:
+              - lvgl.label.update:
+                  id: sonos_${id}_mute_button
+                  text: "${volume_icon}"
+
+text_sensor:
+  - platform: homeassistant
+    id: sonos_${id}_media_title_text_sensor
+    entity_id: media_player.${id}
+    attribute: media_title
+    on_value:
+      then:
+        - lvgl.label.update:
+            id: display_sonos_${id}_title
+            text: !lambda |-
+              return id(sonos_${id}_media_title_text_sensor).state.c_str();
+
+  - platform: homeassistant
+    id: sonos_${id}_media_artist_text_sensor
+    entity_id: media_player.${id}
+    attribute: media_artist
+    on_value:
+      then:
+        - lvgl.label.update:
+            id: display_sonos_${id}_media_artist
+            text: !lambda |-
+              return id(sonos_${id}_media_artist_text_sensor).state.c_str();

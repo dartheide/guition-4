@@ -1,0 +1,62 @@
+# id:
+# entity_id
+# title
+# gui voor de rolgordijnen
+
+#- obj: # Control card
+    x: 245
+    y: 320
+    width: 225
+    height: 100
+    styles: bg_white
+    widgets:
+      - label:
+          text_font: roboto16
+          align: top_mid
+          y: -5
+          text: ${title}
+      - ${knop}:
+          width: 50
+          height: 40
+          align: bottom_left
+          widgets:
+          - label:
+              id: cov_up_${id}
+              text_font: mdi24
+              align: CENTER
+              text: "\U000F0143"
+          on_press:
+            - homeassistant.action:
+                action: cover.open_cover
+                data:
+                  entity_id: ${entity_id}
+      - ${knop}:
+          width: 65
+          height: 40
+          align: bottom_mid
+          widgets:
+          - label:
+              id: cov_stop_${id}
+              align: CENTER
+              text: STP
+          on_press:
+            - homeassistant.action:
+                action: cover.stop_cover
+                data:
+                  entity_id: ${entity_id}
+      - ${knop}:
+          width: 50
+          height: 40
+          align: bottom_right
+          widgets:
+          - label:
+              id: cov_down_${id} 
+              text_font: mdi24
+              align: CENTER
+              text: "\U000F0140"
+          on_press:
+            - homeassistant.action:
+                action: cover.close_cover
+                data:
+                  entity_id: ${entity_id}
+ 

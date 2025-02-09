@@ -2,7 +2,11 @@ substitutions:
   name: "mypanel-woonkamer-sdl2"
   friendly_name: "Guition480-basic"
 
+
 packages:
+  wifi: !include { file: modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
+
+
   # for simulation turn on device_sdl and turn off device_base
   device_base: !include packages/display_base.yaml
   #device_sdl: !include packages/display_sdl.yaml

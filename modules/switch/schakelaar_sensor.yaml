@@ -1,0 +1,23 @@
+# id:
+# entity_id
+text_sensor:
+  - platform: homeassistant
+    id: remote_light_${id}
+    entity_id: ${entity_id}
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return (0 == x.compare(std::string{"on"})) ;
+          then:
+            - lvgl.label.update:
+                id: ${id}_switch_label 
+                text: "${id}"
+                text_color: tft_yellow
+          else:
+            - lvgl.label.update:
+                id: ${id}_switch_label
+                text: "${id}"
+                text_color: tft_white
+
+  

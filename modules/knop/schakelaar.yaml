@@ -1,0 +1,20 @@
+# id
+# entity_id
+# pos top_left, top_mid, top_right
+
+#  - ${knop}:
+align: ${pos}
+width: 135
+height: 50
+widgets:
+  - label:
+      text_font: roboto20
+      id: ${id}_switch_label
+      text: "\U000F0336"
+      align: left_mid
+on_press:
+  then:
+    - homeassistant.action:
+        action: switch.toggle
+        data:
+          action: ${entity_id} 
