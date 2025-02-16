@@ -11,6 +11,7 @@
         text: "${id}"
         align: top_right
         styles: bg_white
+
     - ${knop}: # Mute
         height: 40
         width: 50

@@ -15,4 +15,6 @@ widgets:
 on_press:
   then:
     - homeassistant.action:
-        action: ${entity_id} 
+        action: light.toggle
+        data:
+          entity_id: ${entity_id} 

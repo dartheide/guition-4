@@ -17,4 +17,4 @@ on_press:
     - homeassistant.action:
         action: switch.toggle
         data:
-          action: ${entity_id} 
+          entity_id: ${entity_id} 
