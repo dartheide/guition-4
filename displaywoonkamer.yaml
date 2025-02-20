@@ -4,7 +4,7 @@ substitutions:
 
 
 packages:
-  wifi: !include { file: modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
+#  wifi: !include { file: modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
 
 
   # for simulation turn on device_sdl and turn off device_base

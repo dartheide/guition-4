@@ -1,5 +1,8 @@
 substitutions:
-  knop: "btn"
+  knop: "button"
+
+packages:
+  wifi: !include { file: ../modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
 
 esphome:
   platformio_options:
@@ -24,17 +27,17 @@ psram:
   speed: 80MHz
 
 
-external_components:
-  - source:
-      type: git
-      url: https://github.com/clydebarrow/esphome
-      ref: 82264dc2440981873b8400d613e0cc32d229daa3 #previous commit - wont be needed in the future
-    components: [lvgl]
+# external_components:
+#   - source:
+#       type: git
+#       url: https://github.com/clydebarrow/esphome
+#       ref: 82264dc2440981873b8400d613e0cc32d229daa3 #previous commit - wont be needed in the future
+#     components: [lvgl]
 
 # LVGL configuration
 lvgl:
   displays:
-    - display_id: my_display
+    - my_display
   touchscreens:
     - touchscreen_id: my_touchscreen
   on_idle:
