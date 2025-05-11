@@ -173,15 +173,15 @@ lvgl:
 
 
 sensor:
-  - platform: homeassistant
-    id: temperature_state_sensor
-    entity_id: sensor.home_outdoor_temperature
-    on_value:
-      - lvgl.label.update:
-          id: label_temperature_now
-          text:
-            format: "Temp buiten %.0f °"
-            args: [ 'x' ]
+  # - platform: homeassistant
+  #   id: temperature_state_sensor
+  #   entity_id: sensor.home_outdoor_temperature
+  #   on_value:
+  #     - lvgl.label.update:
+  #         id: label_temperature_now
+  #         text:
+  #           format: "Temp buiten %.0f °"
+  #           args: [ 'x' ]
 
   - platform: homeassistant
     id: uv_index_state_sensor
@@ -191,7 +191,7 @@ sensor:
      - lvgl.label.update:
           id: label_uv_index_now
           text:
-            format: "Uv index %.0f"
+            format: "Uv %.0f"
             args: [ 'x' ]
 
 text_sensor:
@@ -363,7 +363,7 @@ text_sensor:
               icon = "\U000F0590";  // MDI:weather-cloudy
             } else if (id(weather_condition_now).state == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
+              icon = "\U000F0597";  // MDI:weather-rainy
             } else if (id(weather_condition_now).state == "lightning") {
               condition = "Onweer";
               icon = "\U000F0596";  // MDI:weather-lightning
@@ -404,7 +404,7 @@ text_sensor:
               icon = "\U000F0590";  // MDI:weather-cloudy
             } else if (id(weather_condition_1).state == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
+              icon = "\U000F0597";  // MDI:weather-rainy
             } else if (id(weather_condition_1).state == "lightning") {
               condition = "Onweer";
               icon = "\U000F0596";  // MDI:weather-lightning
@@ -444,7 +444,7 @@ text_sensor:
               icon = "\U000F0590";  // MDI:weather-cloudy
             } else if (id(weather_condition_2).state == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
+              icon = "\U000F0597";  // MDI:weather-rainy
             } else if (id(weather_condition_2).state == "lightning") {
               condition = "Onweer";
               icon = "\U000F0596";  // MDI:weather-lightning
@@ -484,7 +484,7 @@ text_sensor:
               icon = "\U000F0590";  // MDI:weather-cloudy
             } else if (id(weather_condition_3).state == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
+              icon = "\U000F0597";  // MDI:weather-rainy
             } else if (id(weather_condition_3).state == "lightning") {
               condition = "Onweer";
               icon = "\U000F0596";  // MDI:weather-lightning
@@ -547,8 +547,8 @@ font:
       "\U000F14E4", # sunny-off
       "\U000F0F31", # mdi-weather-night-partly-cloudy
       "\U000F05A9", # mdi-wifi
-      "\U000F052C", # mdi-train
-      "\U000F058E", 
+      "\U000F052C", # mdi-train 
+
       ]
 
 

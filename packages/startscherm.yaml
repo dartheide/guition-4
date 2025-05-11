@@ -17,32 +17,32 @@ lvgl:
                   text_font: weather_icons
                   id: home_weather_icon_now
                   text: "\U000F0599"
+              # - label:
+              #     text_font: roboto20
+              #     align: bottom_left
+              #     y: -30
+              #     id: label_temperature_now
+              #     text: "-"
               - label:
-                  text_font: roboto16
-                  align: bottom_left
-                  y: -30
-                  id: label_temperature_now
-                  text: "-"
-              - label:
-                  text_font: roboto16
+                  text_font: roboto20
                   align: bottom_left
                   y: -5
                   id: label_uv_index_now
                   text: "-"
               - label:
-                  text_font: roboto16
+                  text_font: roboto20
                   align: bottom_right
                   id: forecast_temperature_current_high
                   text: '"'
                   y: -30
               - label:
-                  text_font: roboto16
+                  text_font: roboto20
                   align: bottom_right
                   id: forecast_temperature_current_low
                   text: '"'
                   y: -5
               - label:
-                  text_font: roboto16
+                  text_font: roboto20
                   id: text_weather_condition_now
                   text: ""
                   align: top_right
@@ -168,7 +168,12 @@ lvgl:
                   align: top_left
                   x: 75
                   y: 100
-              
+            on_press:
+              then:
+                lvgl.page.show: ns_page
+
+
+
         - obj: # Status
             x: 10
             y: 370
@@ -212,45 +217,4 @@ sensor:
             format: "%.0f W"
             args: [ 'x' ]
 
-
-text_sensor:
-  - platform: homeassistant
-    id: ns_departure1
-    entity_id: sensor.ns_departure_1
-    on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_1), (id(ns_departure1).state).c_str());
-
-  - platform: homeassistant
-    id: ns_departure2
-    entity_id: sensor.ns_departure_2
-    on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_2), (id(ns_departure2).state).c_str());
-
-  - platform: homeassistant
-    id: ns_departure3
-    entity_id: sensor.ns_departure_3
-    on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_3), (id(ns_departure3).state).c_str());
-
-  - platform: homeassistant
-    id: ns_departure4
-    entity_id: sensor.ns_departure_4
-    on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_4), (id(ns_departure4).state).c_str());
-
-  - platform: homeassistant
-    id: ns_departure5
-    entity_id: sensor.ns_departure_5
-    on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_5), (id(ns_departure5).state).c_str());
 

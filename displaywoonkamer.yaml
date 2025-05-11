@@ -48,6 +48,8 @@ packages:
     vars:
       knop: "${knop}" 
 
+  train_page: !include
+    file: packages/train.yaml
 
     
 
