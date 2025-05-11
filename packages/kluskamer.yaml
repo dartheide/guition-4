@@ -22,11 +22,13 @@ lvgl:
               - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light, pos: top_left }}                                    
               - ${knop}: !include { file: ../modules/knop/schakelaar.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4, pos: top_left }}                                    
                                   
-        - obj: # Control card
-            x: 10
-            y: 320
-            width: 225
-            height: 100
-            styles: bg_white
+        # - obj: # Control card
+        #     x: 10
+        #     y: 320
+        #     width: 225
+        #     height: 100
+        #     styles: bg_white
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: kluskamer, entity_id: cover.plisse_kluskamer, title: "Gordijnen kluskamer" }}
+
 
         - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: kluskamer, entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat }}
