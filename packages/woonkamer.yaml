@@ -23,9 +23,9 @@ lvgl:
             height: 90
             styles: bg_white
             widgets:
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: light.woonkamer, pos: top_left }}                                    
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: top_mid }}
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: top_right }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: light.woonkamer, pos: top_left }}                                    
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: top_mid }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: top_right }}
               
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker, title: "Gordijnen Erker" }}
 

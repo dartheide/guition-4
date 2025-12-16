@@ -182,7 +182,7 @@ lvgl:
             styles: bg_white
             scrollbar_mode: "OFF"
             widgets:
-              - ${knop}:
+              - button:
                     id: start_lamp1
                     align: left_mid 
                     width: 150

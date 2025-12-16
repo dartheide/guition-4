@@ -1,8 +1,8 @@
 substitutions:
-  knop: "button"
+  friendly_name: "Guition480-basic"
 
 packages:
-  wifi: !include { file: ../modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
+  wifi: !include { file: ../modules/wifi/wifi.yaml, vars: {id: display_woonkamer }}
 
 esphome:
   platformio_options:
@@ -25,14 +25,6 @@ esp32:
 psram:
   mode: octal
   speed: 80MHz
-
-
-# external_components:
-#   - source:
-#       type: git
-#       url: https://github.com/clydebarrow/esphome
-#       ref: 82264dc2440981873b8400d613e0cc32d229daa3 #previous commit - wont be needed in the future
-#     components: [lvgl]
 
 # LVGL configuration
 lvgl:
@@ -181,8 +173,6 @@ display:
         - 7 #b4
         - 15 #b5
 
-
-
 time:
   - platform: homeassistant
     on_time:
@@ -220,4 +210,3 @@ switch:
           then:
             - lvgl.resume:
             - lvgl.widget.redraw:
-

@@ -10,8 +10,6 @@ substitutions:
   countertop: "\U000F181C"
   sofa: "\U000F04B9"
 
-
-
   radio_url_stubru: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
   radio_url_pinguin: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
 
@@ -64,7 +62,7 @@ lvgl:
       shadow_color: 0x2f3b52
 
   theme:
-    ${knop}:
+    button:
       bg_color: 0x1a2942 # donkerblauw
       radius: 10
       shadow_color: 0x1c1c1c
@@ -73,7 +71,7 @@ lvgl:
       pressed: # set some button colors to be different in pressed state
         bg_color: dark_grey
         text_color: tft_white
-    ${knop}matrix:
+    buttonmatrix:
       bg_color: 0x1a2942 # donkerblauw
       pad_all: 5
       items:

@@ -8,7 +8,8 @@ text_sensor:
       - if:
           condition:
             lambda: |-
-              return (0 == x.compare(std::string{"on"})) ;
+              return x == "on";
+#              return (0 == x.compare(std::string{"on"})) ;
           then:
             - lvgl.label.update:
                 id: ${id}_switch_label 

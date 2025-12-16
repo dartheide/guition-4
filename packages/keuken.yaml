@@ -21,9 +21,9 @@ lvgl:
             height: 90
             styles: bg_white
             widgets:
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: eettafel, entity_id: light.icasa_iczb_iw11d_light, pos: top_left }}
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: aanrecht, entity_id: light.aanrechtblad, pos: top_mid }}
-              - ${knop}: !include { file: ../modules/knop/licht.yaml, vars: {id: spotjes, entity_id: light.keukenspotjes, pos: top_right }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: eettafel, entity_id: light.icasa_iczb_iw11d_light, pos: top_left }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: aanrecht, entity_id: light.aanrechtblad, pos: top_mid }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: spotjes, entity_id: light.keukenspotjes, pos: top_right }}
 
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: klapdeur, entity_id: cover.plissegordijn_klapdeur_cover, title: "Gordijnen eettafel" }}
         - obj: !include { file: ../modules/cover/gui_cover2.yaml, vars: {id: keuken, entity_id: cover.keukenraam_cover, title: "Gordijnen keuken" }}

@@ -1,12 +1,7 @@
 substitutions:
   name: "mypanel-woonkamer-sdl2"
-  friendly_name: "Guition480-basic"
-
 
 packages:
-#  wifi: !include { file: modules//wifi/wifi.yaml, vars: {id: display_woonkamer }}
-
-
   # for simulation turn on device_sdl and turn off device_base
   device_base: !include packages/display_base.yaml
   #device_sdl: !include packages/display_sdl.yaml
@@ -15,44 +10,29 @@ packages:
     vars:
       name: "${name}"
       friendly_name: "${friendly_name}" 
-      knop: "${knop}"
   start_page: !include 
     file: packages/startscherm.yaml
-    vars:
-      knop: "${knop}" 
+
   room_page: !include 
     file: packages/studeerkamer.yaml
-    vars:
-      knop: "${knop}" 
+
   woon_page: !include 
     file: packages/woonkamer.yaml
-    vars:
-      knop: "${knop}" 
+
   keuken_page: !include 
     file: packages/keuken.yaml
-    vars:
-      knop: "${knop}" 
 
-  kluskamer__page: !include
+  kluskamer_page: !include
     file: packages/kluskamer.yaml
-    vars:
-      knop: "${knop}" 
 
   weather_page: !include
     file: packages/weather.yaml
-    vars:
-      knop: "${knop}" 
 
   energy_page: !include
     file: packages/energy.yaml
-    vars:
-      knop: "${knop}" 
 
   train_page: !include
     file: packages/train.yaml
-
-    
-
 
 api:
   on_client_connected:
@@ -117,9 +97,8 @@ lvgl:
                 align: out_right_mid
               y: -10
               id: afval_label
-          
-              
-    - ${knop}matrix:
+                   
+    - buttonmatrix:
         align: bottom_mid
         styles: header_footer
         radius: 0
@@ -170,7 +149,7 @@ script:
       - lvgl.label.update:
           id: title_time
           text: !lambda |-
-            static char time_buf[17];
+            static char time_buf[10];
             auto now = id(time_comp).now();
             snprintf(time_buf, sizeof(time_buf), "%2d:%02d ", now.hour, now.minute );
             return time_buf;      
@@ -183,7 +162,8 @@ text_sensor:
       - if:
           condition:
             lambda: |-
-              return (0 == x.compare(std::string{"code_yellow"})) ;
+              return x == "code_yellow";
+#              return (0 == x.compare(std::string{"code_yellow"})) ;
           then:
             - lvgl.label.update:
                 id: stookwijzer_label
@@ -195,8 +175,6 @@ text_sensor:
                 text: " \U000F0238"
                 text_color: 0xFF3000 # red
 
-
-
 # sensor.afvalinfo_huize_dartheide_trash_type_tomorrow
   - platform: homeassistant
     id: sensor_afval
@@ -205,7 +183,8 @@ text_sensor:
       - if:
           condition:
             lambda: |-
-              return (0 == x.compare(std::string{"geen"})) ;
+              return x == "geen";
+#             return (0 == x.compare(std::string{"geen"}));
           then:
             - lvgl.widget.hide: afval_label
             - lvgl.widget.hide: afval_label2
@@ -214,5 +193,3 @@ text_sensor:
             - lvgl.label.update:
                 id: afval_label
                 text: !lambda 'return x.c_str();'
-
-

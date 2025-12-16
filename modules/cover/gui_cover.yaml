@@ -15,7 +15,7 @@
           align: top_mid
           y: -5
           text: ${title}
-      - ${knop}:
+      - button:
           width: 50
           height: 40
           align: bottom_left
@@ -30,7 +30,7 @@
                 action: cover.open_cover
                 data:
                   entity_id: ${entity_id}
-      - ${knop}:
+      - button:
           width: 65
           height: 40
           align: bottom_mid
@@ -44,7 +44,7 @@
                 action: cover.stop_cover
                 data:
                   entity_id: ${entity_id}
-      - ${knop}:
+      - button:
           width: 50
           height: 40
           align: bottom_right

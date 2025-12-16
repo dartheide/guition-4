@@ -59,44 +59,64 @@ text_sensor:
     id: ns_departure1
     entity_id: sensor.ns_departure_1
     on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_1), (id(ns_departure1).state).c_str());
-            lv_label_set_text(id(text_train_1), (id(ns_departure1).state).c_str());
-        
+      # Update startscherm label
+      - lvgl.label.update:
+          id: text_ns_1
+          text: !lambda 'return x.c_str();'
+      # Update train page label
+      - lvgl.label.update:
+          id: text_train_1
+          text: !lambda 'return x.c_str();'
+
   - platform: homeassistant
     id: ns_departure2
     entity_id: sensor.ns_departure_2
     on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_2), (id(ns_departure2).state).c_str());
-            lv_label_set_text(id(text_train_2), (id(ns_departure2).state).c_str());
-        
+      # Update startscherm label
+      - lvgl.label.update:
+          id: text_ns_2
+          text: !lambda 'return x.c_str();'
+      # Update train page label
+      - lvgl.label.update:
+          id: text_train_2
+          text: !lambda 'return x.c_str();'
+
   - platform: homeassistant
     id: ns_departure3
     entity_id: sensor.ns_departure_3
     on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_3), (id(ns_departure3).state).c_str());
-            lv_label_set_text(id(text_train_3), (id(ns_departure3).state).c_str());
-        
+      # Update startscherm label
+      - lvgl.label.update:
+          id: text_ns_3
+          text: !lambda 'return x.c_str();'
+      # Update train page label
+      - lvgl.label.update:
+          id: text_train_3
+          text: !lambda 'return x.c_str();'
+
   - platform: homeassistant
     id: ns_departure4
     entity_id: sensor.ns_departure_4
     on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_4), (id(ns_departure4).state).c_str());
-            lv_label_set_text(id(text_train_4), (id(ns_departure4).state).c_str());
-        
+      # Update startscherm label
+      - lvgl.label.update:
+          id: text_ns_4
+          text: !lambda 'return x.c_str();'
+      # Update train page label
+      - lvgl.label.update:
+          id: text_train_4
+          text: !lambda 'return x.c_str();'
+
   - platform: homeassistant
     id: ns_departure5
     entity_id: sensor.ns_departure_5
     on_value:
-      then:
-        - lambda: |-
-            lv_label_set_text(id(text_ns_5), (id(ns_departure5).state).c_str());
-            lv_label_set_text(id(text_train_5), (id(ns_departure5).state).c_str());
+      # Update startscherm label
+      - lvgl.label.update:
+          id: text_ns_5
+          text: !lambda 'return x.c_str();'
+      # Update train page label
+      - lvgl.label.update:
+          id: text_train_5
+          text: !lambda 'return x.c_str();'
         

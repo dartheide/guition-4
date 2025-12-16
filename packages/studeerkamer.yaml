@@ -20,7 +20,7 @@ lvgl:
             styles: bg_white
             widgets:
 
-              - ${knop}:  # Nieuw: Bureau-knop met dynamische tekst
+              - button:  # Nieuw: Bureau-knop met dynamische tekst
                   id: desk_toggle
                   align: top_right
                   width: 135

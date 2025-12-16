@@ -1,8 +1,4 @@
-# id
-# entity_id
-# pos top_left, top_mid, top_right
 
-#  - ${knop}:
 align: ${pos}
 width: 135
 height: 50

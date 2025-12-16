@@ -7,7 +7,7 @@
         height: 100
         styles: bg_white
         widgets:
-            - ${knop}:
+            - button:
                 width: 50
                 height: 40
                 align: bottom_left
@@ -26,7 +26,7 @@
                 width: 50
                 range_from: 21
                 range_to: 35
-                step: 0.5
+                selected_digit: 0
                 rollover: false
                 digits: 3
                 decimal_places: 1
@@ -38,7 +38,7 @@
                             data:
                                 temperature: !lambda return x;
                                 entity_id: ${entity_id}
-            - ${knop}:
+            - button:
                 width: 50
                 height: 40
                 align: bottom_right

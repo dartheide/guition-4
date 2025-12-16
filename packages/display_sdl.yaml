@@ -1,10 +1,9 @@
 substitutions:
-  knop: "button"
+  friendly_name: "Guition480-test" 
 
 # Host setting, uit voor flashen
 host:
     mac_address: "06:35:69:ab:f6:79"
-
 
 #Enable SDL display
 display:

@@ -41,7 +41,8 @@ text_sensor:
       - if:
           condition:
             lambda: |-
-              return ((0 == x.compare(std::string{"opening"})) or (0 == x.compare(std::string{"closing"})));
+              return x == "opening" or x == "closing";
+#              return  ((0 == x.compare(std::string{"opening"})) or (0 == x.compare(std::string{"closing"})));
           then:
             - lvgl.label.update:
                 id: cov_stop_${id}

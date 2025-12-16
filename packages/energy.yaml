@@ -332,7 +332,7 @@ script:
 
           float power_sun = (tariefsun1 + tariefsun2) / 1000;
           // Format the power value as a string with 1 decimal place
-          char power_sun_str[10];  // Buffer to hold the formatted string
+          char power_sun_str[16];  // Buffer to hold the formatted string
           snprintf(power_sun_str, sizeof(power_sun_str), "%.1f kWh", power_sun);
 
           lv_label_set_text(id(energy_text_zon), power_sun_str);
@@ -349,7 +349,7 @@ script:
 
           float power_up = tariefup1 + tariefup2;
           // Format the power value as a string with 1 decimal place
-          char power_up_str[10];  // Buffer to hold the formatted string
+          char power_up_str[16];  // Buffer to hold the formatted string
           snprintf(power_up_str, sizeof(power_up_str), "%.1f kWh", power_up);
 
           lv_label_set_text(id(energy_text_up), power_up_str);
@@ -367,7 +367,7 @@ script:
           float power_down = tariefdown1 + tariefdown2;
 
           // Format the power value as a string with 1 decimal place
-          char power_down_str[10];  // Buffer to hold the formatted string
+          char power_down_str[16];  // Buffer to hold the formatted string
           snprintf(power_down_str, sizeof(power_down_str), "%.1f kWh", power_down);
 
           lv_label_set_text(id(energy_text_down), power_down_str);
@@ -393,7 +393,7 @@ script:
           float power_home = ((tariefsun1 + tariefsun2)/1000) - (tariefup1 + tariefup2) + (tariefdown1 + tariefdown2);
 
           // Format the power value as a string with 1 decimal place
-          char power_home_str[10];  // Buffer to hold the formatted string
+          char power_home_str[16];  // Buffer to hold the formatted string
           snprintf(power_home_str, sizeof(power_home_str), "%.1f kWh", power_home);
 
           lv_label_set_text(id(energy_text_home), power_home_str);

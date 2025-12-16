@@ -12,7 +12,7 @@
         align: top_right
         styles: bg_white
 
-    - ${knop}: # Mute
+    - button: # Mute
         height: 40
         width: 50
         align: bottom_right
@@ -29,7 +29,7 @@
                     entity_id: media_player.${id}
                     is_volume_muted: !lambda 'return !id(sonos_${id}_mute).state;'
 
-    - ${knop}: # play/pause
+    - button: # play/pause
         height: 40
         width: 50
         id: sonos_${id}_play_pause_button
@@ -47,7 +47,7 @@
                 action: media_player.media_play_pause
                 data_template:
                     entity_id: media_player.${id}
-    - ${knop}: # stubru
+    - button: # stubru
         height: 40
         width: 50
         align_to:
@@ -69,7 +69,7 @@
                     media_content_type: "music"
                     media_content_id: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
 
-    - ${knop}: # pinguin
+    - button: # pinguin
         height: 40
         width: 50
         align_to:
