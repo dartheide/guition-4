@@ -38,55 +38,87 @@ logger:
 # LVGL configuration
 lvgl:
 
-  # Define styles with unique IDs
+  # Palet
+  #   achtergrond 0x10141D  kaart 0x1B2333  knop 0x263049  knop ingedrukt 0x324064
+  #   balken 0x0B0E15  tekst 0xE9EDF4  gedempt 0x8792A8  accent (aan/actief) 0xF4B740
   radius: 0
-  bg_color: 0x1c1c1c # zwart
+  bg_color: 0x10141D
   style_definitions:
-    - id: bg_white
+    - id: bg_white # kaart
       text_font: roboto20
-      bg_color: 0x2f3b52 # donkerblauw
-      border_color: 0x2f3b52  # donkerblauw
+      bg_color: 0x1B2333
+      border_color: 0x1B2333
       border_width: 0
-      radius: 10
-      text_color: tft_white
+      radius: 12
+      text_color: 0xE9EDF4
       scrollbar_mode: "OFF"
+    - id: card_title # titel linksboven in een kaart
+      text_font: roboto14
+      text_color: 0x8792A8
+      align: top_left
+      y: -6
+    - id: card_value # waarde rechtsboven in een kaart
+      text_font: roboto16
+      text_color: 0xE9EDF4
+      align: top_right
+      y: -7
     - id: header_footer
       text_font: mdi24
-      bg_color: 0x1a2942 # donkerblauw
-      text_color: tft_white
+      bg_color: 0x0B0E15
+      text_color: 0xE9EDF4
       width: 100%
       height: 50
-      border_color: 0x2f3b52
+      border_color: 0x0B0E15
       border_width: 0
-      radius: 10
-      shadow_color: 0x2f3b52
+      radius: 0
+      shadow_width: 0
 
   theme:
     button:
-      bg_color: 0x1a2942 # donkerblauw
+      bg_color: 0x263049
       radius: 10
-      shadow_color: 0x1c1c1c
-      border_color: 0x1c1c1c
-      text_color: tft_white
+      shadow_width: 0
+      border_width: 0
+      text_color: 0xE9EDF4
       pressed: # set some button colors to be different in pressed state
-        bg_color: dark_grey
-        text_color: tft_white
+        bg_color: 0x324064
+        text_color: 0xE9EDF4
+      checked: # lamp of schakelaar staat aan
+        bg_color: 0xF4B740
+        text_color: 0x2A1D00
     buttonmatrix:
-      bg_color: 0x1a2942 # donkerblauw
-      pad_all: 5
+      bg_color: 0x0B0E15
+      pad_all: 0
+      pad_column: 0
+      border_width: 0
       items:
-        bg_color: 0x1a2942 # donkerblauw
-        radius: 3
+        bg_color: 0x0B0E15
+        radius: 0
         height: 50
-        shadow_color: 0x1c1c1c
-        border_color: 0x1c1c1c
-        text_color: tft_white
+        shadow_width: 0
+        border_width: 0
+        text_color: 0x8792A8
         text_font: mdi24
-
         pressed: # set some button colors to be different in pressed state
-          bg_color: dark_grey
-          text_color: tft_white
-          
+          bg_color: 0x151B29
+          text_color: 0xE9EDF4
+        checked: # actieve pagina
+          bg_color: 0x151B29
+          text_color: 0xF4B740
+    slider:
+      bg_color: 0x263049
+      indicator:
+        bg_color: 0xE9EDF4
+      knob:
+        bg_color: 0xE9EDF4
+        pad_all: 2
+    bar:
+      bg_color: 0x263049
+      radius: 2
+      indicator:
+        bg_color: 0xE9EDF4
+        radius: 2
+
 
 
   page_wrap: true
@@ -200,6 +232,7 @@ font:
         "\U000F0050", # mdi-arrow-left-bold-circle-outline
         "\U000F0057", # mdi-arrow-right-bold-circle-outline
         "\U000F052C", # mdi-train
+        "\U000F04DB", # mdi-stop
       ]
 
 
@@ -244,8 +277,14 @@ font:
       "\u0025", # %
       ]
 
+  - file: "gfonts://Roboto@500"
+    id: roboto32 # grote getallen (temperatuur)
+    size: 32
+    bpp: 4
+    glyphs: "0123456789.,-+°% "
+
 color:
-  - id: dark_blue 
+  - id: dark_blue
     red: 47% 
     green: 59%
     blue: 82%

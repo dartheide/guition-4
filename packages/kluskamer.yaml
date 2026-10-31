@@ -9,18 +9,26 @@ lvgl:
   pages:
     - id: kluskamer_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: 4
       widgets:
         - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: kluskamer }}
                                                
         - obj: # Lampen
             x: 10
-            y: 220
+            y: 180
             width: 460
             height: 90
+            pad_all: 10
             styles: bg_white
             widgets:
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light, pos: top_left }}                                    
-              - button: !include { file: ../modules/knop/schakelaar.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4, pos: top_left }}                                    
+              - label:
+                  styles: card_title
+                  text: "Lampen"
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light, pos: bottom_left }}                                    
+              - button: !include { file: ../modules/knop/schakelaar.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4, pos: bottom_mid }}                                    
                                   
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: kluskamer, entity_id: cover.plisse_kluskamer, title: "Gordijnen kluskamer" }}
 

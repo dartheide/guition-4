@@ -10,3 +10,14 @@ sensor:
       - lvgl.spinbox.update:
           id: spinbox_${id}
           value: !lambda return x;
+
+  - platform: homeassistant
+    id: ${id}_temp_huidig
+    entity_id: ${entity_id}
+    attribute: current_temperature
+    on_value:
+      - lvgl.label.update:
+          id: temp_cur_${id}
+          text:
+            format: "nu %.1f°"
+            args: [ 'x' ]

@@ -7,6 +7,14 @@ sensor:
     entity_id: ${entity_id}
     attribute: current_position
     on_value:
+      - lvgl.bar.update:
+          id: cov_bar_${id}
+          value: !lambda 'return x;'
+      - lvgl.label.update:
+          id: cov_pos_${id}
+          text:
+            format: "%.0f%%"
+            args: [ 'x' ]
       - if:
           condition:
             lambda: |-
@@ -33,24 +41,16 @@ sensor:
                 text_opa: 100%
 
 text_sensor:
-  # Gordijnen
+  # Gordijnen: tijdens bewegen "opent..." / "sluit..." rechtsboven, anders de positie
   - platform: homeassistant
     id: cover_${id}_gordijnen
     entity_id: ${entity_id}
     on_value:
-      - if:
-          condition:
-            lambda: |-
-              return x == "opening" or x == "closing";
-#              return  ((0 == x.compare(std::string{"opening"})) or (0 == x.compare(std::string{"closing"})));
-          then:
-            - lvgl.label.update:
-                id: cov_stop_${id}
-                text: "STOP"
-          else:
-            - lvgl.label.update:
-                id: cov_stop_${id}
-                text:
-                  format: "%.0f%%"
-                  args: [ 'id(cover_${id}_pos).get_state()' ]
-  
+      - lvgl.label.update:
+          id: cov_pos_${id}
+          text: !lambda |-
+            static char buf[12];
+            if (x == "opening") return "opent...";
+            if (x == "closing") return "sluit...";
+            snprintf(buf, sizeof(buf), "%.0f%%", id(cover_${id}_pos).get_state());
+            return buf;

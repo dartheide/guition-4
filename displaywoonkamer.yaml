@@ -51,58 +51,65 @@ api:
 lvgl:
   top_layer:
     widgets:
-    - obj:
+    - obj: # kopbalk
         styles: header_footer
-        text_font: roboto20
+        text_font: roboto16
         height: 30
-        bg_color: 0x1c1c1c
-        border_color: 0x1c1c1c 
-        border_width: 0
-        text_color: tft_white
-        radius: 0
+        pad_all: 0
+        pad_left: 12
+        pad_right: 12
         scrollbar_mode: "OFF"
-        align: top_left  
-        widgets:  
+        align: top_left
+        widgets:
           - label:
-              align: top_right
-              x: -2
-              y: -10
+              align: right_mid
+              text_font: roboto20
+              text_color: 0x8792A8
               text: "\U000F05A9"
               id: lbl_hastatus
               hidden: true
-          - label: 
-              align: top_left
-              y: -10
+          - label:
+              align: left_mid
               id: title_time
               text: "00:00"
-          - label: 
+          - label:
               align_to:
                 id: title_time
                 align: out_right_mid
-              y: -5
+                x: 6
+              text_font: roboto20
               id: stookwijzer_label
-              text: " \U000F0238"
-
-          - label:
+              text: "\U000F0238"
+          - label: # chip: "Morgen <afval>"
               align_to:
                 id: stookwijzer_label
                 align: out_right_mid
-              y: -10
+                x: 10
               id: afval_label2
-              text: " Morgen: "
-          
+              text_font: roboto14
+              text_color: 0x8792A8
+              text: "Morgen"
           - label:
               align_to:
                 id: afval_label2
                 align: out_right_mid
-              y: -10
+                x: 6
               id: afval_label
-                   
-    - buttonmatrix:
+              text_font: roboto14
+              text_color: 0xBFE8B8
+              bg_color: 0x2F4D2F
+              bg_opa: COVER
+              radius: 10
+              pad_left: 8
+              pad_right: 8
+              pad_top: 1
+              pad_bottom: 1
+              text: ""
+
+    - buttonmatrix: # navigatie; actieve pagina wordt gezet door script nav_actief
+        id: nav_matrix
         align: bottom_mid
         styles: header_footer
-        radius: 0
-        #id: top_layer
         rows:
            - buttons:
               - id: page_home
@@ -143,7 +150,17 @@ time:
           - script.execute: time_update
 
 script:
-# Time update  
+# Actieve knop in de navigatiebalk: 0 = home .. 4 = kluskamer, -1 = geen
+  - id: nav_actief
+    parameters:
+      knop: int
+    then:
+      - lambda: |-
+          lv_buttonmatrix_clear_button_ctrl_all(id(nav_matrix)->obj, LV_BUTTONMATRIX_CTRL_CHECKED);
+          if (knop >= 0)
+            lv_buttonmatrix_set_button_ctrl(id(nav_matrix)->obj, knop, LV_BUTTONMATRIX_CTRL_CHECKED);
+
+# Time update
   - id: time_update
     then:
       - lvgl.label.update:

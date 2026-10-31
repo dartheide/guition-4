@@ -4,42 +4,74 @@ lvgl:
   pages:
     - id: weather_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
       widgets:
-        - obj: # achtergrond
+        - obj: # Weer van nu
             x: 10
             y: 40
             width: 460
-            height: 375
+            height: 110
+            pad_all: 10
             styles: bg_white
             widgets:
               - label:
-                  text_font: roboto20
-                  text: "Weersverwachting"
+                  text_font: weather_icons
+                  id: weer_nu_icon
+                  text: "-"
+                  align: left_mid
+              - label:
+                  id: weer_nu_tekst
+                  text: "-"
                   align: top_left
-                  y: 20
+                  x: 70
+                  y: 14
+                  width: 220
+                  long_mode: DOT
+              - label:
+                  id: weer_nu_uv
+                  text_font: roboto16
+                  text_color: 0x8792A8
+                  text: ""
+                  align: top_left
+                  x: 70
+                  y: 48
+              - label:
+                  id: weer_nu_hoog
+                  text: "-"
+                  align: top_right
+                  y: 14
+              - label:
+                  id: weer_nu_laag
+                  text_color: 0x8792A8
+                  text: "-"
+                  align: top_right
+                  y: 46
             on_press:
                 then:
                   lvgl.page.show: start_page
 
         - obj: # Dag 0
-            x: 25
-            y: 150
-            width: 100
-            height: 240
+            x: 10
+            y: 160
+            width: 107
+            height: 260
+            pad_all: 10
             styles: bg_white
-            bg_color: 0x1a237e
-            scrollbar_mode: "OFF"
             widgets:
               - label:
                   id: text_dag_0
+                  text_font: roboto16
                   text: "dag"
                   align: top_mid
               - label:
                   text_font: weather_icons
                   id: home_weather_icon_0
                   text: "-"
-                  align: center
-                  y: -30
+                  align: top_mid
+                  y: 30
               - label:
                   id: text_temperature_high_0
                   text: "-"
@@ -47,36 +79,39 @@ lvgl:
                   y: 20
               - label:
                   id: text_temperature_low_0
-                  text: "/-"
+                  text_color: 0x8792A8
+                  text: "-"
                   align: center
                   y: 50
               - label:
                   id: text_uv_index_0
-                  text: "uv "
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  text: "uv"
                   align: bottom_mid
             on_press:
                 then:
                   lvgl.page.show: start_page
 
         - obj: # Dag 1
-            x: 135
-            y: 150
-            width: 100
-            height: 240
+            x: 127
+            y: 160
+            width: 107
+            height: 260
+            pad_all: 10
             styles: bg_white
-            bg_color: 0x1a237e
-            scrollbar_mode: "OFF"
             widgets:
               - label:
                   id: text_dag_1
+                  text_font: roboto16
                   text: "dag"
                   align: top_mid
               - label:
                   text_font: weather_icons
                   id: home_weather_icon_1
                   text: "-"
-                  align: center
-                  y: -30
+                  align: top_mid
+                  y: 30
               - label:
                   id: text_temperature_high_1
                   text: "-"
@@ -84,36 +119,39 @@ lvgl:
                   y: 20
               - label:
                   id: text_temperature_low_1
-                  text: "/-"
+                  text_color: 0x8792A8
+                  text: "-"
                   align: center
                   y: 50
               - label:
                   id: text_uv_index_1
-                  text: "uv "
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  text: "uv"
                   align: bottom_mid
             on_press:
                 then:
                   lvgl.page.show: start_page
 
         - obj: # Dag 2
-            x: 245
-            y: 150
-            width: 100
-            height: 240
+            x: 244
+            y: 160
+            width: 107
+            height: 260
+            pad_all: 10
             styles: bg_white
-            bg_color: 0x1a237e
-            scrollbar_mode: "OFF"
             widgets:
               - label:
                   id: text_dag_2
+                  text_font: roboto16
                   text: "dag"
                   align: top_mid
               - label:
                   text_font: weather_icons
                   id: home_weather_icon_2
                   text: "-"
-                  align: center
-                  y: -30
+                  align: top_mid
+                  y: 30
               - label:
                   id: text_temperature_high_2
                   text: "-"
@@ -121,37 +159,39 @@ lvgl:
                   y: 20
               - label:
                   id: text_temperature_low_2
-                  text: "/-"
+                  text_color: 0x8792A8
+                  text: "-"
                   align: center
                   y: 50
               - label:
                   id: text_uv_index_2
-                  text: "uv "
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  text: "uv"
                   align: bottom_mid
             on_press:
                 then:
                   lvgl.page.show: start_page
 
-
         - obj: # Dag 3
-            x: 355
-            y: 150
-            width: 100
-            height: 240
+            x: 361
+            y: 160
+            width: 107
+            height: 260
+            pad_all: 10
             styles: bg_white
-            bg_color: 0x1a237e
-            scrollbar_mode: "OFF"
             widgets:
               - label:
                   id: text_dag_3
+                  text_font: roboto16
                   text: "dag"
                   align: top_mid
               - label:
                   text_font: weather_icons
                   id: home_weather_icon_3
                   text: "-"
-                  align: center
-                  y: -30
+                  align: top_mid
+                  y: 30
               - label:
                   id: text_temperature_high_3
                   text: "-"
@@ -159,12 +199,15 @@ lvgl:
                   y: 20
               - label:
                   id: text_temperature_low_3
-                  text: "/-"
+                  text_color: 0x8792A8
+                  text: "-"
                   align: center
                   y: 50
               - label:
                   id: text_uv_index_3
-                  text: "uv "
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  text: "uv"
                   align: bottom_mid
             on_press:
                 then:
@@ -222,6 +265,7 @@ script:
             lv_label_set_text(id(home_weather_icon_0), icon.c_str());
             // Also update startscherm icons for day 0
             lv_label_set_text(id(home_weather_icon_now), icon.c_str());
+            lv_label_set_text(id(weer_nu_icon), icon.c_str());
           } else if (day == 1) {
             lv_label_set_text(id(home_weather_icon_1), icon.c_str());
           } else if (day == 2) {
@@ -242,6 +286,10 @@ sensor:
             static char buf[16];
             snprintf(buf, sizeof(buf), "Uv %.0f", x);
             return buf;
+      # zelfde tekst op de weerpagina
+      - lvgl.label.update:
+          id: weer_nu_uv
+          text: !lambda 'return std::string(lv_label_get_text(id(label_uv_index_now)));'
 
 text_sensor:
   # Day names
@@ -349,6 +397,10 @@ text_sensor:
             static char buf[16];
             snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
             return buf;
+      # zelfde tekst op de weerpagina
+      - lvgl.label.update:
+          id: weer_nu_hoog
+          text: !lambda 'return std::string(lv_label_get_text(id(forecast_temperature_current_high)));'
 
   - platform: homeassistant
     id: weather_temp_high_1
@@ -405,6 +457,10 @@ text_sensor:
             static char buf[16];
             snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
             return buf;
+      # zelfde tekst op de weerpagina
+      - lvgl.label.update:
+          id: weer_nu_laag
+          text: !lambda 'return std::string(lv_label_get_text(id(forecast_temperature_current_low)));'
 
   - platform: homeassistant
     id: weather_temp_low_1
@@ -472,6 +528,10 @@ text_sensor:
             else if (x == "windy" || x == "windy-variant") return "Winderig";
             else if (x == "exceptional") return "Uitzonderlijk";
             else return "Onbekend";
+      # zelfde tekst op de weerpagina
+      - lvgl.label.update:
+          id: weer_nu_tekst
+          text: !lambda 'return std::string(lv_label_get_text(id(text_weather_condition_now)));'
 
   - platform: homeassistant
     id: weather_condition_1

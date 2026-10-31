@@ -1,56 +1,57 @@
-
 # LVGL configuration
 lvgl:
   pages:
     - id: start_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: 0
       widgets:
         - obj: # Weer
             x: 10
             y: 40
             width: 225
             height: 150
+            pad_all: 10
             styles: bg_white
-
             widgets:
               - label:
                   text_font: weather_icons
                   id: home_weather_icon_now
+                  align: top_left
                   text: "\U000F0599"
-              # - label:
-              #     text_font: roboto20
-              #     align: bottom_left
-              #     y: -30
-              #     id: label_temperature_now
-              #     text: "-"
               - label:
                   text_font: roboto20
-                  align: bottom_left
-                  y: -5
-                  id: label_uv_index_now
+                  align: top_right
+                  y: 2
+                  id: forecast_temperature_current_high
                   text: "-"
               - label:
                   text_font: roboto20
-                  align: bottom_right
-                  id: forecast_temperature_current_high
-                  text: '"'
-                  y: -30
-              - label:
-                  text_font: roboto20
-                  align: bottom_right
+                  align: top_right
+                  y: 30
+                  text_color: 0x8792A8
                   id: forecast_temperature_current_low
-                  text: '"'
-                  y: -5
+                  text: "-"
               - label:
-                  text_font: roboto20
+                  text_font: roboto16
+                  align: bottom_left
+                  y: -20
+                  width: 205
+                  long_mode: DOT
                   id: text_weather_condition_now
                   text: ""
-                  align: top_right
-
+              - label:
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: bottom_left
+                  id: label_uv_index_now
+                  text: "-"
             on_press:
                 then:
                   lvgl.page.show: weather_page
- 
+
         - obj: # Energiescherm
             x: 245
             y: 40
@@ -76,19 +77,20 @@ lvgl:
                       indicators:
                         - line:
                             id: val_needle
-                            width: 8
+                            width: 6
+                            color: 0xE9EDF4
                             r_mod: 12 # sets line length by this much difference from the scale default radius
                             value: 0
-                        - arc: # first half of the scale background
-                            color: 0x00FF00 # green
+                        - arc: # teruglevering
+                            color: 0x4CC38A # groen
                             r_mod: 10 # radius difference from the scale default radius
-                            width: 31
+                            width: 20
                             start_value: -2000
                             end_value: 0
-                        - arc: # second half of the scale background
-                            color: 0xFF3000 # red
+                        - arc: # afname
+                            color: 0xEF5D4E # rood
                             r_mod: 10
-                            width: 31
+                            width: 20
                             start_value: 0
                             end_value: 2000
 
@@ -112,11 +114,12 @@ lvgl:
                     then:
                       lvgl.page.show: energy_page
 
-              - label: # 
+              - label: #
                   text_font: roboto14
+                  text_color: 0x8792A8
                   align: bottom_mid
                   y: 10
-                  text: Grid
+                  text: Net
                   on_press:
                     then:
                       lvgl.page.show: energy_page
@@ -124,77 +127,58 @@ lvgl:
                 then:
                   lvgl.page.show: energy_page
 
-        - obj: # Treinlijst
+        - obj: # Treinlijst: tijd in eigen kolom, bestemming ernaast (gevuld door script vertrek_regel)
             x: 10
             y: 200
             width: 460
             height: 160
+            pad_all: 10
             styles: bg_white
             scrollbar_mode: "OFF"
             widgets:
               - label:
-                  text_font: weather_icons
-                  text: "\U000F052C" # train 
-                  align: left_mid            
+                  styles: card_title
+                  text: "Vertrek"
               - label:
-                  text_font: roboto16
-                  id: text_ns_1
-                  text: "-"
-                  align: top_left
-                  x: 75
-              - label:
-                  text_font: roboto16
-                  id: text_ns_2
-                  text: "-"
-                  align: top_left
-                  x: 75
-                  y: 25
-              - label:
-                  text_font: roboto16
-                  id: text_ns_3
-                  text: "-"
-                  align: top_left
-                  x: 75
-                  y: 50
-              - label:
-                  text_font: roboto16
-                  id: text_ns_4
-                  text: "-"
-                  align: top_left
-                  x: 75
-                  y: 75
-              - label:
-                  text_font: roboto16
-                  id: text_ns_5
-                  text: "-"
-                  align: top_left
-                  x: 75
-                  y: 100
+                  text_font: mdi24
+                  text_color: 0x8792A8
+                  text: "\U000F052C" # train
+                  align: top_right
+                  y: -8
+              - label: { text_font: roboto16, id: text_ns_1_tijd, text: "", align: top_left, y: 22 }
+              - label: { text_font: roboto16, id: text_ns_1, text: "-", align: top_left, x: 56, y: 22, width: 384, long_mode: DOT }
+              - label: { text_font: roboto16, id: text_ns_2_tijd, text: "", align: top_left, y: 46 }
+              - label: { text_font: roboto16, id: text_ns_2, text: "-", align: top_left, x: 56, y: 46, width: 384, long_mode: DOT }
+              - label: { text_font: roboto16, id: text_ns_3_tijd, text: "", align: top_left, y: 70 }
+              - label: { text_font: roboto16, id: text_ns_3, text: "-", align: top_left, x: 56, y: 70, width: 384, long_mode: DOT }
+              - label: { text_font: roboto16, id: text_ns_4_tijd, text: "", align: top_left, y: 94 }
+              - label: { text_font: roboto16, id: text_ns_4, text: "-", align: top_left, x: 56, y: 94, width: 384, long_mode: DOT }
+              - label: { text_font: roboto16, id: text_ns_5_tijd, text: "", align: top_left, y: 118 }
+              - label: { text_font: roboto16, id: text_ns_5, text: "-", align: top_left, x: 56, y: 118, width: 384, long_mode: DOT }
             on_press:
               then:
                 lvgl.page.show: ns_page
 
-
-
-        - obj: # Status
+        - obj: # Scènes
             x: 10
             y: 370
             width: 460
             height: 50
+            pad_all: 5
             styles: bg_white
             scrollbar_mode: "OFF"
             widgets:
               - button:
                     id: start_lamp1
-                    align: left_mid 
-                    width: 150
-                    height: 30
+                    align: left_mid
+                    width: 180
+                    height: 40
                     widgets:
                       - label:
                           text_font: roboto16
                           id: start_lamp1_label
                           text: "\U000F0336 Alle lichten uit"
-                          align: left_mid
+                          align: center
                     on_press:
                       then:
                         - homeassistant.action:
@@ -218,5 +202,3 @@ sensor:
           text:
             format: "%.0f W"
             args: [ 'x' ]
-
-

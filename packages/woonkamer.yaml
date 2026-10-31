@@ -13,19 +13,27 @@ lvgl:
   pages:
     - id: ${pagina}_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: 1
       widgets:
         - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: woonkamer }}
                                           
         - obj: # Lampen
             x: 10
-            y: 220
+            y: 180
             width: 460
             height: 90
+            pad_all: 10
             styles: bg_white
             widgets:
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: light.woonkamer, pos: top_left }}                                    
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: top_mid }}
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: top_right }}
+              - label:
+                  styles: card_title
+                  text: "Lampen"
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: light.woonkamer, pos: bottom_left }}                                    
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: bottom_mid }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: bottom_right }}
               
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker, title: "Gordijnen Erker" }}
 

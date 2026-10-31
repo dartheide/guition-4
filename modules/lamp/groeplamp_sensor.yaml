@@ -1,24 +1,16 @@
 # id:
 # entity_id
+# aan: knop gevuld in accentkleur (theme 'checked'), uit: gewone knop
 text_sensor:
   - platform: homeassistant
     id: remote_light_${id}
     entity_id: ${entity_id}
     on_value:
-      - if:
-          condition:
-            lambda: |-
-              return x == "on";
-#              return (0 == x.compare(std::string{"on"})) ;
-          then:
-            - lvgl.label.update:
-                id: ${id}_lamp_label
-                text: "\U000F1254 ${id}"
-                text_color: tft_yellow
-          else:
-            - lvgl.label.update:
-                id: ${id}_lamp_label
-                text: "\U000F1254 ${id}"
-                text_color: tft_white
-
-  
+      - lvgl.widget.update:
+          id: ${id}_lamp_btn
+          state:
+            checked: !lambda 'return x == "on";'
+      - lvgl.label.update:
+          id: ${id}_lamp_label
+          text: !lambda |-
+            return std::string(x == "on" ? "\U000F1254 ${id}" : "\U000F0336 ${id}");

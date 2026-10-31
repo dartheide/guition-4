@@ -2,28 +2,30 @@
 # entity_id
 #- obj: # Temperatuur
         x: 245
-        y: 320
+        y: 280
         width: 225
-        height: 100
+        height: 140
+        pad_all: 10
         styles: bg_white
         widgets:
-            - button:
-                width: 50
-                height: 40
-                align: bottom_left
-                id: ${id}_spin_down
-                on_click:
-                    - lvgl.spinbox.decrement: spinbox_${id}
-                widgets:
-                    - label:
-                        text: "-"
-                        align: center
+            - label:
+                styles: card_title
+                text: "Temperatuur"
+            - label: # gemeten temperatuur, gezet door temp_sensor.yaml
+                styles: card_value
+                id: temp_cur_${id}
+                text_color: 0x8792A8
+                text: "nu -"
             - spinbox:
-                styles: bg_white
                 id: spinbox_${id}
-                align: bottom_mid 
+                align: top_mid
+                y: 14
+                width: 120
+                text_font: roboto32
                 text_align: CENTER
-                width: 50
+                text_color: 0xE9EDF4
+                bg_opa: TRANSP
+                border_width: 0
                 range_from: 21
                 range_to: 35
                 selected_digit: 0
@@ -39,17 +41,26 @@
                                 temperature: !lambda return x;
                                 entity_id: ${entity_id}
             - button:
-                width: 50
-                height: 40
+                width: 60
+                height: 44
+                align: bottom_left
+                id: ${id}_spin_down
+                on_click:
+                    - lvgl.spinbox.decrement: spinbox_${id}
+                widgets:
+                    - label:
+                        text_font: roboto32
+                        text: "-"
+                        align: center
+            - button:
+                width: 60
+                height: 44
                 align: bottom_right
                 id: ${id}_spin_up
                 on_click:
                     - lvgl.spinbox.increment: spinbox_${id}
                 widgets:
                     - label:
+                        text_font: roboto32
                         text: "+"
                         align: center
-            - label:
-                text_font: roboto16
-                align: top_mid
-                text: "Temperatuur"

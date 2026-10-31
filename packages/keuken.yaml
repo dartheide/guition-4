@@ -11,19 +11,27 @@ lvgl:
   pages:
     - id: keuken_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: 2
       widgets:
         - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: keuken }}
                                           
         - obj: 
             x: 10
-            y: 220
+            y: 180
             width: 460
             height: 90
+            pad_all: 10
             styles: bg_white
             widgets:
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: eettafel, entity_id: light.icasa_iczb_iw11d_light, pos: top_left }}
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: aanrecht, entity_id: light.aanrechtblad, pos: top_mid }}
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: spotjes, entity_id: light.keukenspotjes, pos: top_right }}
+              - label:
+                  styles: card_title
+                  text: "Lampen"
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: eettafel, entity_id: light.icasa_iczb_iw11d_light, pos: bottom_left }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: aanrecht, entity_id: light.aanrechtblad, pos: bottom_mid }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: spotjes, entity_id: light.keukenspotjes, pos: bottom_right }}
 
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: klapdeur, entity_id: cover.plissegordijn_klapdeur_cover, title: "Gordijnen eettafel" }}
         - obj: !include { file: ../modules/cover/gui_cover2.yaml, vars: {id: keuken, entity_id: cover.keukenraam_cover, title: "Gordijnen keuken" }}

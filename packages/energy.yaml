@@ -6,6 +6,10 @@ lvgl:
   pages:
     - id: energy_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
       widgets:
         - obj: # achtergrond
             x: 10
@@ -62,7 +66,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:
@@ -104,7 +108,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:
@@ -133,7 +137,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:
@@ -161,7 +165,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:
@@ -190,7 +194,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:
@@ -219,7 +223,7 @@ lvgl:
                   width: 130
                   height: 100
                   styles: bg_white
-                  bg_color: 0x1a237e
+                  bg_color: 0x263049
                   scrollbar_mode: "OFF"
                   widgets:
                     - label:

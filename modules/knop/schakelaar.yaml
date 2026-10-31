@@ -1,12 +1,13 @@
 
+id: ${id}_switch_btn
 align: ${pos}
-width: 135
-height: 50
+width: 140
+height: 44
 widgets:
   - label:
       text_font: roboto20
       id: ${id}_switch_label
-      text: "\U000F0336"
+      text: "${id}"
       align: left_mid
 on_press:
   then:

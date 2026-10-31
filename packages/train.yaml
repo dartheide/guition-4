@@ -4,6 +4,10 @@ lvgl:
   pages:
     - id: ns_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
       widgets:
         - obj: # achtergrond
             x: 10
@@ -59,10 +63,11 @@ text_sensor:
     id: ns_departure1
     entity_id: sensor.ns_departure_1
     on_value:
-      # Update startscherm label
-      - lvgl.label.update:
-          id: text_ns_1
-          text: !lambda 'return x.c_str();'
+      # Update startscherm: tijd en bestemming apart
+      - script.execute:
+          id: vertrek_regel
+          nr: 1
+          tekst: !lambda 'return x;'
       # Update train page label
       - lvgl.label.update:
           id: text_train_1
@@ -72,10 +77,11 @@ text_sensor:
     id: ns_departure2
     entity_id: sensor.ns_departure_2
     on_value:
-      # Update startscherm label
-      - lvgl.label.update:
-          id: text_ns_2
-          text: !lambda 'return x.c_str();'
+      # Update startscherm: tijd en bestemming apart
+      - script.execute:
+          id: vertrek_regel
+          nr: 2
+          tekst: !lambda 'return x;'
       # Update train page label
       - lvgl.label.update:
           id: text_train_2
@@ -85,10 +91,11 @@ text_sensor:
     id: ns_departure3
     entity_id: sensor.ns_departure_3
     on_value:
-      # Update startscherm label
-      - lvgl.label.update:
-          id: text_ns_3
-          text: !lambda 'return x.c_str();'
+      # Update startscherm: tijd en bestemming apart
+      - script.execute:
+          id: vertrek_regel
+          nr: 3
+          tekst: !lambda 'return x;'
       # Update train page label
       - lvgl.label.update:
           id: text_train_3
@@ -98,10 +105,11 @@ text_sensor:
     id: ns_departure4
     entity_id: sensor.ns_departure_4
     on_value:
-      # Update startscherm label
-      - lvgl.label.update:
-          id: text_ns_4
-          text: !lambda 'return x.c_str();'
+      # Update startscherm: tijd en bestemming apart
+      - script.execute:
+          id: vertrek_regel
+          nr: 4
+          tekst: !lambda 'return x;'
       # Update train page label
       - lvgl.label.update:
           id: text_train_4
@@ -111,12 +119,43 @@ text_sensor:
     id: ns_departure5
     entity_id: sensor.ns_departure_5
     on_value:
-      # Update startscherm label
-      - lvgl.label.update:
-          id: text_ns_5
-          text: !lambda 'return x.c_str();'
+      # Update startscherm: tijd en bestemming apart
+      - script.execute:
+          id: vertrek_regel
+          nr: 5
+          tekst: !lambda 'return x;'
       # Update train page label
       - lvgl.label.update:
           id: text_train_5
           text: !lambda 'return x.c_str();'
-        
+
+script:
+  # Splitst "19:08 - Zwolle" in tijd en bestemming voor het startscherm.
+  # Een vervallen trein ("... - rijdt niet") wordt rood en doorgestreept.
+  - id: vertrek_regel
+    mode: queued
+    parameters:
+      nr: int
+      tekst: string
+    then:
+      - lambda: |-
+          if (nr < 1 || nr > 5) return;
+          lv_obj_t *tijd[] = {id(text_ns_1_tijd), id(text_ns_2_tijd), id(text_ns_3_tijd), id(text_ns_4_tijd), id(text_ns_5_tijd)};
+          lv_obj_t *best[] = {id(text_ns_1), id(text_ns_2), id(text_ns_3), id(text_ns_4), id(text_ns_5)};
+          std::string t = "";
+          std::string b = tekst;
+          size_t pos = tekst.find(" - ");
+          if (pos != std::string::npos) {
+            t = tekst.substr(0, pos);
+            b = tekst.substr(pos + 3);
+          }
+          bool vervalt = b.find("rijdt niet") != std::string::npos;
+          lv_color_t kleur = lv_color_hex(vervalt ? 0xEF5D4E : 0xE9EDF4);
+          lv_text_decor_t decor = vervalt ? LV_TEXT_DECOR_STRIKETHROUGH : LV_TEXT_DECOR_NONE;
+          lv_obj_t *regel[] = {tijd[nr - 1], best[nr - 1]};
+          lv_label_set_text(regel[0], t.c_str());
+          lv_label_set_text(regel[1], b.c_str());
+          for (auto *obj : regel) {
+            lv_obj_set_style_text_color(obj, kleur, LV_PART_MAIN);
+            lv_obj_set_style_text_decor(obj, decor, LV_PART_MAIN);
+          }

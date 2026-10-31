@@ -9,22 +9,30 @@ lvgl:
   pages:
     - id: studeer_page
       styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: 3
       widgets:
         - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: studeerkamer }}
                                                
         - obj: # Lampen
             x: 10
-            y: 220
+            y: 180
             width: 460
             height: 90
+            pad_all: 10
             styles: bg_white
             widgets:
+              - label:
+                  styles: card_title
+                  text: "Lampen"
 
               - button:  # Nieuw: Bureau-knop met dynamische tekst
                   id: desk_toggle
-                  align: top_right
-                  width: 135
-                  height: 50
+                  align: bottom_right
+                  width: 140
+                  height: 44
                   widgets:
                     - label:
                         id: desk_label
