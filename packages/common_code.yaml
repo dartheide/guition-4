@@ -13,20 +13,6 @@ substitutions:
   radio_url_stubru: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"
   radio_url_pinguin: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
 
-globals:
-  - id: from_sensor_flag_studeerkamer
-    type: bool
-    initial_value: 'false'
-  - id: from_sensor_flag_woonkamer
-    type: bool
-    initial_value: 'false'
-  - id: from_sensor_flag_keuken
-    type: bool
-    initial_value: 'false'
-  - id: from_sensor_flag_kluskamer
-    type: bool
-    initial_value: 'false'
-
 
 esphome:
   name: "${name}"
@@ -113,11 +99,13 @@ lvgl:
         bg_color: 0xE9EDF4
         pad_all: 2
     bar:
-      bg_color: 0x263049
-      radius: 2
+      bg_color: 0x324064
+      bg_opa: COVER
+      radius: 5
       indicator:
-        bg_color: 0xE9EDF4
-        radius: 2
+        bg_color: 0xF4B740
+        bg_opa: COVER
+        radius: 5
 
 
 
@@ -259,6 +247,9 @@ font:
             "\U000F10C3", # mdi-thermometer-low
             "\U000F10C2", # mdi-thermometer-high
             "\U000F0336",
+            "\U000F0FCE", # mdi-movie-open
+            "\U000F02E3", # mdi-bed
+            "\U000F0A28", # mdi-exit-run
           ]
 
   - file: "gfonts://Roboto"

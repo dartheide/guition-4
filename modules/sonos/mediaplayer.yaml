@@ -29,28 +29,47 @@
         width: 440
         long_mode: DOT
 
-    - slider: # volume
-        id: slider_media_player_sonos_${id}
+    - button: # zachter
+        height: 40
+        width: 50
         align: bottom_left
-        width: 150
-        height: 8
-        x: 8
-        y: -16
-        value: 5
-        min_value: 1
-        max_value: 70
-        adv_hittest: true
-        on_value:
-            - if:
-                condition:
-                    lambda: 'return not id(from_sensor_flag_${id});'
-                then:
-                - homeassistant.action:
-                    action: media_player.volume_set
-                    data:
-                        entity_id: media_player.${id}
-                        volume_level: !lambda "return (x / 100);"
-            - lambda: 'id(from_sensor_flag_${id}) = false;'
+        widgets:
+            - label:
+                text_font: mdi24
+                text: "\U000F075E"
+                align: center
+        on_click:
+            - homeassistant.action:
+                action: media_player.volume_down
+                data:
+                    entity_id: media_player.${id}
+
+    - label: # volume in %, gezet door mediaplayersensors.yaml
+        id: sonos_${id}_volume_label
+        text_font: roboto16
+        text_color: 0x8792A8
+        text_align: center
+        align: bottom_left
+        x: 54
+        y: -10
+        width: 48
+        text: "-"
+
+    - button: # harder
+        height: 40
+        width: 50
+        align: bottom_left
+        x: 106
+        widgets:
+            - label:
+                text_font: mdi24
+                text: "\U000F075D"
+                align: center
+        on_click:
+            - homeassistant.action:
+                action: media_player.volume_up
+                data:
+                    entity_id: media_player.${id}
 
     - button: # Mute
         height: 40

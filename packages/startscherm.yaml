@@ -169,15 +169,59 @@ lvgl:
             scrollbar_mode: "OFF"
             widgets:
               - button:
-                    id: start_lamp1
+                    id: scene_film
                     align: left_mid
-                    width: 180
+                    width: 100
+                    height: 40
+                    widgets:
+                      - label:
+                          text_font: roboto16
+                          text: "\U000F0FCE Film"
+                          align: center
+                    on_press:
+                      then:
+                        - homeassistant.action:
+                            action: script.film
+              - button:
+                    id: scene_naar_bed
+                    align: left_mid
+                    x: 106
+                    width: 110
+                    height: 40
+                    widgets:
+                      - label:
+                          text_font: roboto16
+                          text: "\U000F02E3 Naar bed"
+                          align: center
+                    on_press:
+                      then:
+                        - homeassistant.action:
+                            action: script.naar_bed
+              - button:
+                    id: scene_weg
+                    align: left_mid
+                    x: 222
+                    width: 90
+                    height: 40
+                    widgets:
+                      - label:
+                          text_font: roboto16
+                          text: "\U000F0A28 Weg"
+                          align: center
+                    on_press:
+                      then:
+                        - homeassistant.action:
+                            action: script.weg
+              - button:
+                    id: start_lamp1
+                    align: right_mid
+                    width: 132
                     height: 40
                     widgets:
                       - label:
                           text_font: roboto16
                           id: start_lamp1_label
-                          text: "\U000F0336 Alle lichten uit"
+                          text: "\U000F0336 Lichten uit"
                           align: center
                     on_press:
                       then:

@@ -2,6 +2,7 @@ packages:
   mediaplayer_kluskamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: kluskamer }}
   lamp1: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light }}
   switch1: !include { file: ../modules/switch/schakelaar_sensor.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4 }}
+  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: kluskamer, entity_id: cover.plisse_kluskamer }}
   temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: kluskamer, entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat }}
   
 # LVGL configuration

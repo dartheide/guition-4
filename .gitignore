@@ -4,3 +4,4 @@
 /.esphome/
 /secrets.yaml
 packages/.esphome/external_components/ce87c102/
+/.claude/settings.local.json

@@ -9,11 +9,11 @@ sensor:
     entity_id: media_player.${id}
     attribute: volume_level
     on_value:
-      - lambda: 'id(from_sensor_flag_${id}) = true;'
-      - lvgl.slider.update: 
-          id: slider_media_player_sonos_${id}
-          value: !lambda "return (x * 100);"
-      - lambda: 'id(from_sensor_flag_${id}) = false;'
+      - lvgl.label.update:
+          id: sonos_${id}_volume_label
+          text:
+            format: "%.0f%%"
+            args: [ 'x * 100' ]
 
 
 

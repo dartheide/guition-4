@@ -21,9 +21,9 @@
       - bar:
           id: cov_bar_${id}
           align: top_left
-          y: 26
+          y: 24
           width: 205
-          height: 4
+          height: 10
           min_value: 0
           max_value: 100
           value: 0
