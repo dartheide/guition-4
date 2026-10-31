@@ -69,8 +69,10 @@ lvgl:
                     - range_from: -2000
                       range_to: 2000
                       angle_range: 180 # sets the total angle to 180 = starts mid left and ends mid right
-                      ticks:
-                        count: 0
+                      ticks: # minimaal 2 verplicht; onzichtbaar gemaakt
+                        count: 2
+                        width: 0
+                        length: 0
                       indicators:
                         - line:
                             id: val_needle
