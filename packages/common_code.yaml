@@ -273,32 +273,3 @@ font:
     size: 32
     bpp: 4
     glyphs: "0123456789.,-+°% Wkh"
-
-color:
-  - id: dark_blue
-    red: 47% 
-    green: 59%
-    blue: 82%
-  - id: darker_blue #1a2942
-    red: 26%
-    green: 41%
-    blue: 66%
-  - id: tft_black
-    red: 28%
-    green: 28%
-    blue: 28%
-  - id: tft_white
-    red: 100%
-    green: 100%
-    blue: 100%
-  - id: dark_grey
-    red: 56%
-    green: 56%
-    blue: 56%
-  - id: tft_yellow 
-    # Golden yellow rgb(218, 165, 32) 
-    # Gold (#FFD700): rgb(255, 215, 0) 
-    # Bright Yellow (#FFFF00): rgb(255, 255, 0)
-    red: 100%
-    green: 84%
-    blue: 0%

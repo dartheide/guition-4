@@ -1,0 +1,43 @@
+# n: dag 0..3
+# x: positie van de kaart
+# kaart voor één dag op de weerpagina (gevuld door script weer_waarde)
+
+#- obj:
+    x: ${x}
+    y: 160
+    width: 107
+    height: 260
+    pad_all: 10
+    styles: bg_white
+    widgets:
+      - label:
+          id: text_dag_${n}
+          text_font: roboto16
+          text: "dag"
+          align: top_mid
+      - label:
+          text_font: weather_icons
+          id: home_weather_icon_${n}
+          text: "-"
+          align: top_mid
+          y: 30
+      - label:
+          id: text_temperature_high_${n}
+          text: "-"
+          align: center
+          y: 20
+      - label:
+          id: text_temperature_low_${n}
+          text_color: 0x8792A8
+          text: "-"
+          align: center
+          y: 50
+      - label:
+          id: text_uv_index_${n}
+          text_font: roboto14
+          text_color: 0x8792A8
+          text: "uv"
+          align: bottom_mid
+    on_press:
+      then:
+        lvgl.page.show: start_page

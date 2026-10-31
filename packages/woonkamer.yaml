@@ -7,6 +7,7 @@ packages:
   lamp2: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: erker, entity_id: light.erker }}
   lamp3: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer }}
   cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker }}
+  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: woonkamer, entity_id: climate.bosch_radiatorkraan_woonkamer_thermostat }}
 
 # LVGL configuration
 lvgl:
@@ -35,6 +36,6 @@ lvgl:
               - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: bottom_mid }}
               - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: bottom_right }}
               
-        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker, title: "Gordijnen Erker" }}
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker, title: "Gordijnen Erker", x: 10 }}
 
         - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: woonkamer, entity_id: climate.bosch_radiatorkraan_woonkamer_thermostat }}

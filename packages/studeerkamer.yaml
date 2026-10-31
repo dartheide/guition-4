@@ -39,14 +39,14 @@ lvgl:
                         text: "\U000F1239 Bureau..."
                         align: left_mid
                   on_press:
-                    - homeassistant.service:
-                          service: cover.set_cover_position
+                    - homeassistant.action:
+                          action: cover.set_cover_position
                           data:
                             position: !lambda |-
                               return (id(desk_position).state == 23) ? 82 : 23;
                             entity_id: cover.desk_4728
 
-        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: studeerkamer, entity_id: cover.gordijnen_studeer, title: "Rolgordijnen", x_pos: "10" }}
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: studeerkamer, entity_id: cover.gordijnen_studeer, title: "Rolgordijnen", x: 10 }}
 
         - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: studeerkamer, entity_id: climate.bosch_radiatorkraan_studeerkamer_thermostat }}
 

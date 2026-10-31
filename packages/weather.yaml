@@ -1,3 +1,11 @@
+# Weerpagina: vandaag bovenaan, daaronder 4 dagen.
+# Alle waarden lopen via script weer_waarde, dat ook het startscherm vult.
+
+packages:
+  weer_dag0: !include { file: ../modules/weer/dag_sensors.yaml, vars: { n: 0, cond: weather_condition_now }}
+  weer_dag1: !include { file: ../modules/weer/dag_sensors.yaml, vars: { n: 1, cond: weather_condition_1 }}
+  weer_dag2: !include { file: ../modules/weer/dag_sensors.yaml, vars: { n: 2, cond: weather_condition_2 }}
+  weer_dag3: !include { file: ../modules/weer/dag_sensors.yaml, vars: { n: 3, cond: weather_condition_3 }}
 
 # LVGL configuration
 lvgl:
@@ -53,225 +61,89 @@ lvgl:
                 then:
                   lvgl.page.show: start_page
 
-        - obj: # Dag 0
-            x: 10
-            y: 160
-            width: 107
-            height: 260
-            pad_all: 10
-            styles: bg_white
-            widgets:
-              - label:
-                  id: text_dag_0
-                  text_font: roboto16
-                  text: "dag"
-                  align: top_mid
-              - label:
-                  text_font: weather_icons
-                  id: home_weather_icon_0
-                  text: "-"
-                  align: top_mid
-                  y: 30
-              - label:
-                  id: text_temperature_high_0
-                  text: "-"
-                  align: center
-                  y: 20
-              - label:
-                  id: text_temperature_low_0
-                  text_color: 0x8792A8
-                  text: "-"
-                  align: center
-                  y: 50
-              - label:
-                  id: text_uv_index_0
-                  text_font: roboto14
-                  text_color: 0x8792A8
-                  text: "uv"
-                  align: bottom_mid
-            on_press:
-                then:
-                  lvgl.page.show: start_page
+        - obj: !include { file: ../modules/weer/dag.yaml, vars: { n: 0, x: 10 }}
+        - obj: !include { file: ../modules/weer/dag.yaml, vars: { n: 1, x: 127 }}
+        - obj: !include { file: ../modules/weer/dag.yaml, vars: { n: 2, x: 244 }}
+        - obj: !include { file: ../modules/weer/dag.yaml, vars: { n: 3, x: 361 }}
 
-        - obj: # Dag 1
-            x: 127
-            y: 160
-            width: 107
-            height: 260
-            pad_all: 10
-            styles: bg_white
-            widgets:
-              - label:
-                  id: text_dag_1
-                  text_font: roboto16
-                  text: "dag"
-                  align: top_mid
-              - label:
-                  text_font: weather_icons
-                  id: home_weather_icon_1
-                  text: "-"
-                  align: top_mid
-                  y: 30
-              - label:
-                  id: text_temperature_high_1
-                  text: "-"
-                  align: center
-                  y: 20
-              - label:
-                  id: text_temperature_low_1
-                  text_color: 0x8792A8
-                  text: "-"
-                  align: center
-                  y: 50
-              - label:
-                  id: text_uv_index_1
-                  text_font: roboto14
-                  text_color: 0x8792A8
-                  text: "uv"
-                  align: bottom_mid
-            on_press:
-                then:
-                  lvgl.page.show: start_page
-
-        - obj: # Dag 2
-            x: 244
-            y: 160
-            width: 107
-            height: 260
-            pad_all: 10
-            styles: bg_white
-            widgets:
-              - label:
-                  id: text_dag_2
-                  text_font: roboto16
-                  text: "dag"
-                  align: top_mid
-              - label:
-                  text_font: weather_icons
-                  id: home_weather_icon_2
-                  text: "-"
-                  align: top_mid
-                  y: 30
-              - label:
-                  id: text_temperature_high_2
-                  text: "-"
-                  align: center
-                  y: 20
-              - label:
-                  id: text_temperature_low_2
-                  text_color: 0x8792A8
-                  text: "-"
-                  align: center
-                  y: 50
-              - label:
-                  id: text_uv_index_2
-                  text_font: roboto14
-                  text_color: 0x8792A8
-                  text: "uv"
-                  align: bottom_mid
-            on_press:
-                then:
-                  lvgl.page.show: start_page
-
-        - obj: # Dag 3
-            x: 361
-            y: 160
-            width: 107
-            height: 260
-            pad_all: 10
-            styles: bg_white
-            widgets:
-              - label:
-                  id: text_dag_3
-                  text_font: roboto16
-                  text: "dag"
-                  align: top_mid
-              - label:
-                  text_font: weather_icons
-                  id: home_weather_icon_3
-                  text: "-"
-                  align: top_mid
-                  y: 30
-              - label:
-                  id: text_temperature_high_3
-                  text: "-"
-                  align: center
-                  y: 20
-              - label:
-                  id: text_temperature_low_3
-                  text_color: 0x8792A8
-                  text: "-"
-                  align: center
-                  y: 50
-              - label:
-                  id: text_uv_index_3
-                  text_font: roboto14
-                  text_color: 0x8792A8
-                  text: "uv"
-                  align: bottom_mid
-            on_press:
-                then:
-                  lvgl.page.show: start_page
-
-# Scripts for reusable weather condition mapping
 script:
-  - id: update_weather_icon
+  # Zet één waarde (veld) voor dag 0..3 op de weerpagina.
+  # Dag 0 vult ook het startscherm en de kaart "vandaag"; hoog van dag 1 wordt "Morgen".
+  - id: weer_waarde
+    mode: queued
+    max_runs: 30
     parameters:
       day: int
-      condition: string
+      veld: string
+      waarde: string
     then:
       - lambda: |-
-          std::string icon;
-          std::string cond = condition;
+          if (day < 0 || day > 3) return;
+          lv_obj_t *dag[] = {id(text_dag_0), id(text_dag_1), id(text_dag_2), id(text_dag_3)};
+          lv_obj_t *uv[] = {id(text_uv_index_0), id(text_uv_index_1), id(text_uv_index_2), id(text_uv_index_3)};
+          lv_obj_t *hoog[] = {id(text_temperature_high_0), id(text_temperature_high_1), id(text_temperature_high_2), id(text_temperature_high_3)};
+          lv_obj_t *laag[] = {id(text_temperature_low_0), id(text_temperature_low_1), id(text_temperature_low_2), id(text_temperature_low_3)};
+          lv_obj_t *icoon[] = {id(home_weather_icon_0), id(home_weather_icon_1), id(home_weather_icon_2), id(home_weather_icon_3)};
+          const char *w = waarde.c_str();
+          char buf[32];
 
-          if (cond == "sunny") {
-            icon = "\U000F0599";  // MDI:weather-sunny
-          } else if (cond == "clear-night") {
-            icon = "\U000F0594";  // MDI:weather-night
-          } else if (cond == "partlycloudy") {
-            icon = "\U000F0595";  // MDI:weather-partly-cloudy
-          } else if (cond == "night-partly-cloudy") {
-            icon = "\U000F0F31";  // MDI:weather-night-partly-cloudy
-          } else if (cond == "cloudy") {
-            icon = "\U000F0590";  // MDI:weather-cloudy
-          } else if (cond == "rainy") {
-            icon = "\U000F0597";  // MDI:weather-rainy
-          } else if (cond == "pouring") {
-            icon = "\U000F0596";  // MDI:weather-pouring
-          } else if (cond == "lightning") {
-            icon = "\U000F0593";  // MDI:weather-lightning
-          } else if (cond == "lightning-rainy") {
-            icon = "\U000F067E";  // MDI:weather-lightning-rainy
-          } else if (cond == "snowy") {
-            icon = "\U000F0598";  // MDI:weather-snowy
-          } else if (cond == "snowy-rainy") {
-            icon = "\U000F067F";  // MDI:weather-snowy-rainy
-          } else if (cond == "hail") {
-            icon = "\U000F0592";  // MDI:weather-hail
-          } else if (cond == "fog") {
-            icon = "\U000F0591";  // MDI:weather-fog
-          } else if (cond == "windy") {
-            icon = "\U000F059D";  // MDI:weather-windy
-          } else if (cond == "windy-variant") {
-            icon = "\U000F059E";  // MDI:weather-windy-variant
-          } else if (cond == "exceptional") {
-            icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
-          } else {
-            icon = "\U000F02D7";  // MDI:help-circle (unknown)
-          }
-
-          // Update weather page icon
-          if (day == 0) {
-            lv_label_set_text(id(home_weather_icon_0), icon.c_str());
-            // Also update startscherm icons for day 0
-            lv_label_set_text(id(home_weather_icon_now), icon.c_str());
-            lv_label_set_text(id(weer_nu_icon), icon.c_str());
-          } else if (day == 1) {
-            lv_label_set_text(id(home_weather_icon_1), icon.c_str());
-          } else if (day == 2) {
-            lv_label_set_text(id(home_weather_icon_2), icon.c_str());
-          } else if (day == 3) {
-            lv_label_set_text(id(home_weather_icon_3), icon.c_str());
+          if (veld == "dag") {
+            lv_label_set_text(dag[day], w);
+          } else if (veld == "uv") {
+            snprintf(buf, sizeof(buf), "uv %s", w);
+            lv_label_set_text(uv[day], buf);
+          } else if (veld == "hoog") {
+            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", w);
+            lv_label_set_text(hoog[day], buf);
+            if (day == 0) {
+              lv_label_set_text(id(weer_nu_hoog), buf);
+              snprintf(buf, sizeof(buf), "%s°", w);
+              lv_label_set_text(id(forecast_temperature_current_high), buf);
+            } else if (day == 1) {
+              snprintf(buf, sizeof(buf), "Morgen %s°", w);
+              lv_label_set_text(id(weer_morgen), buf);
+            }
+          } else if (veld == "laag") {
+            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", w);
+            lv_label_set_text(laag[day], buf);
+            if (day == 0) {
+              lv_label_set_text(id(weer_nu_laag), buf);
+              snprintf(buf, sizeof(buf), "min %s°", w);
+              lv_label_set_text(id(forecast_temperature_current_low), buf);
+            }
+          } else if (veld == "weer") {
+            // weertype -> MDI-icoon en Nederlandse tekst
+            struct Weer { const char *naam, *icoon, *tekst; };
+            static const Weer tabel[] = {
+              {"sunny",               "\U000F0599", "Zonnig"},
+              {"clear-night",         "\U000F0594", "Heldere nacht"},
+              {"partlycloudy",        "\U000F0595", "Gedeeltelijk bewolkt"},
+              {"night-partly-cloudy", "\U000F0F31", "Gedeeltelijk bewolkt"},
+              {"cloudy",              "\U000F0590", "Bewolkt"},
+              {"rainy",               "\U000F0597", "Regenachtig"},
+              {"pouring",             "\U000F0596", "Stortregen"},
+              {"lightning",           "\U000F0593", "Onweer"},
+              {"lightning-rainy",     "\U000F067E", "Onweer en regen"},
+              {"snowy",               "\U000F0598", "Sneeuw"},
+              {"snowy-rainy",         "\U000F067F", "Natte sneeuw"},
+              {"hail",                "\U000F0592", "Hagel"},
+              {"fog",                 "\U000F0591", "Mistig"},
+              {"windy",               "\U000F059D", "Winderig"},
+              {"windy-variant",       "\U000F059E", "Winderig"},
+              {"exceptional",         "\U000F0F2F", "Uitzonderlijk"},
+            };
+            const char *ic = "\U000F02D7";  // help-circle (onbekend)
+            const char *tekst = "Onbekend";
+            for (const auto &r : tabel) {
+              if (waarde == r.naam) { ic = r.icoon; tekst = r.tekst; break; }
+            }
+            lv_label_set_text(icoon[day], ic);
+            if (day == 0) {
+              lv_label_set_text(id(home_weather_icon_now), ic);
+              lv_label_set_text(id(weer_nu_icon), ic);
+              lv_label_set_text(id(text_weather_condition_now), tekst);
+              lv_label_set_text(id(weer_nu_tekst), tekst);
+            }
           }
 
 sensor:
@@ -280,292 +152,11 @@ sensor:
     entity_id: weather.forecast_home
     attribute: uv_index
     on_value:
-      - lvgl.label.update:
-          id: label_uv_index_now
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "Uv %.0f", x);
-            return buf;
-      # zelfde tekst op de weerpagina
-      - lvgl.label.update:
-          id: weer_nu_uv
-          text: !lambda 'return std::string(lv_label_get_text(id(label_uv_index_now)));'
-
-text_sensor:
-  # Day names
-  - platform: homeassistant
-    id: weather_week_dag_0
-    entity_id: sensor.weather_data
-    attribute: weather_week_dag_0
-    on_value:
-      - lvgl.label.update:
-          id: text_dag_0
-          text: !lambda 'return x.c_str();'
-
-  - platform: homeassistant
-    id: weather_week_dag_1
-    entity_id: sensor.weather_data
-    attribute: weather_week_dag_1
-    on_value:
-      - lvgl.label.update:
-          id: text_dag_1
-          text: !lambda 'return x.c_str();'
-
-  - platform: homeassistant
-    id: weather_week_dag_2
-    entity_id: sensor.weather_data
-    attribute: weather_week_dag_2
-    on_value:
-      - lvgl.label.update:
-          id: text_dag_2
-          text: !lambda 'return x.c_str();'
-
-  - platform: homeassistant
-    id: weather_week_dag_3
-    entity_id: sensor.weather_data
-    attribute: weather_week_dag_3
-    on_value:
-      - lvgl.label.update:
-          id: text_dag_3
-          text: !lambda 'return x.c_str();'
-
-  # UV Index
-  - platform: homeassistant
-    id: weather_uv_index_0
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_uv_index_0
-    on_value:
-      - lvgl.label.update:
-          id: text_uv_index_0
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "uv %s", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_uv_index_1
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_uv_index_1
-    on_value:
-      - lvgl.label.update:
-          id: text_uv_index_1
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "uv %s", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_uv_index_2
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_uv_index_2
-    on_value:
-      - lvgl.label.update:
-          id: text_uv_index_2
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "uv %s", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_uv_index_3
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_uv_index_3
-    on_value:
-      - lvgl.label.update:
-          id: text_uv_index_3
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "uv %s", x.c_str());
-            return buf;
-
-  # High temperatures
-  - platform: homeassistant
-    id: weather_temp_high_0
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_0
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_high_0
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
-            return buf;
-      # Update startscherm label for current day high temp
-      - lvgl.label.update:
-          id: forecast_temperature_current_high
-          text: !lambda |-
-            static char buf[24];
-            snprintf(buf, sizeof(buf), "%s°", x.c_str());
-            return buf;
-      - lvgl.label.update:
-          id: weer_nu_hoog
-          text: !lambda 'return std::string(lv_label_get_text(id(text_temperature_high_0)));'
-
-  - platform: homeassistant
-    id: weather_temp_high_1
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_1
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_high_1
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
-            return buf;
-      - lvgl.label.update:
-          id: weer_morgen
-          text: !lambda |-
-            static char buf[24];
-            snprintf(buf, sizeof(buf), "Morgen %s°", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_temp_high_2
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_2
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_high_2
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_temp_high_3
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_3
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_high_3
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
-            return buf;
-
-  # Low temperatures
-  - platform: homeassistant
-    id: weather_temp_low_0
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_low_0
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_low_0
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
-            return buf;
-      # Update startscherm label for current day low temp
-      - lvgl.label.update:
-          id: forecast_temperature_current_low
-          text: !lambda |-
-            static char buf[24];
-            snprintf(buf, sizeof(buf), "min %s°", x.c_str());
-            return buf;
-      - lvgl.label.update:
-          id: weer_nu_laag
-          text: !lambda 'return std::string(lv_label_get_text(id(text_temperature_low_0)));'
-
-  - platform: homeassistant
-    id: weather_temp_low_1
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_low_1
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_low_1
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_temp_low_2
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_low_2
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_low_2
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
-            return buf;
-
-  - platform: homeassistant
-    id: weather_temp_low_3
-    entity_id: sensor.weather_data
-    attribute: weather_temperature_low_3
-    on_value:
-      - lvgl.label.update:
-          id: text_temperature_low_3
-          text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
-            return buf;
-
-  # Weather conditions - using the reusable script
-  - platform: homeassistant
-    id: weather_condition_now
-    entity_id: sensor.weather_data
-    attribute: weather_condition_now
-    on_value:
-      - script.execute:
-          id: update_weather_icon
-          day: 0
-          condition: !lambda 'return x;'
-      # Also update text label on startscherm
-      - lvgl.label.update:
-          id: text_weather_condition_now
-          text: !lambda |-
-            if (x == "sunny") return "Zonnig";
-            else if (x == "clear-night") return "Heldere nacht";
-            else if (x == "partlycloudy") return "Gedeeltelijk bewolkt";
-            else if (x == "night-partly-cloudy") return "Gedeeltelijk bewolkt";
-            else if (x == "cloudy") return "Bewolkt";
-            else if (x == "rainy") return "Regenachtig";
-            else if (x == "pouring") return "Stortregen";
-            else if (x == "lightning") return "Onweer";
-            else if (x == "lightning-rainy") return "Onweer en regen";
-            else if (x == "snowy") return "Sneeuw";
-            else if (x == "snowy-rainy") return "Natte sneeuw";
-            else if (x == "hail") return "Hagel";
-            else if (x == "fog") return "Mistig";
-            else if (x == "windy" || x == "windy-variant") return "Winderig";
-            else if (x == "exceptional") return "Uitzonderlijk";
-            else return "Onbekend";
-      # zelfde tekst op de weerpagina
-      - lvgl.label.update:
-          id: weer_nu_tekst
-          text: !lambda 'return std::string(lv_label_get_text(id(text_weather_condition_now)));'
-
-  - platform: homeassistant
-    id: weather_condition_1
-    entity_id: sensor.weather_data
-    attribute: weather_condition_1
-    on_value:
-      - script.execute:
-          id: update_weather_icon
-          day: 1
-          condition: !lambda 'return x;'
-
-  - platform: homeassistant
-    id: weather_condition_2
-    entity_id: sensor.weather_data
-    attribute: weather_condition_2
-    on_value:
-      - script.execute:
-          id: update_weather_icon
-          day: 2
-          condition: !lambda 'return x;'
-
-  - platform: homeassistant
-    id: weather_condition_3
-    entity_id: sensor.weather_data
-    attribute: weather_condition_3
-    on_value:
-      - script.execute:
-          id: update_weather_icon
-          day: 3
-          condition: !lambda 'return x;'
+      - lambda: |-
+          char buf[16];
+          snprintf(buf, sizeof(buf), "Uv %.0f", x);
+          lv_label_set_text(id(label_uv_index_now), buf);
+          lv_label_set_text(id(weer_nu_uv), buf);
 
 font:
   - file: "fonts/materialdesignicons-webfont.ttf"

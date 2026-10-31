@@ -1,0 +1,39 @@
+# n: dag 0..3
+# cond: attribuut met het weertype (dag 0 heet weather_condition_now)
+# sensoren voor één dag; alles loopt via script weer_waarde in weather.yaml
+
+text_sensor:
+  - platform: homeassistant
+    id: weather_week_dag_${n}
+    entity_id: sensor.weather_data
+    attribute: weather_week_dag_${n}
+    on_value:
+      - script.execute: { id: weer_waarde, day: "${n}", veld: dag, waarde: !lambda 'return x;' }
+
+  - platform: homeassistant
+    id: weather_uv_index_${n}
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_uv_index_${n}
+    on_value:
+      - script.execute: { id: weer_waarde, day: "${n}", veld: uv, waarde: !lambda 'return x;' }
+
+  - platform: homeassistant
+    id: weather_temp_high_${n}
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_${n}
+    on_value:
+      - script.execute: { id: weer_waarde, day: "${n}", veld: hoog, waarde: !lambda 'return x;' }
+
+  - platform: homeassistant
+    id: weather_temp_low_${n}
+    entity_id: sensor.weather_data
+    attribute: weather_temperature_low_${n}
+    on_value:
+      - script.execute: { id: weer_waarde, day: "${n}", veld: laag, waarde: !lambda 'return x;' }
+
+  - platform: homeassistant
+    id: weather_condition_${n}
+    entity_id: sensor.weather_data
+    attribute: ${cond}
+    on_value:
+      - script.execute: { id: weer_waarde, day: "${n}", veld: weer, waarde: !lambda 'return x;' }

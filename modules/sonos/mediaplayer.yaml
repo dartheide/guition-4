@@ -82,8 +82,8 @@
                 text: "${volume_icon}"
                 align: center
         on_click:
-            - homeassistant.service:
-                service: media_player.volume_mute
+            - homeassistant.action:
+                action: media_player.volume_mute
                 data:
                     entity_id: media_player.${id}
                     is_volume_muted: !lambda 'return !id(sonos_${id}_mute).state;'
@@ -122,8 +122,8 @@
                 text: "\U000F0EC0"
                 align: center
         on_click:
-            - homeassistant.service:
-                service: media_player.play_media
+            - homeassistant.action:
+                action: media_player.play_media
                 data_template:
                     entity_id: media_player.${id}
                     media_content_type: "music"

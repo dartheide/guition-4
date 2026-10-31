@@ -4,10 +4,6 @@ substitutions:
 packages:
   wifi: !include { file: ../modules/wifi/wifi.yaml, vars: {id: display_woonkamer }}
 
-esphome:
-  platformio_options:
-    board_build.flash_mode: dio
-
 esp32:
   board: esp32-s3-devkitc-1
   variant: esp32s3
@@ -32,23 +28,12 @@ lvgl:
     - my_display
   touchscreens:
     - touchscreen_id: my_touchscreen
-  on_idle:
+  on_idle: # na 45 s niets aanraken: scherm dimmen en terug naar start
     - timeout: 45s
       then:
-        - logger.log: idle timeout
-        - if:
-            condition:
-              lvgl.is_idle:
-                timeout: 5s
-            then:
-              - logger.log: LVGL is idle
-#              - lvgl.pause:
-              - light.control: 
-                  id: backlight
-                  brightness: 35%
-    - timeout: 45s
-      then:
-        - logger.log: idle 45s timeout
+        - light.control:
+            id: backlight
+            brightness: 35%
         - lvgl.page.show: start_page
 
 #-------------------------------------------

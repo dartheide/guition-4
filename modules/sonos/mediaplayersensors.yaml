@@ -22,7 +22,7 @@ binary_sensor:
     id: sonos_${id}_mute
     entity_id: media_player.${id}
     attribute: is_volume_muted
-    publish_initial_state: true
+    trigger_on_initial_state: true
     on_state:
       then:
         - if:
