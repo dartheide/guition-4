@@ -193,14 +193,28 @@ script:
             icon = "\U000F0590";  // MDI:weather-cloudy
           } else if (cond == "rainy") {
             icon = "\U000F0597";  // MDI:weather-rainy
+          } else if (cond == "pouring") {
+            icon = "\U000F0596";  // MDI:weather-pouring
           } else if (cond == "lightning") {
-            icon = "\U000F0596";  // MDI:weather-lightning
+            icon = "\U000F0593";  // MDI:weather-lightning
+          } else if (cond == "lightning-rainy") {
+            icon = "\U000F067E";  // MDI:weather-lightning-rainy
           } else if (cond == "snowy") {
             icon = "\U000F0598";  // MDI:weather-snowy
+          } else if (cond == "snowy-rainy") {
+            icon = "\U000F067F";  // MDI:weather-snowy-rainy
+          } else if (cond == "hail") {
+            icon = "\U000F0592";  // MDI:weather-hail
           } else if (cond == "fog") {
             icon = "\U000F0591";  // MDI:weather-fog
+          } else if (cond == "windy") {
+            icon = "\U000F059D";  // MDI:weather-windy
+          } else if (cond == "windy-variant") {
+            icon = "\U000F059E";  // MDI:weather-windy-variant
+          } else if (cond == "exceptional") {
+            icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
           } else {
-            icon = "\U000F05A9";  // MDI:help-circle (unknown)
+            icon = "\U000F02D7";  // MDI:help-circle (unknown)
           }
 
           // Update weather page icon
@@ -448,9 +462,15 @@ text_sensor:
             else if (x == "night-partly-cloudy") return "Gedeeltelijk bewolkt";
             else if (x == "cloudy") return "Bewolkt";
             else if (x == "rainy") return "Regenachtig";
+            else if (x == "pouring") return "Stortregen";
             else if (x == "lightning") return "Onweer";
+            else if (x == "lightning-rainy") return "Onweer en regen";
             else if (x == "snowy") return "Sneeuw";
+            else if (x == "snowy-rainy") return "Natte sneeuw";
+            else if (x == "hail") return "Hagel";
             else if (x == "fog") return "Mistig";
+            else if (x == "windy" || x == "windy-variant") return "Winderig";
+            else if (x == "exceptional") return "Uitzonderlijk";
             else return "Onbekend";
 
   - platform: homeassistant
@@ -506,6 +526,6 @@ font:
       "\U000F059E", # windy-variant
       "\U000F14E4", # sunny-off
       "\U000F0F31", # mdi-weather-night-partly-cloudy
-      "\U000F05A9", # mdi-wifi (help-circle)
+      "\U000F02D7", # mdi-help-circle
       "\U000F052C", # mdi-train
       ]
