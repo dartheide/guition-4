@@ -25,7 +25,7 @@ template:
         weather_condition_now: >
           {% set cond_now = states('weather.forecast_home') %}
           {% if states('sun.sun') == 'below_horizon' %}
-              {% if cond_now == 'sunny' %} night {% elif cond_now == 'partlycloudy' %} night-partly-cloudy {% else %} {{ cond_now }} {% endif %}
+              {% if cond_now == 'sunny' %} clear-night {% elif cond_now == 'partlycloudy' %} night-partly-cloudy {% else %} {{ cond_now }} {% endif %}
           {% else %}
               {{ cond_now }}
           {% endif %}

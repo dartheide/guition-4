@@ -346,36 +346,58 @@ text_sensor:
         - lambda: |-
             std::string condition;  
             std::string icon;          
-            if (id(weather_condition_now).state == "sunny") {
+            const std::string &c = id(weather_condition_now).state;
+            if (c == "sunny") {
               condition = "Zonnig";
               icon = "\U000F0599";  // MDI:weather-sunny
-            } else if (id(weather_condition_now).state == "clear-night") {
+            } else if (c == "clear-night") {
               condition = "Heldere nacht";
               icon = "\U000F0594";  // MDI:weather-night
-            } else if (id(weather_condition_now).state == "partlycloudy") {
+            } else if (c == "partlycloudy") {
               condition = "Gedeeltelijk bewolkt";
               icon = "\U000F0595";  // MDI:weather-partly-cloudy
-            } else if (id(weather_condition_now).state == "night-partly-cloudy") {
+            } else if (c == "night-partly-cloudy") {
               condition = "Gedeeltelijk bewolkt";
-              icon = "\U000F0F31";  // MDI:weather-partly-cloudy            
-            } else if (id(weather_condition_now).state == "cloudy") {
+              icon = "\U000F0F31";  // MDI:weather-night-partly-cloudy
+            } else if (c == "cloudy") {
               condition = "Bewolkt";
               icon = "\U000F0590";  // MDI:weather-cloudy
-            } else if (id(weather_condition_now).state == "rainy") {
+            } else if (c == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
-            } else if (id(weather_condition_now).state == "lightning") {
+              icon = "\U000F0597";  // MDI:weather-rainy
+            } else if (c == "pouring") {
+              condition = "Stortregen";
+              icon = "\U000F0596";  // MDI:weather-pouring
+            } else if (c == "lightning") {
               condition = "Onweer";
-              icon = "\U000F0596";  // MDI:weather-lightning
-            } else if (id(weather_condition_now).state == "snowy") {
+              icon = "\U000F0593";  // MDI:weather-lightning
+            } else if (c == "lightning-rainy") {
+              condition = "Onweer en regen";
+              icon = "\U000F067E";  // MDI:weather-lightning-rainy
+            } else if (c == "snowy") {
               condition = "Sneeuw";
               icon = "\U000F0598";  // MDI:weather-snowy
-            } else if (id(weather_condition_now).state == "fog") {
+            } else if (c == "snowy-rainy") {
+              condition = "Natte sneeuw";
+              icon = "\U000F067F";  // MDI:weather-snowy-rainy
+            } else if (c == "hail") {
+              condition = "Hagel";
+              icon = "\U000F0592";  // MDI:weather-hail
+            } else if (c == "fog") {
               condition = "Mistig";
               icon = "\U000F0591";  // MDI:weather-fog
+            } else if (c == "windy") {
+              condition = "Winderig";
+              icon = "\U000F059D";  // MDI:weather-windy
+            } else if (c == "windy-variant") {
+              condition = "Winderig";
+              icon = "\U000F059E";  // MDI:weather-windy-variant
+            } else if (c == "exceptional") {
+              condition = "Uitzonderlijk";
+              icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
             } else {
               condition = "Onbekend";
-              icon = "\U000F05A9";  // MDI:help-circle
+              icon = "\U000F02D7";  // MDI:help-circle
             }
             lv_label_set_text(id(text_weather_condition_now), (condition).c_str());
             lv_label_set_text(id(home_weather_icon_now), (icon).c_str());
@@ -390,33 +412,58 @@ text_sensor:
         - lambda: |-
             std::string condition;  
             std::string icon;          
-            if (id(weather_condition_1).state == "sunny") {
+            const std::string &c = id(weather_condition_1).state;
+            if (c == "sunny") {
               condition = "Zonnig";
               icon = "\U000F0599";  // MDI:weather-sunny
-            } else if (id(weather_condition_1).state == "clear-night") {
+            } else if (c == "clear-night") {
               condition = "Heldere nacht";
               icon = "\U000F0594";  // MDI:weather-night
-            } else if (id(weather_condition_1).state == "partlycloudy") {
+            } else if (c == "partlycloudy") {
               condition = "Gedeeltelijk bewolkt";
               icon = "\U000F0595";  // MDI:weather-partly-cloudy
-            } else if (id(weather_condition_1).state == "cloudy") {
+            } else if (c == "night-partly-cloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0F31";  // MDI:weather-night-partly-cloudy
+            } else if (c == "cloudy") {
               condition = "Bewolkt";
               icon = "\U000F0590";  // MDI:weather-cloudy
-            } else if (id(weather_condition_1).state == "rainy") {
+            } else if (c == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
-            } else if (id(weather_condition_1).state == "lightning") {
+              icon = "\U000F0597";  // MDI:weather-rainy
+            } else if (c == "pouring") {
+              condition = "Stortregen";
+              icon = "\U000F0596";  // MDI:weather-pouring
+            } else if (c == "lightning") {
               condition = "Onweer";
-              icon = "\U000F0596";  // MDI:weather-lightning
-            } else if (id(weather_condition_1).state == "snowy") {
+              icon = "\U000F0593";  // MDI:weather-lightning
+            } else if (c == "lightning-rainy") {
+              condition = "Onweer en regen";
+              icon = "\U000F067E";  // MDI:weather-lightning-rainy
+            } else if (c == "snowy") {
               condition = "Sneeuw";
               icon = "\U000F0598";  // MDI:weather-snowy
-            } else if (id(weather_condition_1).state == "fog") {
+            } else if (c == "snowy-rainy") {
+              condition = "Natte sneeuw";
+              icon = "\U000F067F";  // MDI:weather-snowy-rainy
+            } else if (c == "hail") {
+              condition = "Hagel";
+              icon = "\U000F0592";  // MDI:weather-hail
+            } else if (c == "fog") {
               condition = "Mistig";
               icon = "\U000F0591";  // MDI:weather-fog
+            } else if (c == "windy") {
+              condition = "Winderig";
+              icon = "\U000F059D";  // MDI:weather-windy
+            } else if (c == "windy-variant") {
+              condition = "Winderig";
+              icon = "\U000F059E";  // MDI:weather-windy-variant
+            } else if (c == "exceptional") {
+              condition = "Uitzonderlijk";
+              icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
             } else {
               condition = "Onbekend";
-              icon = "\U000F05A9";  // MDI:help-circle
+              icon = "\U000F02D7";  // MDI:help-circle
             }
             // lv_label_set_text(id(text_weather_condition_1), (condition).c_str());
             lv_label_set_text(id(home_weather_icon_1), (icon).c_str());
@@ -430,33 +477,58 @@ text_sensor:
         - lambda: |-
             std::string condition;  
             std::string icon;          
-            if (id(weather_condition_2).state == "sunny") {
+            const std::string &c = id(weather_condition_2).state;
+            if (c == "sunny") {
               condition = "Zonnig";
               icon = "\U000F0599";  // MDI:weather-sunny
-            } else if (id(weather_condition_2).state == "clear-night") {
+            } else if (c == "clear-night") {
               condition = "Heldere nacht";
               icon = "\U000F0594";  // MDI:weather-night
-            } else if (id(weather_condition_2).state == "partlycloudy") {
+            } else if (c == "partlycloudy") {
               condition = "Gedeeltelijk bewolkt";
               icon = "\U000F0595";  // MDI:weather-partly-cloudy
-            } else if (id(weather_condition_2).state == "cloudy") {
+            } else if (c == "night-partly-cloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0F31";  // MDI:weather-night-partly-cloudy
+            } else if (c == "cloudy") {
               condition = "Bewolkt";
               icon = "\U000F0590";  // MDI:weather-cloudy
-            } else if (id(weather_condition_2).state == "rainy") {
+            } else if (c == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
-            } else if (id(weather_condition_2).state == "lightning") {
+              icon = "\U000F0597";  // MDI:weather-rainy
+            } else if (c == "pouring") {
+              condition = "Stortregen";
+              icon = "\U000F0596";  // MDI:weather-pouring
+            } else if (c == "lightning") {
               condition = "Onweer";
-              icon = "\U000F0596";  // MDI:weather-lightning
-            } else if (id(weather_condition_2).state == "snowy") {
+              icon = "\U000F0593";  // MDI:weather-lightning
+            } else if (c == "lightning-rainy") {
+              condition = "Onweer en regen";
+              icon = "\U000F067E";  // MDI:weather-lightning-rainy
+            } else if (c == "snowy") {
               condition = "Sneeuw";
               icon = "\U000F0598";  // MDI:weather-snowy
-            } else if (id(weather_condition_2).state == "fog") {
+            } else if (c == "snowy-rainy") {
+              condition = "Natte sneeuw";
+              icon = "\U000F067F";  // MDI:weather-snowy-rainy
+            } else if (c == "hail") {
+              condition = "Hagel";
+              icon = "\U000F0592";  // MDI:weather-hail
+            } else if (c == "fog") {
               condition = "Mistig";
               icon = "\U000F0591";  // MDI:weather-fog
+            } else if (c == "windy") {
+              condition = "Winderig";
+              icon = "\U000F059D";  // MDI:weather-windy
+            } else if (c == "windy-variant") {
+              condition = "Winderig";
+              icon = "\U000F059E";  // MDI:weather-windy-variant
+            } else if (c == "exceptional") {
+              condition = "Uitzonderlijk";
+              icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
             } else {
               condition = "Onbekend";
-              icon = "\U000F05A9";  // MDI:help-circle
+              icon = "\U000F02D7";  // MDI:help-circle
             }
             // lv_label_set_text(id(text_weather_condition_2), (condition).c_str());
             lv_label_set_text(id(home_weather_icon_2), (icon).c_str());
@@ -470,33 +542,58 @@ text_sensor:
         - lambda: |-
             std::string condition;  
             std::string icon;          
-            if (id(weather_condition_3).state == "sunny") {
+            const std::string &c = id(weather_condition_3).state;
+            if (c == "sunny") {
               condition = "Zonnig";
               icon = "\U000F0599";  // MDI:weather-sunny
-            } else if (id(weather_condition_3).state == "clear-night") {
+            } else if (c == "clear-night") {
               condition = "Heldere nacht";
               icon = "\U000F0594";  // MDI:weather-night
-            } else if (id(weather_condition_3).state == "partlycloudy") {
+            } else if (c == "partlycloudy") {
               condition = "Gedeeltelijk bewolkt";
               icon = "\U000F0595";  // MDI:weather-partly-cloudy
-            } else if (id(weather_condition_3).state == "cloudy") {
+            } else if (c == "night-partly-cloudy") {
+              condition = "Gedeeltelijk bewolkt";
+              icon = "\U000F0F31";  // MDI:weather-night-partly-cloudy
+            } else if (c == "cloudy") {
               condition = "Bewolkt";
               icon = "\U000F0590";  // MDI:weather-cloudy
-            } else if (id(weather_condition_3).state == "rainy") {
+            } else if (c == "rainy") {
               condition = "Regenachtig";
-              icon = "\U000F058E";  // MDI:weather-rainy
-            } else if (id(weather_condition_3).state == "lightning") {
+              icon = "\U000F0597";  // MDI:weather-rainy
+            } else if (c == "pouring") {
+              condition = "Stortregen";
+              icon = "\U000F0596";  // MDI:weather-pouring
+            } else if (c == "lightning") {
               condition = "Onweer";
-              icon = "\U000F0596";  // MDI:weather-lightning
-            } else if (id(weather_condition_3).state == "snowy") {
+              icon = "\U000F0593";  // MDI:weather-lightning
+            } else if (c == "lightning-rainy") {
+              condition = "Onweer en regen";
+              icon = "\U000F067E";  // MDI:weather-lightning-rainy
+            } else if (c == "snowy") {
               condition = "Sneeuw";
               icon = "\U000F0598";  // MDI:weather-snowy
-            } else if (id(weather_condition_3).state == "fog") {
+            } else if (c == "snowy-rainy") {
+              condition = "Natte sneeuw";
+              icon = "\U000F067F";  // MDI:weather-snowy-rainy
+            } else if (c == "hail") {
+              condition = "Hagel";
+              icon = "\U000F0592";  // MDI:weather-hail
+            } else if (c == "fog") {
               condition = "Mistig";
               icon = "\U000F0591";  // MDI:weather-fog
+            } else if (c == "windy") {
+              condition = "Winderig";
+              icon = "\U000F059D";  // MDI:weather-windy
+            } else if (c == "windy-variant") {
+              condition = "Winderig";
+              icon = "\U000F059E";  // MDI:weather-windy-variant
+            } else if (c == "exceptional") {
+              condition = "Uitzonderlijk";
+              icon = "\U000F0F2F";  // MDI:weather-cloudy-alert
             } else {
               condition = "Onbekend";
-              icon = "\U000F05A9";  // MDI:help-circle
+              icon = "\U000F02D7";  // MDI:help-circle
             }
             // lv_label_set_text(id(text_weather_condition_3), (condition).c_str());
             lv_label_set_text(id(home_weather_icon_3), (icon).c_str());
@@ -548,6 +645,7 @@ font:
       "\U000F0F31", # mdi-weather-night-partly-cloudy
       "\U000F05A9", # mdi-wifi
       "\U000F052C", # mdi-train
+      "\U000F02D7", # mdi-help-circle
       ]
 
 

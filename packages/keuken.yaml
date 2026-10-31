@@ -426,7 +426,7 @@ text_sensor:
                 id: cov_stop_eettafel
                 text:
                   format: "%.0f%%"
-                  args: [ 'id(cover_keuken_pos).get_state()' ]
+                  args: [ 'id(cover_eettafel_pos).get_state()' ]
 
 
   # Groep lampen keuken lamp1

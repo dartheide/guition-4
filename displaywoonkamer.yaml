@@ -174,20 +174,13 @@ text_sensor:
     id: sensor_stookwijzer
     entity_id: sensor.stookwijzer
     on_value:
-      - if:
-          condition:
-            lambda: |-
-              return (0 == x.compare(std::string{"code_yellow"})) ;
-          then:
-            - lvgl.label.update:
-                id: stookwijzer_label
-                text: " \U000F0238"
-                text_color: tft_yellow
-          else:
-            - lvgl.label.update:
-                id: stookwijzer_label
-                text: " \U000F0238"
-                text_color: 0xFF3000 # red
+      - lambda: |-
+          // geel / oranje / rood; grijs bij unknown of unavailable
+          uint32_t kleur = 0x8F8F8F;
+          if (x == "code_yellow") kleur = 0xFFD600;
+          else if (x == "code_orange") kleur = 0xFF8C00;
+          else if (x == "code_red") kleur = 0xFF3000;
+          lv_obj_set_style_text_color(id(stookwijzer_label), lv_color_hex(kleur), LV_PART_MAIN);
 
 
 
@@ -208,5 +201,7 @@ text_sensor:
             - lvgl.label.update:
                 id: afval_label
                 text: !lambda 'return x.c_str();'
+            - lvgl.widget.show: afval_label
+            - lvgl.widget.show: afval_label2
 
 
