@@ -269,10 +269,10 @@ font:
       ]
 
   - file: "gfonts://Roboto@500"
-    id: roboto32 # grote getallen (temperatuur)
+    id: roboto32 # grote getallen (temperatuur, energie)
     size: 32
     bpp: 4
-    glyphs: "0123456789.,-+°% "
+    glyphs: "0123456789.,-+°% Wkh"
 
 color:
   - id: dark_blue

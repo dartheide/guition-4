@@ -139,9 +139,9 @@ script:
       tekst: string
     then:
       - lambda: |-
-          if (nr < 1 || nr > 5) return;
-          lv_obj_t *tijd[] = {id(text_ns_1_tijd), id(text_ns_2_tijd), id(text_ns_3_tijd), id(text_ns_4_tijd), id(text_ns_5_tijd)};
-          lv_obj_t *best[] = {id(text_ns_1), id(text_ns_2), id(text_ns_3), id(text_ns_4), id(text_ns_5)};
+          if (nr < 1 || nr > 3) return;  // startscherm toont 3 vertrekken
+          lv_obj_t *tijd[] = {id(text_ns_1_tijd), id(text_ns_2_tijd), id(text_ns_3_tijd)};
+          lv_obj_t *best[] = {id(text_ns_1), id(text_ns_2), id(text_ns_3)};
           std::string t = "";
           std::string b = tekst;
           size_t pos = tekst.find(" - ");

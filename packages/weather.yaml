@@ -394,13 +394,12 @@ text_sensor:
       - lvgl.label.update:
           id: forecast_temperature_current_high
           text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
+            static char buf[24];
+            snprintf(buf, sizeof(buf), "%s°", x.c_str());
             return buf;
-      # zelfde tekst op de weerpagina
       - lvgl.label.update:
           id: weer_nu_hoog
-          text: !lambda 'return std::string(lv_label_get_text(id(forecast_temperature_current_high)));'
+          text: !lambda 'return std::string(lv_label_get_text(id(text_temperature_high_0)));'
 
   - platform: homeassistant
     id: weather_temp_high_1
@@ -412,6 +411,12 @@ text_sensor:
           text: !lambda |-
             static char buf[16];
             snprintf(buf, sizeof(buf), "\U000F10C2 %s°", x.c_str());
+            return buf;
+      - lvgl.label.update:
+          id: weer_morgen
+          text: !lambda |-
+            static char buf[24];
+            snprintf(buf, sizeof(buf), "Morgen %s°", x.c_str());
             return buf;
 
   - platform: homeassistant
@@ -454,13 +459,12 @@ text_sensor:
       - lvgl.label.update:
           id: forecast_temperature_current_low
           text: !lambda |-
-            static char buf[16];
-            snprintf(buf, sizeof(buf), "\U000F10C3 %s°", x.c_str());
+            static char buf[24];
+            snprintf(buf, sizeof(buf), "min %s°", x.c_str());
             return buf;
-      # zelfde tekst op de weerpagina
       - lvgl.label.update:
           id: weer_nu_laag
-          text: !lambda 'return std::string(lv_label_get_text(id(forecast_temperature_current_low)));'
+          text: !lambda 'return std::string(lv_label_get_text(id(text_temperature_low_0)));'
 
   - platform: homeassistant
     id: weather_temp_low_1

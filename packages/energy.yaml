@@ -1,6 +1,9 @@
 #esphome:
 #  includes: std_includes.h
 
+# Energiescherm: net nu, balans van het huis vandaag en de grootste verbruikers.
+# Huis = zon - teruglevering + afname (script update_home).
+
 # LVGL configuration
 lvgl:
   pages:
@@ -11,244 +14,249 @@ lvgl:
             id: nav_actief
             knop: -1
       widgets:
-        - obj: # achtergrond
+        - obj: # Net nu (gevuld door script update_net_nu)
             x: 10
             y: 40
             width: 460
-            height: 375
+            height: 100
+            pad_all: 10
             styles: bg_white
             scrollbar_mode: "OFF"
             widgets:
               - label:
-                  text_font: roboto20
-                  text: "Energie verbruik vandaag"
+                  styles: card_title
+                  text: "Net nu"
+              - label:
+                  id: energy_net_nu
+                  text_font: roboto32
                   align: top_left
-                  y: 0
-              - line:
-                  points:
-                    - 130, 200
-                    - 300, 200
-                  line_width: 2
-                  line_color: tft_yellow 
-                  line_rounded: false   
-
-              - line:
-                  points:
-                    - 130, 170
-                    - 200, 170
-                    - 200, 115
-                  line_width: 2
-                  line_color: tft_yellow 
-                  line_rounded: true   
-
-              - line:
-                  points:
-                    - 300, 170
-                    - 230, 170
-                    - 230, 115
-                  line_width: 2
-                  line_color: tft_yellow 
-                  line_rounded: true   
-
-              - line:
-                  points:
-                    - 360, 115
-                    - 360, 300
-                  line_width: 2
-                  line_color: tft_yellow 
-                  line_rounded: true   
-
-
-              - obj: # Grid
-                  align: left_mid
-                  x: 0
-                  y: 15
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F0050" # uit
-                        align: bottom_left
-                        y: -20
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F0057" # in
-                        align: bottom_left 
-                        y: 5                       
-                    - label:
-                        text_font: roboto16
-                        text: "Liander"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_up
-                        text: "- kWh"
-                        align: bottom_left
-                        y: -20
-                        x: 30
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_down
-                        text: "- kWh"
-                        align: bottom_left
-                        x: 30
-                        y: 5
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-
-              - obj: # Zon
-                  align: top_mid
-                  y: 25
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F0A72"
-                        align: bottom_left
-                    - label:
-                        text_font: roboto16
-                        text: "Zon"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_zon
-                        text: "- kWh"
-                        align: bottom_left
-                        x: 30
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-                  
-              - obj: # Warmtepomp
-                  align: top_right
-                  y: 25
-                  x: 0
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F1A44"
-                        align: bottom_left
-                    - label:
-                        text_font: roboto16
-                        text: "Warmtepomp"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_wp
-                        text: "- kWh"
-                        align: bottom_left
-                        x: 30
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-                                  
-              - obj: # Huis
-                  align: right_mid
-                  y: 15
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F02DC"
-                        align: bottom_left
-                    - label:
-                        text_font: roboto16
-                        text: "Huis"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_home
-                        text: "- kWh"
-                        align: bottom_left
-                        x: 30
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-                  
-              - obj: # AC
-                  align: bottom_right
-                  x: 0
-                  y: 5
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F001B"
-                        align: bottom_left
-                    - label:
-                        text_font: roboto16
-                        text: "Airco"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_ac
-                        text: "- kWh"
-                        align: bottom_left
-                        x: 30
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-
-              - obj: # Gas
+                  y: 14
+                  text: "- W"
+              - label:
+                  id: energy_net_tekst
+                  text_font: roboto14
+                  text_color: 0x8792A8
                   align: bottom_left
-                  x: 0
-                  y: 5
-                  width: 130
-                  height: 100
-                  styles: bg_white
-                  bg_color: 0x263049
-                  scrollbar_mode: "OFF"
-                  widgets:
-                    - label:
-                        text_font: mdi24
-                        text: "\U000F0238"
-                        align: bottom_left                        
-                    - label:
-                        text_font: roboto16
-                        text: "Gas"
-                        align: top_mid
-                        y: -5
-                    - label:
-                        text_font: roboto16
-                        id: energy_text_gas
-                        text: "- m3"
-                        align: bottom_left
-                        x: 30
-                  on_press:
-                      then:
-                        lvgl.page.show: start_page
-
+                  y: 4
+                  text: ""
+              - bar:
+                  id: energy_net_bar
+                  mode: SYMMETRICAL
+                  align: top_right
+                  y: 26
+                  width: 230
+                  height: 12
+                  min_value: -3000
+                  max_value: 3000
+                  value: 0
+              - obj: # nulstreep midden in de balk
+                  align: top_right
+                  x: -114
+                  y: 20
+                  width: 2
+                  height: 24
+                  radius: 1
+                  border_width: 0
+                  pad_all: 0
+                  bg_color: 0xE9EDF4
+              - label:
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: top_right
+                  x: -192
+                  y: 46
+                  text: "-3 kW"
+              - label:
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: top_right
+                  x: -111
+                  y: 46
+                  text: "0"
+              - label:
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: top_right
+                  y: 46
+                  text: "+3 kW"
             on_press:
-                then:
-                  lvgl.page.show: start_page
-                   
+              then:
+                lvgl.page.show: start_page
+
+        - obj: # Huis vandaag
+            x: 10
+            y: 150
+            width: 460
+            height: 140
+            pad_all: 10
+            styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  styles: card_title
+                  text: "Huis vandaag"
+              - label:
+                  id: energy_text_home
+                  text_font: roboto32
+                  align: top_left
+                  y: 12
+                  text: "- kWh"
+              - label:
+                  id: energy_zon_pct
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: top_right
+                  y: 22
+                  text: ""
+              - bar: # aandeel zon (amber) tegen net (blauw)
+                  id: energy_mix_bar
+                  align: top_left
+                  y: 62
+                  width: 440
+                  height: 16
+                  radius: 8
+                  bg_color: 0x6C8BD6
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  indicator:
+                    radius: 8
+              - obj: { align: top_left, x: 0, y: 99, width: 9, height: 9, radius: 5, border_width: 0, pad_all: 0, bg_color: 0xF4B740 }
+              - label:
+                  id: energy_text_zon
+                  text_font: roboto14
+                  align: top_left
+                  x: 15
+                  y: 94
+                  text: "Zon -"
+              - obj: { align: top_left, x: 140, y: 99, width: 9, height: 9, radius: 5, border_width: 0, pad_all: 0, bg_color: 0x6C8BD6 }
+              - label:
+                  id: energy_text_down
+                  text_font: roboto14
+                  align: top_left
+                  x: 155
+                  y: 94
+                  text: "Net -"
+              - obj: { align: top_left, x: 280, y: 99, width: 9, height: 9, radius: 5, border_width: 0, pad_all: 0, bg_color: 0x4CC38A }
+              - label:
+                  id: energy_text_up
+                  text_font: roboto14
+                  align: top_left
+                  x: 295
+                  y: 94
+                  text: "Terug -"
+            on_press:
+              then:
+                lvgl.page.show: start_page
+
+        - obj: # Warmtepomp
+            x: 10
+            y: 300
+            width: 147
+            height: 115
+            pad_all: 10
+            styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  styles: card_title
+                  text: "Warmtepomp"
+              - label:
+                  id: energy_text_wp
+                  text_font: roboto20
+                  align: top_left
+                  y: 20
+                  text: "- kWh"
+              - bar:
+                  id: energy_wp_bar
+                  align: top_left
+                  y: 58
+                  width: 127
+                  height: 8
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  indicator:
+                    bg_color: 0xE9EDF4
+              - label:
+                  id: energy_wp_pct
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: bottom_left
+                  y: 4
+                  text: ""
+            on_press:
+              then:
+                lvgl.page.show: start_page
+
+        - obj: # Airco
+            x: 167
+            y: 300
+            width: 146
+            height: 115
+            pad_all: 10
+            styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  styles: card_title
+                  text: "Airco"
+              - label:
+                  id: energy_text_ac
+                  text_font: roboto20
+                  align: top_left
+                  y: 20
+                  text: "- kWh"
+              - bar:
+                  id: energy_ac_bar
+                  align: top_left
+                  y: 58
+                  width: 126
+                  height: 8
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  indicator:
+                    bg_color: 0xE9EDF4
+              - label:
+                  id: energy_ac_pct
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: bottom_left
+                  y: 4
+                  text: ""
+            on_press:
+              then:
+                lvgl.page.show: start_page
+
+        - obj: # Gas
+            x: 323
+            y: 300
+            width: 147
+            height: 115
+            pad_all: 10
+            styles: bg_white
+            scrollbar_mode: "OFF"
+            widgets:
+              - label:
+                  styles: card_title
+                  text: "Gas"
+              - label:
+                  id: energy_text_gas
+                  text_font: roboto20
+                  align: top_left
+                  y: 20
+                  text: "- m3"
+              - label:
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: bottom_left
+                  y: 4
+                  text: "vandaag"
+            on_press:
+              then:
+                lvgl.page.show: start_page
+
 sensor:
   - platform: homeassistant
     id: gas_per_dag
@@ -257,7 +265,7 @@ sensor:
       - lvgl.label.update:
           id: energy_text_gas
           text:
-            format: "%.2f  m3"
+            format: "%.2f m3"
             args: [ 'x' ]
 
   - platform: homeassistant
@@ -267,8 +275,9 @@ sensor:
       - lvgl.label.update:
           id: energy_text_ac
           text:
-            format: "%.0f  kWH"
+            format: "%.1f kWh"
             args: [ 'x' ]
+      - script.execute: update_home
 
   - platform: homeassistant
     id: warmtepomp2
@@ -277,128 +286,134 @@ sensor:
       - lvgl.label.update:
           id: energy_text_wp
           text:
-            format: "%.0f  kWH"
+            format: "%.1f kWh"
             args: [ 'x' ]
-
+      - script.execute: update_home
 
   - platform: homeassistant
     id: lever_energie_tarief_1
     entity_id: sensor.dag_lever_energie_tarief_1
     on_value:
-      - script.execute: update_grid_up
       - script.execute: update_home
 
   - platform: homeassistant
     id: lever_energie_tarief_2
     entity_id: sensor.dag_lever_energie_tarief_2
     on_value:
-      - script.execute: update_grid_up
       - script.execute: update_home
-  
+
   - platform: homeassistant
     id: verbruik_energie_tarief_1
     entity_id: sensor.dag_verbruik_energie_tarief_1
     on_value:
-      - script.execute: update_grid_down
       - script.execute: update_home
 
   - platform: homeassistant
     id: verbruik_energie_tarief_2
     entity_id: sensor.dag_verbruik_energie_tarief_2
     on_value:
-      - script.execute: update_grid_down
       - script.execute: update_home
 
   - platform: homeassistant
     id: dag_envoy
     entity_id: sensor.envoy_122229057507_today_s_energy_production
     on_value:
-      - script.execute: update_zon
       - script.execute: update_home
 
   - platform: homeassistant
     id: dag_schuur
     entity_id: sensor.dag_zon_schuur
     on_value:
-      - script.execute: update_zon
       - script.execute: update_home
 
 script:
-  - id: update_zon
+  # Net nu: negatief = teruglevering (groen), positief = afname (rood).
+  # Wordt aangeroepen door sensor_sum_power_total in startscherm.yaml.
+  - id: update_net_nu
+    parameters:
+      w: float
     then:
-      - lambda: |- 
-          float tariefsun1 = id(dag_schuur).state;
-          float tariefsun2 = id(dag_envoy).state;
+      - lambda: |-
+          if (isnan(w)) return;
+          bool terug = w < 0;
+          lv_color_t kleur = lv_color_hex(terug ? 0x4CC38A : 0xEF5D4E);
 
-          // Controleer of de sensorwaarden geldig zijn
-          if (isnan(tariefsun1)) tariefsun1 = 0.0;
-          if (isnan(tariefsun2)) tariefsun2 = 0.0;
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.0f W", w);
+          int32_t v = (int32_t) w;
+          if (v < -3000) v = -3000;
+          if (v > 3000) v = 3000;
 
-          float power_sun = (tariefsun1 + tariefsun2) / 1000;
-          // Format the power value as a string with 1 decimal place
-          char power_sun_str[16];  // Buffer to hold the formatted string
-          snprintf(power_sun_str, sizeof(power_sun_str), "%.1f kWh", power_sun);
-
-          lv_label_set_text(id(energy_text_zon), power_sun_str);
-          
-  - id: update_grid_up
-    then:
-      - lambda: |- 
-          float tariefup1 = id(lever_energie_tarief_1).state;
-          float tariefup2 = id(lever_energie_tarief_2).state;
-
-          // Controleer of de sensorwaarden geldig zijn
-          if (isnan(tariefup1)) tariefup1 = 0.0;
-          if (isnan(tariefup2)) tariefup2 = 0.0;
-
-          float power_up = tariefup1 + tariefup2;
-          // Format the power value as a string with 1 decimal place
-          char power_up_str[16];  // Buffer to hold the formatted string
-          snprintf(power_up_str, sizeof(power_up_str), "%.1f kWh", power_up);
-
-          lv_label_set_text(id(energy_text_up), power_up_str);
-
-  - id: update_grid_down
-    then:
-      - lambda: |- 
-          float tariefdown1 = id(verbruik_energie_tarief_1).state;
-          float tariefdown2 = id(verbruik_energie_tarief_2).state;
-
-          // Controleer of de sensorwaarden geldig zijn
-          if (isnan(tariefdown1)) tariefdown1 = 0.0;
-          if (isnan(tariefdown2)) tariefdown2 = 0.0;
-
-          float power_down = tariefdown1 + tariefdown2;
-
-          // Format the power value as a string with 1 decimal place
-          char power_down_str[16];  // Buffer to hold the formatted string
-          snprintf(power_down_str, sizeof(power_down_str), "%.1f kWh", power_down);
-
-          lv_label_set_text(id(energy_text_down), power_down_str);
+          // Energiescherm en startscherm tonen hetzelfde
+          lv_obj_t *getal[] = {id(energy_net_nu), id(start_net_nu)};
+          lv_obj_t *tekst[] = {id(energy_net_tekst), id(start_net_tekst)};
+          lv_obj_t *balk[] = {id(energy_net_bar), id(start_net_bar)};
+          for (int i = 0; i < 2; i++) {
+            lv_label_set_text(getal[i], buf);
+            lv_obj_set_style_text_color(getal[i], kleur, LV_PART_MAIN);
+            lv_label_set_text(tekst[i], terug ? "je levert terug" : "je neemt af");
+            lv_bar_set_value(balk[i], v, LV_ANIM_ON);
+            lv_obj_set_style_bg_color(balk[i], kleur, LV_PART_INDICATOR);
+          }
 
   - id: update_home
     then:
-      - lambda: |- 
-          float tariefdown1 = id(verbruik_energie_tarief_1).state;
-          float tariefdown2 = id(verbruik_energie_tarief_2).state;
-          float tariefup1 = id(lever_energie_tarief_1).state;
-          float tariefup2 = id(lever_energie_tarief_2).state;
-          float tariefsun1 = id(dag_schuur).state;
-          float tariefsun2 = id(dag_envoy).state;
+      - lambda: |-
+          float down1 = id(verbruik_energie_tarief_1).state;
+          float down2 = id(verbruik_energie_tarief_2).state;
+          float up1 = id(lever_energie_tarief_1).state;
+          float up2 = id(lever_energie_tarief_2).state;
+          float sun1 = id(dag_schuur).state;
+          float sun2 = id(dag_envoy).state;
+          float wp = id(warmtepomp2).state;
+          float ac = id(panasonic_ac_total_daily_energy).state;
 
           // Controleer of de sensorwaarden geldig zijn
-          if (isnan(tariefsun1)) tariefsun1 = 0.0;
-          if (isnan(tariefsun2)) tariefsun2 = 0.0;
-          if (isnan(tariefup1)) tariefup1 = 0.0;
-          if (isnan(tariefup2)) tariefup2 = 0.0;
-          if (isnan(tariefdown1)) tariefdown1 = 0.0;
-          if (isnan(tariefdown2)) tariefdown2 = 0.0;
+          if (isnan(sun1)) sun1 = 0.0;
+          if (isnan(sun2)) sun2 = 0.0;
+          if (isnan(up1)) up1 = 0.0;
+          if (isnan(up2)) up2 = 0.0;
+          if (isnan(down1)) down1 = 0.0;
+          if (isnan(down2)) down2 = 0.0;
 
-          float power_home = ((tariefsun1 + tariefsun2)/1000) - (tariefup1 + tariefup2) + (tariefdown1 + tariefdown2);
+          float zon = (sun1 + sun2) / 1000;
+          float terug = up1 + up2;
+          float net = down1 + down2;
+          float home = zon - terug + net;
+          float zon_direct = zon - terug;
+          if (zon_direct < 0) zon_direct = 0;
 
-          // Format the power value as a string with 1 decimal place
-          char power_home_str[16];  // Buffer to hold the formatted string
-          snprintf(power_home_str, sizeof(power_home_str), "%.1f kWh", power_home);
+          char buf[32];
+          snprintf(buf, sizeof(buf), "%.1f kWh", home);
+          lv_label_set_text(id(energy_text_home), buf);
+          snprintf(buf, sizeof(buf), "Zon %.1f", zon_direct);
+          lv_label_set_text(id(energy_text_zon), buf);
+          snprintf(buf, sizeof(buf), "Net %.1f", net);
+          lv_label_set_text(id(energy_text_down), buf);
+          snprintf(buf, sizeof(buf), "Terug %.1f", terug);
+          lv_label_set_text(id(energy_text_up), buf);
+          snprintf(buf, sizeof(buf), "Zon vandaag %.1f kWh", zon);
+          lv_label_set_text(id(start_zon), buf);
 
-          lv_label_set_text(id(energy_text_home), power_home_str);
+          if (home <= 0) return;
+          int zon_pct = (int) (zon_direct / home * 100 + 0.5);
+          if (zon_pct > 100) zon_pct = 100;
+          lv_bar_set_value(id(energy_mix_bar), zon_pct, LV_ANIM_ON);
+          snprintf(buf, sizeof(buf), "%d%% van de zon", zon_pct);
+          lv_label_set_text(id(energy_zon_pct), buf);
 
+          // Aandeel van warmtepomp en airco in het huisverbruik
+          if (!isnan(wp)) {
+            int p = (int) (wp / home * 100 + 0.5);
+            if (p > 100) p = 100;
+            lv_bar_set_value(id(energy_wp_bar), p, LV_ANIM_ON);
+            snprintf(buf, sizeof(buf), "%d%% van huis", p);
+            lv_label_set_text(id(energy_wp_pct), buf);
+          }
+          if (!isnan(ac)) {
+            int p = (int) (ac / home * 100 + 0.5);
+            if (p > 100) p = 100;
+            lv_bar_set_value(id(energy_ac_bar), p, LV_ANIM_ON);
+            snprintf(buf, sizeof(buf), "%d%% van huis", p);
+            lv_label_set_text(id(energy_ac_pct), buf);
+          }
