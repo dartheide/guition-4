@@ -42,14 +42,20 @@ sensor:
 
 text_sensor:
   # Gordijnen: tijdens bewegen "opent..." / "sluit..." rechtsboven, anders de positie
+  # Niet bereikbaar: "offline" en de knoppen uitgeschakeld
   - platform: homeassistant
     id: cover_${id}_gordijnen
     entity_id: ${entity_id}
     on_value:
+      - lvgl.widget.update:
+          id: [ "cov_up_btn_${id}", "cov_stop_btn_${id}", "cov_down_btn_${id}" ]
+          state:
+            disabled: !lambda 'return x == "unavailable" || x == "unknown";'
       - lvgl.label.update:
           id: cov_pos_${id}
           text: !lambda |-
             static char buf[12];
+            if (x == "unavailable" || x == "unknown") return "offline";
             if (x == "opening") return "opent...";
             if (x == "closing") return "sluit...";
             snprintf(buf, sizeof(buf), "%.0f%%", id(cover_${id}_pos).get_state());

@@ -1,6 +1,7 @@
 # id:
 # entity_id
 # aan: knop gevuld in accentkleur (theme 'checked'), uit: gewone knop
+# niet bereikbaar: grijze knop die niet reageert (theme 'disabled')
 text_sensor:
   - platform: homeassistant
     id: remote_light_${id}
@@ -10,6 +11,7 @@ text_sensor:
           id: ${id}_lamp_btn
           state:
             checked: !lambda 'return x == "on";'
+            disabled: !lambda 'return x == "unavailable" || x == "unknown";'
       - lvgl.label.update:
           id: ${id}_lamp_label
           text: !lambda |-

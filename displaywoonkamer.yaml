@@ -140,6 +140,17 @@ lvgl:
                   then:
                     lvgl.page.show: kluskamer_page
 
+    - obj: # onzichtbare laag over het hele scherm; vangt de eerste tik op een gedimd scherm af
+        id: wake_overlay
+        align: top_left
+        width: 480
+        height: 480
+        bg_opa: TRANSP
+        border_width: 0
+        radius: 0
+        pad_all: 0
+        hidden: true
+
 time:
   - platform: homeassistant
     id: time_comp

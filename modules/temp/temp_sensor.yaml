@@ -21,3 +21,40 @@ sensor:
           text:
             format: "nu %.1f°"
             args: [ 'x' ]
+
+text_sensor:
+  # Niet bereikbaar: "offline" tonen en de knoppen uitschakelen
+  - platform: homeassistant
+    id: ${id}_thermostat_status
+    entity_id: ${entity_id}
+    on_value:
+      - lvgl.widget.update:
+          id: [ "${id}_spin_down", "${id}_spin_up" ]
+          state:
+            disabled: !lambda 'return x == "unavailable" || x == "unknown";'
+      - if:
+          condition:
+            lambda: 'return x == "unavailable" || x == "unknown";'
+          then:
+            - lvgl.label.update:
+                id: temp_cur_${id}
+                text: "offline"
+
+script:
+  # Wacht tot er even niet op +/- getikt is en stuur dan alleen de laatste waarde.
+  # Een waarde die net uit Home Assistant kwam wordt niet teruggestuurd.
+  - id: ${id}_temp_zetten
+    mode: restart
+    parameters:
+      temp: float
+    then:
+      - delay: 1500ms
+      - if:
+          condition:
+            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - id(${id}_thermostat).state) > 0.05;'
+          then:
+            - homeassistant.action:
+                action: climate.set_temperature
+                data:
+                  temperature: !lambda return temp;
+                  entity_id: ${entity_id}

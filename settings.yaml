@@ -3,6 +3,15 @@
 
 substitutions:
 
+  # Scherm
+  helderheid_normaal: 80%
+  helderheid_gedimd: 35%
+  dimmen_na: 45s
+
+  # Bereik van de thermostaatknoppen (°C)
+  thermostaat_min: "12"
+  thermostaat_max: "25"
+
   # Lampen
   licht_woonkamer: light.woonkamer
   licht_erker: light.erker

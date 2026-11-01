@@ -29,6 +29,7 @@
           max_value: 100
           value: 0
       - button:
+          id: cov_up_btn_${id}
           width: 60
           height: 44
           align: bottom_left
@@ -44,6 +45,7 @@
                 data:
                   entity_id: ${entity_id}
       - button:
+          id: cov_stop_btn_${id}
           width: 60
           height: 44
           align: bottom_mid
@@ -59,6 +61,7 @@
                 data:
                   entity_id: ${entity_id}
       - button:
+          id: cov_down_btn_${id}
           width: 60
           height: 44
           align: bottom_right

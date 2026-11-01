@@ -28,12 +28,13 @@ lvgl:
     - my_display
   touchscreens:
     - touchscreen_id: my_touchscreen
-  on_idle: # na 45 s niets aanraken: scherm dimmen en terug naar start
-    - timeout: 45s
+  on_idle: # na ${dimmen_na} niets aanraken: scherm dimmen en terug naar start
+    - timeout: ${dimmen_na}
       then:
         - light.control:
             id: backlight
-            brightness: 35%
+            brightness: ${helderheid_gedimd}
+        - lvgl.widget.show: wake_overlay
         - lvgl.page.show: start_page
 
 #-------------------------------------------
@@ -59,10 +60,11 @@ light:
       then:
         - light.control: 
             id: backlight
-            brightness: 80%
+            brightness: ${helderheid_normaal}
         - lvgl.resume:
     on_turn_off: 
       then:
+        - lvgl.widget.show: wake_overlay
         - lvgl.pause:
 
 #-------------------------------------------
@@ -86,18 +88,22 @@ touchscreen:
           format: Touch at (%d, %d)
           args: [touch.x, touch.y]
             
+  # Gedimd of uit: de tik maakt alleen wakker; wake_overlay vangt hem af
   on_release:
     then:
       - if:
           condition:
-            lambda: 'return id(backlight).current_values.get_brightness() <= 0.35;'
+            or:
+              - lvgl.is_paused:
+              - lambda: 'return !lv_obj_has_flag(id(wake_overlay), LV_OBJ_FLAG_HIDDEN);'
           then:
-            - logger.log: "Backlight is at or below 35%, resuming LVGL"
+            - logger.log: "Scherm wakker maken"
             - lvgl.resume:
             - lvgl.widget.redraw:
             - light.turn_on:
                 id: backlight
-                brightness: 80%
+                brightness: ${helderheid_normaal}
+            - lvgl.widget.hide: wake_overlay
     
 #-------------------------------------------
 # Display st7701s spi

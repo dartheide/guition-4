@@ -26,20 +26,18 @@
                 text_color: 0xE9EDF4
                 bg_opa: TRANSP
                 border_width: 0
-                range_from: 21
-                range_to: 35
+                range_from: ${thermostaat_min}
+                range_to: ${thermostaat_max}
                 selected_digit: 0
                 rollover: false
                 digits: 3
                 decimal_places: 1
                 value: 22
-                on_value:
+                on_value: # versturen gebeurt vertraagd door temp_sensor.yaml
                     then:
-                        - homeassistant.action:
-                            action: climate.set_temperature
-                            data:
-                                temperature: !lambda return x;
-                                entity_id: ${entity_id}
+                        - script.execute:
+                            id: ${id}_temp_zetten
+                            temp: !lambda return x;
             - button:
                 width: 60
                 height: 44
