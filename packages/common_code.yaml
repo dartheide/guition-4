@@ -246,10 +246,11 @@ font:
           [
             "\U000F10C3", # mdi-thermometer-low
             "\U000F10C2", # mdi-thermometer-high
-            "\U000F0336",
-            "\U000F0FCE", # mdi-movie-open
-            "\U000F02E3", # mdi-bed
-            "\U000F0A28", # mdi-exit-run
+            # iconen van de scèneknoppen, uit settings.yaml
+            "${scene_1_icoon}",
+            "${scene_2_icoon}",
+            "${scene_3_icoon}",
+            "${scene_4_icoon}",
           ]
 
   - file: "gfonts://Roboto"

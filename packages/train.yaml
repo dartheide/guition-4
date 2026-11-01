@@ -61,7 +61,7 @@ lvgl:
 text_sensor:
   - platform: homeassistant
     id: ns_departure1
-    entity_id: sensor.ns_departure_1
+    entity_id: ${sensor_trein_1}
     on_value:
       # Update startscherm: tijd en bestemming apart
       - script.execute:
@@ -75,7 +75,7 @@ text_sensor:
 
   - platform: homeassistant
     id: ns_departure2
-    entity_id: sensor.ns_departure_2
+    entity_id: ${sensor_trein_2}
     on_value:
       # Update startscherm: tijd en bestemming apart
       - script.execute:
@@ -89,7 +89,7 @@ text_sensor:
 
   - platform: homeassistant
     id: ns_departure3
-    entity_id: sensor.ns_departure_3
+    entity_id: ${sensor_trein_3}
     on_value:
       # Update startscherm: tijd en bestemming apart
       - script.execute:
@@ -103,7 +103,7 @@ text_sensor:
 
   - platform: homeassistant
     id: ns_departure4
-    entity_id: sensor.ns_departure_4
+    entity_id: ${sensor_trein_4}
     on_value:
       # Update startscherm: tijd en bestemming apart
       - script.execute:
@@ -117,7 +117,7 @@ text_sensor:
 
   - platform: homeassistant
     id: ns_departure5
-    entity_id: sensor.ns_departure_5
+    entity_id: ${sensor_trein_5}
     on_value:
       # Update startscherm: tijd en bestemming apart
       - script.execute:

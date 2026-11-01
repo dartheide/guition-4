@@ -2,6 +2,8 @@ substitutions:
   name: "mypanel-woonkamer-sdl2"
 
 packages:
+  settings: !include settings.yaml
+
   # for simulation turn on device_sdl and turn off device_base
   device_base: !include packages/display_base.yaml
   #device_sdl: !include packages/display_sdl.yaml
@@ -174,7 +176,7 @@ script:
 text_sensor:    
   - platform: homeassistant
     id: sensor_stookwijzer
-    entity_id: sensor.stookwijzer
+    entity_id: ${sensor_stookwijzer}
     on_value:
       - lambda: |-
           // geel / oranje / rood; grijs bij unknown of unavailable
@@ -184,10 +186,10 @@ text_sensor:
           else if (x == "code_red") kleur = 0xFF3000;
           lv_obj_set_style_text_color(id(stookwijzer_label), lv_color_hex(kleur), LV_PART_MAIN);
 
-# sensor.afvalinfo_huize_dartheide_trash_type_tomorrow
+# afvalinfo: wat wordt er morgen opgehaald
   - platform: homeassistant
     id: sensor_afval
-    entity_id: sensor.afvalinfo_huize_dartheide_trash_type_tomorrow
+    entity_id: ${sensor_afval_morgen}
     on_value:
       - if:
           condition:

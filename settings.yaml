@@ -1,0 +1,76 @@
+# Alle Home Assistant entiteiten op één plek.
+# Vervang je een apparaat in Home Assistant, pas dan alleen hier het entity_id aan.
+
+substitutions:
+
+  # Lampen
+  licht_woonkamer: light.woonkamer
+  licht_erker: light.erker
+  licht_plafond_woonkamer: light.plafondlamp_woonkamer
+  licht_eettafel: light.icasa_iczb_iw11d_light
+  licht_aanrecht: light.aanrechtblad
+  licht_keukenspotjes: light.keukenspotjes
+  licht_badkamer: light.ikea_of_sweden_gunnarp_panel_40_40_light
+  schakelaar_deken_hans: light.ikea_of_sweden_tradfri_control_outlet_switch_4
+
+  # Gordijnen en bureau
+  gordijn_erker: cover.gordijnen_erker
+  gordijn_klapdeur: cover.plissegordijn_klapdeur_cover
+  gordijn_keuken: cover.keukenraam_cover
+  gordijn_studeerkamer: cover.gordijnen_studeer
+  gordijn_kluskamer: cover.plisse_kluskamer
+  bureau_studeerkamer: cover.desk_4728
+
+  # Thermostaten
+  klimaat_woonkamer: climate.bosch_radiatorkraan_woonkamer_thermostat
+  klimaat_studeerkamer: climate.bosch_radiatorkraan_studeerkamer_thermostat
+  klimaat_kluskamer: climate.bosch_radiatorkraan_kluskamer_thermostat
+
+  # Media
+  media_woonkamer: media_player.woonkamer
+  media_studeerkamer: media_player.studeerkamer
+  media_keuken: media_player.keuken
+  media_kluskamer: media_player.kluskamer
+
+  # Kopbalk
+  sensor_stookwijzer: sensor.stookwijzer
+  sensor_afval_morgen: sensor.afvalinfo_huize_dartheide_trash_type_tomorrow
+
+  # Energie
+  sensor_vermogen_totaal: sensor.sum_power_total
+  sensor_gas_dag: sensor.gas_per_dag
+  sensor_airco_dag: sensor.panasonic_ac_total_daily_energy
+  sensor_warmtepomp_dag: sensor.warmtepomp2
+  sensor_lever_tarief_1: sensor.dag_lever_energie_tarief_1
+  sensor_lever_tarief_2: sensor.dag_lever_energie_tarief_2
+  sensor_verbruik_tarief_1: sensor.dag_verbruik_energie_tarief_1
+  sensor_verbruik_tarief_2: sensor.dag_verbruik_energie_tarief_2
+  sensor_zon_dak: sensor.envoy_122229057507_today_s_energy_production
+  sensor_zon_schuur: sensor.dag_zon_schuur
+
+  # Weer en trein (template sensoren uit packages_ha)
+  weer_verwachting: weather.forecast_home
+  sensor_weer_data: sensor.weather_data
+  sensor_trein_1: sensor.ns_departure_1
+  sensor_trein_2: sensor.ns_departure_2
+  sensor_trein_3: sensor.ns_departure_3
+  sensor_trein_4: sensor.ns_departure_4
+  sensor_trein_5: sensor.ns_departure_5
+
+  # Scènes op het startscherm, van links naar rechts.
+  # entity_id mag een script (script.*) of scene (scene.*) zijn; icoon is een Material Design Icon.
+  scene_1: script.film
+  scene_1_tekst: Film
+  scene_1_icoon: "\U000F0FCE"
+
+  scene_2: script.naar_bed
+  scene_2_tekst: Naar bed
+  scene_2_icoon: "\U000F02E3"
+
+  scene_3: script.weg
+  scene_3_tekst: Weg
+  scene_3_icoon: "\U000F0A28"
+
+  scene_4: script.alle_lichten_uit
+  scene_4_tekst: Alles uit
+  scene_4_icoon: "\U000F0336"

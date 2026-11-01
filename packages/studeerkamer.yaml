@@ -1,7 +1,7 @@
 packages:
-  mediaplayer_studeerkamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: studeerkamer }}
-  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: studeerkamer, entity_id: cover.gordijnen_studeer }}
-  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: studeerkamer, entity_id: climate.bosch_radiatorkraan_studeerkamer_thermostat }}
+  mediaplayer_studeerkamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: studeerkamer, entity_id: "${media_studeerkamer}" }}
+  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: studeerkamer, entity_id: "${gordijn_studeerkamer}" }}
+  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
 
 
 # LVGL configuration
@@ -14,7 +14,7 @@ lvgl:
             id: nav_actief
             knop: 3
       widgets:
-        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: studeerkamer }}
+        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: studeerkamer, entity_id: "${media_studeerkamer}" }}
                                                
         - obj: # Lampen
             x: 10
@@ -44,15 +44,15 @@ lvgl:
                           data:
                             position: !lambda |-
                               return (id(desk_position).state == 23) ? 82 : 23;
-                            entity_id: cover.desk_4728
+                            entity_id: ${bureau_studeerkamer}
 
-        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: studeerkamer, entity_id: cover.gordijnen_studeer, title: "Rolgordijnen", x: 10 }}
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: studeerkamer, entity_id: "${gordijn_studeerkamer}", title: "Rolgordijnen", x: 10 }}
 
-        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: studeerkamer, entity_id: climate.bosch_radiatorkraan_studeerkamer_thermostat }}
+        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
 
 sensor:
   - platform: homeassistant
-    entity_id: cover.desk_4728
+    entity_id: ${bureau_studeerkamer}
     attribute: current_position
     id: desk_position
     on_value:

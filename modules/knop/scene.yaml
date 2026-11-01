@@ -1,0 +1,16 @@
+# Scèneknop; entity_id mag een script.* of scene.* zijn
+x: ${x}
+y: 360
+width: ${width}
+height: 56
+widgets:
+  - label:
+      text_font: roboto16
+      text: "${icoon} ${tekst}"
+      align: center
+on_press:
+  then:
+    - homeassistant.action:
+        action: homeassistant.turn_on
+        data:
+          entity_id: ${entity_id}

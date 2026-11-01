@@ -6,7 +6,7 @@ sensor:
 
   - platform: homeassistant # volume ${id}
     id: media_player_volume_${id}
-    entity_id: media_player.${id}
+    entity_id: ${entity_id}
     attribute: volume_level
     on_value:
       - lvgl.label.update:
@@ -20,7 +20,7 @@ sensor:
 binary_sensor:
   - platform: homeassistant
     id: sonos_${id}_mute
-    entity_id: media_player.${id}
+    entity_id: ${entity_id}
     attribute: is_volume_muted
     trigger_on_initial_state: true
     on_state:
@@ -40,7 +40,7 @@ binary_sensor:
 text_sensor:
   - platform: homeassistant
     id: sonos_${id}_media_title_text_sensor
-    entity_id: media_player.${id}
+    entity_id: ${entity_id}
     attribute: media_title
     on_value:
       then:
@@ -51,7 +51,7 @@ text_sensor:
 
   - platform: homeassistant
     id: sonos_${id}_media_artist_text_sensor
-    entity_id: media_player.${id}
+    entity_id: ${entity_id}
     attribute: media_artist
     on_value:
       then:

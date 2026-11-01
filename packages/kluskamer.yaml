@@ -1,9 +1,9 @@
 packages:
-  mediaplayer_kluskamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: kluskamer }}
-  lamp1: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light }}
-  switch1: !include { file: ../modules/switch/schakelaar_sensor.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4 }}
-  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: kluskamer, entity_id: cover.plisse_kluskamer }}
-  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: kluskamer, entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat }}
+  mediaplayer_kluskamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: kluskamer, entity_id: "${media_kluskamer}" }}
+  lamp1: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: badkamer, entity_id: "${licht_badkamer}" }}
+  switch1: !include { file: ../modules/switch/schakelaar_sensor.yaml, vars: {id: deken_hans, entity_id: "${schakelaar_deken_hans}" }}
+  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: kluskamer, entity_id: "${gordijn_kluskamer}" }}
+  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: kluskamer, entity_id: "${klimaat_kluskamer}" }}
   
 # LVGL configuration
 lvgl:
@@ -15,7 +15,7 @@ lvgl:
             id: nav_actief
             knop: 4
       widgets:
-        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: kluskamer }}
+        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: kluskamer, entity_id: "${media_kluskamer}" }}
                                                
         - obj: # Lampen
             x: 10
@@ -28,10 +28,10 @@ lvgl:
               - label:
                   styles: card_title
                   text: "Lampen"
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: badkamer, entity_id: light.ikea_of_sweden_gunnarp_panel_40_40_light, pos: bottom_left }}                                    
-              - button: !include { file: ../modules/knop/schakelaar.yaml, vars: {id: deken_hans, entity_id: light.ikea_of_sweden_tradfri_control_outlet_switch_4, pos: bottom_mid }}                                    
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: badkamer, entity_id: "${licht_badkamer}", pos: bottom_left }}                                    
+              - button: !include { file: ../modules/knop/schakelaar.yaml, vars: {id: deken_hans, entity_id: "${schakelaar_deken_hans}", pos: bottom_mid }}                                    
                                   
-        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: kluskamer, entity_id: cover.plisse_kluskamer, title: "Gordijnen kluskamer", x: 10 }}
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: kluskamer, entity_id: "${gordijn_kluskamer}", title: "Gordijnen kluskamer", x: 10 }}
 
 
-        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: kluskamer, entity_id: climate.bosch_radiatorkraan_kluskamer_thermostat }}
+        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: kluskamer, entity_id: "${klimaat_kluskamer}" }}

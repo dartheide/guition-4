@@ -152,63 +152,11 @@ lvgl:
               then:
                 lvgl.page.show: ns_page
 
-        # Scènes
-        - button:
-            x: 10
-            y: 360
-            width: 107
-            height: 56
-            widgets:
-              - label:
-                  text_font: roboto16
-                  text: "\U000F0FCE Film"
-                  align: center
-            on_press:
-              then:
-                - homeassistant.action:
-                    action: script.film
-        - button:
-            x: 127
-            y: 360
-            width: 107
-            height: 56
-            widgets:
-              - label:
-                  text_font: roboto16
-                  text: "\U000F02E3 Naar bed"
-                  align: center
-            on_press:
-              then:
-                - homeassistant.action:
-                    action: script.naar_bed
-        - button:
-            x: 244
-            y: 360
-            width: 107
-            height: 56
-            widgets:
-              - label:
-                  text_font: roboto16
-                  text: "\U000F0A28 Weg"
-                  align: center
-            on_press:
-              then:
-                - homeassistant.action:
-                    action: script.weg
-        - button:
-            x: 361
-            y: 360
-            width: 109
-            height: 56
-            widgets:
-              - label:
-                  text_font: roboto16
-                  text: "\U000F0336 Alles uit"
-                  align: center
-            on_press:
-              then:
-                - homeassistant.action:
-                    action: script.alle_lichten_uit
+        # Scènes (in te stellen in settings.yaml)
+        - button: !include { file: ../modules/knop/scene.yaml, vars: {entity_id: "${scene_1}", tekst: "${scene_1_tekst}", icoon: "${scene_1_icoon}", x: 10, width: 107 }}
+        - button: !include { file: ../modules/knop/scene.yaml, vars: {entity_id: "${scene_2}", tekst: "${scene_2_tekst}", icoon: "${scene_2_icoon}", x: 127, width: 107 }}
+        - button: !include { file: ../modules/knop/scene.yaml, vars: {entity_id: "${scene_3}", tekst: "${scene_3_tekst}", icoon: "${scene_3_icoon}", x: 244, width: 107 }}
+        - button: !include { file: ../modules/knop/scene.yaml, vars: {entity_id: "${scene_4}", tekst: "${scene_4_tekst}", icoon: "${scene_4_icoon}", x: 361, width: 109 }}
 
 binary_sensor:
   - platform: status
@@ -217,7 +165,7 @@ binary_sensor:
 sensor:
   - platform: homeassistant
     id: sensor_sum_power_total
-    entity_id: sensor.sum_power_total
+    entity_id: ${sensor_vermogen_totaal}
     internal: true
     on_value:
       - script.execute:

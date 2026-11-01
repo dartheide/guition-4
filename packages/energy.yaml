@@ -260,7 +260,7 @@ lvgl:
 sensor:
   - platform: homeassistant
     id: gas_per_dag
-    entity_id: sensor.gas_per_dag
+    entity_id: ${sensor_gas_dag}
     on_value:
       - lvgl.label.update:
           id: energy_text_gas
@@ -270,7 +270,7 @@ sensor:
 
   - platform: homeassistant
     id: panasonic_ac_total_daily_energy
-    entity_id: sensor.panasonic_ac_total_daily_energy
+    entity_id: ${sensor_airco_dag}
     on_value:
       - lvgl.label.update:
           id: energy_text_ac
@@ -281,7 +281,7 @@ sensor:
 
   - platform: homeassistant
     id: warmtepomp2
-    entity_id: sensor.warmtepomp2
+    entity_id: ${sensor_warmtepomp_dag}
     on_value:
       - lvgl.label.update:
           id: energy_text_wp
@@ -292,37 +292,37 @@ sensor:
 
   - platform: homeassistant
     id: lever_energie_tarief_1
-    entity_id: sensor.dag_lever_energie_tarief_1
+    entity_id: ${sensor_lever_tarief_1}
     on_value:
       - script.execute: update_home
 
   - platform: homeassistant
     id: lever_energie_tarief_2
-    entity_id: sensor.dag_lever_energie_tarief_2
+    entity_id: ${sensor_lever_tarief_2}
     on_value:
       - script.execute: update_home
 
   - platform: homeassistant
     id: verbruik_energie_tarief_1
-    entity_id: sensor.dag_verbruik_energie_tarief_1
+    entity_id: ${sensor_verbruik_tarief_1}
     on_value:
       - script.execute: update_home
 
   - platform: homeassistant
     id: verbruik_energie_tarief_2
-    entity_id: sensor.dag_verbruik_energie_tarief_2
+    entity_id: ${sensor_verbruik_tarief_2}
     on_value:
       - script.execute: update_home
 
   - platform: homeassistant
     id: dag_envoy
-    entity_id: sensor.envoy_122229057507_today_s_energy_production
+    entity_id: ${sensor_zon_dak}
     on_value:
       - script.execute: update_home
 
   - platform: homeassistant
     id: dag_schuur
-    entity_id: sensor.dag_zon_schuur
+    entity_id: ${sensor_zon_schuur}
     on_value:
       - script.execute: update_home
 

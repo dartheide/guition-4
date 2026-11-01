@@ -2,12 +2,12 @@ substitutions:
   pagina: "woonkamer"
 
 packages:
-  mediaplayer_woonkamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: woonkamer }}
-  lamp1: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: kamer, entity_id: light.woonkamer }}
-  lamp2: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: erker, entity_id: light.erker }}
-  lamp3: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer }}
-  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker }}
-  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: woonkamer, entity_id: climate.bosch_radiatorkraan_woonkamer_thermostat }}
+  mediaplayer_woonkamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: woonkamer, entity_id: "${media_woonkamer}" }}
+  lamp1: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: kamer, entity_id: "${licht_woonkamer}" }}
+  lamp2: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: erker, entity_id: "${licht_erker}" }}
+  lamp3: !include { file: ../modules/lamp/groeplamp_sensor.yaml, vars: {id: plafond, entity_id: "${licht_plafond_woonkamer}" }}
+  cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: erker, entity_id: "${gordijn_erker}" }}
+  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: woonkamer, entity_id: "${klimaat_woonkamer}" }}
 
 # LVGL configuration
 lvgl:
@@ -19,7 +19,7 @@ lvgl:
             id: nav_actief
             knop: 1
       widgets:
-        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: woonkamer }}
+        - obj: !include { file: ../modules/sonos/mediaplayer.yaml, vars: {id: woonkamer, entity_id: "${media_woonkamer}" }}
                                           
         - obj: # Lampen
             x: 10
@@ -32,10 +32,10 @@ lvgl:
               - label:
                   styles: card_title
                   text: "Lampen"
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: light.woonkamer, pos: bottom_left }}                                    
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: light.erker, pos: bottom_mid }}
-              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: light.plafondlamp_woonkamer, pos: bottom_right }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: kamer, entity_id: "${licht_woonkamer}", pos: bottom_left }}                                    
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: erker, entity_id: "${licht_erker}", pos: bottom_mid }}
+              - button: !include { file: ../modules/knop/licht.yaml, vars: {id: plafond, entity_id: "${licht_plafond_woonkamer}", pos: bottom_right }}
               
-        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: cover.gordijnen_erker, title: "Gordijnen Erker", x: 10 }}
+        - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: erker, entity_id: "${gordijn_erker}", title: "Gordijnen Erker", x: 10 }}
 
-        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: woonkamer, entity_id: climate.bosch_radiatorkraan_woonkamer_thermostat }}
+        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: woonkamer, entity_id: "${klimaat_woonkamer}" }}

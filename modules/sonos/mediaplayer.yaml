@@ -42,7 +42,7 @@
             - homeassistant.action:
                 action: media_player.volume_down
                 data:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
 
     - label: # volume in %, gezet door mediaplayersensors.yaml
         id: sonos_${id}_volume_label
@@ -69,7 +69,7 @@
             - homeassistant.action:
                 action: media_player.volume_up
                 data:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
 
     - button: # Mute
         height: 40
@@ -85,7 +85,7 @@
             - homeassistant.action:
                 action: media_player.volume_mute
                 data:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
                     is_volume_muted: !lambda 'return !id(sonos_${id}_mute).state;'
 
     - button: # play/pause
@@ -106,7 +106,7 @@
             - homeassistant.action:
                 action: media_player.media_play_pause
                 data_template:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
 
     - button: # pinguin
         height: 40
@@ -125,7 +125,7 @@
             - homeassistant.action:
                 action: media_player.play_media
                 data_template:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
                     media_content_type: "music"
                     media_content_id: "http://streams.pinguinradio.com/PinguinClassics192.mp3"
 
@@ -147,6 +147,6 @@
             - homeassistant.action:
                 action: media_player.play_media
                 data_template:
-                    entity_id: media_player.${id}
+                    entity_id: ${entity_id}
                     media_content_type: "music"
                     media_content_id: "x-rincon-mp3radio://http://icecast.vrtcdn.be/stubru.aac"

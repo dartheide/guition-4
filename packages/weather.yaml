@@ -149,7 +149,7 @@ script:
 sensor:
   - platform: homeassistant
     id: uv_index_state_sensor
-    entity_id: weather.forecast_home
+    entity_id: ${weer_verwachting}
     attribute: uv_index
     on_value:
       - lambda: |-
