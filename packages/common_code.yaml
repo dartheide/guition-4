@@ -73,6 +73,7 @@ lvgl:
         bg_color: 0xF4B740
         text_color: 0x2A1D00
       disabled: # apparaat niet bereikbaar
+        recolor_opa: TRANSP # geen grijs filter van het standaardthema
         bg_color: 0x1B2333
         border_color: 0x263049
         border_width: 1

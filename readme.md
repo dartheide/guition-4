@@ -1,6 +1,6 @@
 **Project: Touch Display Layouts with ESPhome and Guition 4 480x480 Display**  
 
-This project focuses on designing two intuitive layouts for a Guition 4 480x480 ESP32 Smart Display with LVGL support. The display will be configured using **ESPhome**, drawing inspiration from resources such as the Home Assistant forum and the ESPhome Cookbook LVGL: Tips and Tricks.  
+This project focuses on designing intuitive layouts for a Guition 4 480x480 ESP32 Smart Display with LVGL support. The display is configured using **ESPhome**, drawing inspiration from resources such as the Home Assistant forum and the ESPhome Cookbook LVGL: Tips and Tricks.  
 
 ### Specifications of the Display  
 - **Model:** Guition 4 480x480 ESP32-S3 4848S040 Smart Display  
@@ -8,61 +8,52 @@ This project focuses on designing two intuitive layouts for a Guition 4 480x480 
 - **Resolution:** 480 x 480 pixels  
 - **Interface:** Touchscreen  
 
-### Objectives  
-The goal is to create two unique layouts:  
-1. **A room template**  
-2. **A home screen with status and navigation features**  
+### Configuration  
+All Home Assistant entities (lights, covers, climate, media players, sensors and scenes) are defined in **`settings.yaml`**. When a device is replaced in Home Assistant, only its entity_id in that file needs to change. Screen brightness, the dim timeout and the thermostat range are set there as well.
 
-#### Layout 1: Room Template  
-This layout will serve as a template for individual rooms and includes the following sections:  
+#### Home Screen  
+- **Status bar:** time, stookwijzer alert, waste collection tomorrow and connection icon  
+- **Weather:** icon, temperature and tomorrow's forecast  
+- **Energy:** current grid power (red = consuming, green = returning) and today's solar yield  
+- **Train departures:** next three trains, tap for all departures  
+- **Scenes:** four buttons (Film, Naar bed, Weg, Alles uit), configurable in `settings.yaml`  
+- **Navigation bar:** home and the four rooms  
 
-- **Media Player:**  
-  - Displays current track information  
-  - Includes a **volume slider**  
-  - A **play/pause button** with stylish blue accents  
+![Home screen](images/startscherm.png)
 
-- **Lighting:**  
-  - **Three light buttons** arranged in a grid  
-  - Visual feedback for the on/off status of the lights  
-  - Clear and recognizable icons  
+#### Room Template  
+Each room page has the same layout:  
+- **Media player:** current track, volume, radio presets, play/pause and a button to group Sonos speakers  
+- **Lights:** up to three toggle buttons, highlighted when on  
+- **Curtains:** position bar with open, stop and close buttons  
+- **Temperature:** set point with + and –; changes are sent to the thermostat once you stop tapping  
 
-- **Curtains:**  
-  - Buttons for **up/down movement**  
-  - Intuitive arrow icons for control  
+Devices that are unavailable in Home Assistant are shown greyed out (or as "offline") and cannot be operated.
 
-- **Temperature:**  
-  - Numeric display of the room temperature in Celsius  
-  - **+ and – buttons** for easy adjustment  
-![IMG_3555 (1)](https://github.com/user-attachments/assets/6fe6a073-002a-4385-8d3b-2c343351230d)
+| Woonkamer | Keuken |
+|---|---|
+| ![Woonkamer](images/woonkamer.png) | ![Keuken](images/keuken.png) |
+| **Studeerkamer** | **Kluskamer** (thermostat offline) |
+| ![Studeerkamer](images/studeerkamer.png) | ![Kluskamer](images/kluskamer.png) |
 
-#### Layout 2: Home Screen  
-The home screen provides a clear overview and system status:  
+#### Sonos Grouping  
+Opened from the speaker button in a room's media player. Pick a source, then tap speakers to let them play along or leave the group. "Alles samen" and "Alles los" group or ungroup all speakers at once.
 
-- **Status Bar (top):**  
-  - Time display  
-  - Stoke alert alarm indicator
-  - Connection icon  
+![Sonos grouping](images/sonos.png)
 
-- **Main Content (2x2 grid):**  
-  - **Weather widget:** Displays an icon and the current temperature  
-  - **Energy meters:** Gauge bars for electricity usage  
-  - **Train departure times:** With an icon (to be developed)  
-  - **Agenda widget:** Shows upcoming appointments (to be developed)  
+#### Weather Forecast  
+![Weather](images/weer.png)
 
-- **Navigation Bar (bottom):**  
-  - Buttons for quick navigation between the four rooms  
+#### Energy Overview  
+![Energy](images/energie.png)
 
-![IMG_3556 (1)](https://github.com/user-attachments/assets/fc645864-e4b9-489c-a01c-b7a5ff6dab9e)
+#### Train Departures  
+![Trains](images/treinen.png)
 
-#### Layout 3: weather forecast  
-  
-![Weer](https://github.com/user-attachments/assets/cdb01602-ed6e-4847-95c3-bf4181457b81)
-
-#### Layout 4: energy overview 
-![IMG_3569](https://github.com/user-attachments/assets/b2e7114d-58bd-4ed6-8e20-922579b25d9b)
-
-  
-
+### Display behaviour  
+- After a period without touch the screen dims and returns to the home screen.  
+- The first touch on a dimmed or switched-off screen only wakes it up, so nothing is switched by accident.  
+- Home Assistant can switch the backlight off entirely (e.g. at night).  
 
 ### Inspiration and Resources  
 - [Home Assistant Forum: Guition 4 480x480 Project](https://community.home-assistant.io/t/guition-4-480x480-esp32-s3-4848s040-smart-display-with-lvgl/729271/1)  
@@ -71,7 +62,3 @@ The home screen provides a clear overview and system status:
 This project aims to deliver a user-friendly and visually appealing solution for smart room control and streamlined system information.  
 
 If you have any ideas or feedback, feel free to contact me!
-
-
-
-

@@ -116,6 +116,7 @@ lvgl:
                   align: top_left
                   y: 72
                   width: 440
+                  height: 24
                   long_mode: DOT
                   text: "-"
               - label:
@@ -125,6 +126,7 @@ lvgl:
                   align: top_left
                   y: 98
                   width: 440
+                  height: 20
                   long_mode: DOT
                   text: ""
 
