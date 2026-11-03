@@ -29,6 +29,7 @@ text_sensor:
             text: !lambda |-
               return id(sonos_${id}_media_title_text_sensor).state.c_str();
         - script.execute: sonos_groep_update # Sonos groeperen-scherm
+        - script.execute: sp_chip_update # Spotify-scherm
 
   - platform: homeassistant
     id: sonos_${id}_media_artist_text_sensor
@@ -41,3 +42,4 @@ text_sensor:
             text: !lambda |-
               return id(sonos_${id}_media_artist_text_sensor).state.c_str();
         - script.execute: sonos_groep_update # Sonos groeperen-scherm
+        - script.execute: sp_chip_update # Spotify-scherm

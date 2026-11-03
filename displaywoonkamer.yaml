@@ -39,6 +39,9 @@ packages:
   sonos_page: !include
     file: packages/sonos.yaml
 
+  spotify_page: !include
+    file: packages/spotify.yaml
+
 api:
   on_client_connected:
     - if:

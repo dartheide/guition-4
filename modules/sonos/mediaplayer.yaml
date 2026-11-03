@@ -12,12 +12,28 @@
         styles: card_title
         text: "${id}"
 
+    - button: # Spotify, met deze kamer als speaker
+        align: top_right
+        y: -4
+        width: 50
+        height: 34
+        widgets:
+            - label:
+                text_font: mdi24
+                text: "\U000F04C7"
+                align: center
+        on_click:
+            - lambda: |-
+                auto &ent = id(sonos_ent);
+                id(sp_speaker) = std::find(ent.begin(), ent.end(), "${entity_id}") - ent.begin();
+            - lvgl.page.show: spotify_page
+
     - label: # Title
         id: display_sonos_${id}_title
         text: "Titel"
         align: top_left
         y: 14
-        width: 440
+        width: 384
         long_mode: SCROLL_CIRCULAR
     - label: # Artist
         id: display_sonos_${id}_media_artist

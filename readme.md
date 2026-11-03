@@ -23,7 +23,7 @@ All Home Assistant entities (lights, covers, climate, media players, sensors and
 
 #### Room Template  
 Each room page has the same layout:  
-- **Media player:** current track, volume, radio presets, play/pause and a button to group Sonos speakers  
+- **Media player:** current track, volume, radio presets, play/pause, a button to group Sonos speakers and a Spotify button (top right)  
 - **Lights:** up to three toggle buttons, highlighted when on  
 - **Curtains:** position bar with open, stop and close buttons  
 - **Temperature:** set point with + and –; changes are sent to the thermostat once you stop tapping  
@@ -37,9 +37,23 @@ Devices that are unavailable in Home Assistant are shown greyed out (or as "offl
 | ![Studeerkamer](images/studeerkamer.png) | ![Kluskamer](images/kluskamer.png) |
 
 #### Sonos Grouping  
-Opened from the speaker button in a room's media player. Pick a source, then tap speakers to let them play along or leave the group. "Alles samen" and "Alles los" group or ungroup all speakers at once.
+Opened from the speaker button in a room's media player. Pick a source, then tap speakers to let them play along or leave the group. "Alles samen" and "Alles los" group or ungroup all speakers at once. Each speaker has its own volume buttons.
 
 ![Sonos grouping](images/sonos.png)
+
+#### Spotify (via Music Assistant)  
+Opened from the Spotify button in a room's media player; that room's speaker is preselected (tap the speaker button to switch rooms).  
+- **Start:** Playlists, Recent, Artists (pick a letter), Radio, Podcasts and Search, plus what is playing now  
+- **Lists:** five rows per page with ▲/▼; tap a row to play it. Search results have tabs for tracks, artists, albums and playlists  
+- **Search:** on-screen keyboard  
+
+Lists come from `music_assistant.get_library` and `music_assistant.search`. A `response_template` lets Home Assistant reduce each item to name, artist and URI before it is sent to the display, so memory use stays small. Playback uses `music_assistant.play_media` on the Music Assistant players (`ma_*` in `settings.yaml`); grouping and volume keep using the Sonos entities. Spotify playback through Music Assistant needs a Spotify Premium account.
+
+| Start | Search results |
+|---|---|
+| ![Spotify start](images/spotify_start.png) | ![Spotify search results](images/spotify_zoekresultaten.png) |
+| **Search** | **Artists A–Z** |
+| ![Spotify search](images/spotify_zoeken.png) | ![Spotify artists](images/spotify_artiesten.png) |
 
 #### Weather Forecast  
 ![Weather](images/weer.png)

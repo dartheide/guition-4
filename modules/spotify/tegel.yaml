@@ -1,0 +1,30 @@
+# n: tegelnummer (zie sp_tegel in packages/spotify.yaml)
+# icoon, naam, sub
+# x, y: positie
+
+x: ${x}
+y: ${y}
+width: 148
+height: 146
+pad_all: 14
+bg_color: 0x1B2333
+widgets:
+  - label:
+      text_font: mdi24
+      text_color: 0xF4B740
+      text: "${icoon}"
+      align: top_left
+  - label:
+      text_font: roboto20
+      text: "${naam}"
+      align: bottom_left
+      y: -20
+  - label:
+      text_font: roboto14
+      text_opa: 70%
+      text: "${sub}"
+      align: bottom_left
+on_click:
+  - script.execute:
+      id: sp_tegel
+      n: ${n}

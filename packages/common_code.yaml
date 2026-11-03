@@ -134,6 +134,7 @@ font:
       "\u0027", # '
       "\u003A", # :
       "\u0025", # %
+      "&?/;#@*=–…’‘“”ëïöüäóíúàèçñôâêîûÀÈÖÜÄÅåßøØ[]", # titels van nummers
       ]
     extras:
       - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
@@ -228,6 +229,18 @@ font:
         "\U000F0057", # mdi-arrow-right-bold-circle-outline
         "\U000F052C", # mdi-train
         "\U000F04DB", # mdi-stop
+        "\U000F04C7", # mdi-spotify
+        "\U000F040A", # mdi-play
+        "\U000F0CB8", # mdi-playlist-music
+        "\U000F02DA", # mdi-history
+        "\U000F0803", # mdi-account-music
+        "\U000F0439", # mdi-radio
+        "\U000F0994", # mdi-podcast
+        "\U000F0349", # mdi-magnify
+        "\U000F04C3", # mdi-speaker
+        "\U000F004D", # mdi-arrow-left
+        "\U000F0025", # mdi-album
+        "\U000F0387", # mdi-music-note
       ]
 
 
@@ -246,6 +259,7 @@ font:
       "\u0027", # '
       "\u003A", # :
       "\u0025", # %
+      "&?/;#@*=–…’‘“”ëïöüäóíúàèçñôâêîûÀÈÖÜÄÅåßøØ[]", # titels van nummers
       ]
     extras:
       - file: "fonts/materialdesignicons-webfont.ttf" # http://materialdesignicons.com/cdn/7.4.47/
@@ -274,6 +288,7 @@ font:
       "\u0027", # '
       "\u003A", # :
       "\u0025", # %
+      "&?/;#@*=–…’‘“”ëïöüäóíúàèçñôâêîûÀÈÖÜÄÅåßøØ[]", # titels van nummers
       ]
 
   - file: "gfonts://Roboto@500"

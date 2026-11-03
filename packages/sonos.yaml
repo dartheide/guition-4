@@ -130,10 +130,10 @@ lvgl:
                   long_mode: DOT
                   text: ""
 
-              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 0, naam: "Woonkamer", icoon: "\U000F04B9", x: 0, y: 128 }}
-              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 1, naam: "Keuken", icoon: "\U000F04DE", x: 225, y: 128 }}
-              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 2, naam: "Studeerkamer", icoon: "\U000F095F", x: 0, y: 200 }}
-              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 3, naam: "Kluskamer", icoon: "${hammerscrewdriver}", x: 225, y: 200 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 0, naam: "Woonkamer", icoon: "\U000F04B9", entity_id: "${media_woonkamer}", x: 0, y: 124 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 1, naam: "Keuken", icoon: "\U000F04DE", entity_id: "${media_keuken}", x: 225, y: 124 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 2, naam: "Studeerkamer", icoon: "\U000F095F", entity_id: "${media_studeerkamer}", x: 0, y: 214 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 3, naam: "Kluskamer", icoon: "${hammerscrewdriver}", entity_id: "${media_kluskamer}", x: 225, y: 214 }}
 
               - button:
                   align: bottom_left
@@ -185,7 +185,7 @@ script:
             if (mee) samen++;
             if (i == b || mee) lv_obj_add_state(tegel[i], LV_STATE_CHECKED);
             else lv_obj_clear_state(tegel[i], LV_STATE_CHECKED);
-            lv_label_set_text(status[i], i == b ? "bron" : mee ? "speelt mee" : "los");
+            lv_label_set_text(status[i], i == b ? "bron" : mee ? "samen" : "los");
           }
 
           lv_buttonmatrix_clear_button_ctrl_all(id(sonos_bron_matrix)->obj, LV_BUTTONMATRIX_CTRL_CHECKED);

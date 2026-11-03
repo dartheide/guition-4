@@ -1,0 +1,624 @@
+# Spotify via Music Assistant: bladeren (playlists, recent, artiesten, radio, podcasts) en zoeken.
+# Lijsten komen uit music_assistant.get_library / music_assistant.search; Home Assistant maakt
+# ze met een response_template klein ([naam, sub, uri]) voordat ze naar het display gaan.
+# Afspelen gaat met music_assistant.play_media op de Music Assistant-speler (ma_* in settings.yaml).
+
+esphome:
+  includes:
+    - modules/spotify/spotify.h
+
+globals:
+  - id: sp_ma # volgorde = sonos_ent: woonkamer, keuken, studeerkamer, kluskamer
+    type: std::vector<std::string>
+    initial_value: '{"${ma_woonkamer}", "${ma_keuken}", "${ma_studeerkamer}", "${ma_kluskamer}"}'
+  - id: sp_speaker # index in sp_ma; gezet door de Spotify-knop in de mediakaart
+    type: int
+    initial_value: '0'
+  - id: sp_lijsten # per tabblad een lijst; zonder zoeken alleen [0]
+    type: std::vector<std::vector<std::array<std::string, 3>>> # SpItem, zie spotify.h
+  - id: sp_tab
+    type: int
+    initial_value: '0'
+  - id: sp_offset # eerste zichtbare regel
+    type: int
+    initial_value: '0'
+  - id: sp_zoekmodus
+    type: bool
+    initial_value: 'false'
+  - id: sp_terug # 0 = start, 1 = artiesten A-Z, 2 = zoeken
+    type: int
+    initial_value: '0'
+  - id: sp_status
+    type: std::string
+  - id: sp_speelt # naam van wat er net gestart is
+    type: std::string
+
+lvgl:
+  pages:
+    # Start: zes tegels en wat er nu speelt
+    - id: spotify_page
+      styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
+        - script.execute: sp_chip_update
+      widgets:
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 0, icoon: "\U000F0CB8", naam: "Playlists", sub: "Jouw lijsten", x: 10, y: 40 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 1, icoon: "\U000F02DA", naam: "Recent", sub: "Laatst gespeeld", x: 166, y: 40 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 2, icoon: "\U000F0803", naam: "Artiesten", sub: "Kies op letter", x: 322, y: 40 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 3, icoon: "\U000F0439", naam: "Radio", sub: "Zenders", x: 10, y: 194 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 4, icoon: "\U000F0994", naam: "Podcasts", sub: "Die je volgt", x: 166, y: 194 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 5, icoon: "\U000F0349", naam: "Zoeken", sub: "Met toetsenbord", x: 322, y: 194 }}
+
+        - obj: # speelt nu
+            x: 10
+            y: 348
+            width: 460
+            height: 64
+            pad_all: 10
+            styles: bg_white
+            widgets:
+              - button:
+                  align: left_mid
+                  width: 170
+                  height: 44
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "\U000F04C3"
+                        align: left_mid
+                    - label:
+                        id: sp_chip_start
+                        text_font: roboto16
+                        align: left_mid
+                        x: 28
+                        text: "-"
+                  on_click:
+                    - script.execute: sp_volgende_speaker
+              - label:
+                  id: sp_mini_titel
+                  text_font: roboto16
+                  align: top_left
+                  x: 180
+                  y: 1
+                  width: 200
+                  height: 20
+                  long_mode: DOT
+                  text: ""
+              - label:
+                  id: sp_mini_artiest
+                  text_font: roboto14
+                  text_color: 0x8792A8
+                  align: top_left
+                  x: 180
+                  y: 23
+                  width: 200
+                  height: 18
+                  long_mode: DOT
+                  text: ""
+              - button:
+                  align: right_mid
+                  width: 50
+                  height: 40
+                  bg_color: 0x324064
+                  widgets:
+                    - label:
+                        text_font: mdi24
+                        text: "${play_pause_icon}"
+                        align: center
+                  on_click:
+                    - homeassistant.action:
+                        action: media_player.media_play_pause
+                        data:
+                          entity_id: !lambda 'return id(sonos_ent)[id(sp_speaker)];'
+
+    # Lijst: playlists, artiesten, zoekresultaten, ...
+    - id: sp_lijst_page
+      styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
+        - script.execute: sp_chip_update
+      widgets:
+        - button:
+            x: 10
+            y: 40
+            width: 50
+            height: 44
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F004D", align: center }
+            on_click:
+              - lambda: |-
+                  LvPageType *terug[] = {id(spotify_page), id(sp_az_page), id(sp_zoek_page)};
+                  sp_toon_pagina(terug[id(sp_terug)]);
+        - label:
+            id: sp_lijst_titel
+            x: 70
+            y: 51
+            width: 286
+            height: 24
+            long_mode: DOT
+            text: ""
+        - button:
+            id: sp_omhoog
+            x: 366
+            y: 40
+            width: 50
+            height: 44
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F0143", align: center }
+            on_click:
+              - lambda: 'id(sp_offset) = std::max(0, id(sp_offset) - 5);'
+              - script.execute: sp_toon
+        - button:
+            id: sp_omlaag
+            x: 420
+            y: 40
+            width: 50
+            height: 44
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F0140", align: center }
+            on_click:
+              - lambda: 'id(sp_offset) += 5;'
+              - script.execute: sp_toon
+
+        - buttonmatrix: # tabbladen, alleen bij zoeken
+            id: sp_tabs
+            x: 10
+            y: 92
+            width: 460
+            height: 36
+            hidden: true
+            bg_opa: TRANSP
+            pad_all: 0
+            pad_column: 6
+            items:
+              bg_color: 0x263049
+              text_color: 0xE9EDF4
+              text_font: roboto14
+              radius: 8
+              pressed:
+                bg_color: 0x324064
+              checked:
+                bg_color: 0xF4B740
+                text_color: 0x2A1D00
+            rows:
+              - buttons:
+                - id: sp_tab_0
+                  text: "Nummers"
+                  on_press:
+                    - lambda: 'id(sp_tab) = 0; id(sp_offset) = 0;'
+                    - script.execute: sp_toon
+                - id: sp_tab_1
+                  text: "Artiesten"
+                  on_press:
+                    - lambda: 'id(sp_tab) = 1; id(sp_offset) = 0;'
+                    - script.execute: sp_toon
+                - id: sp_tab_2
+                  text: "Albums"
+                  on_press:
+                    - lambda: 'id(sp_tab) = 2; id(sp_offset) = 0;'
+                    - script.execute: sp_toon
+                - id: sp_tab_3
+                  text: "Playlists"
+                  on_press:
+                    - lambda: 'id(sp_tab) = 3; id(sp_offset) = 0;'
+                    - script.execute: sp_toon
+        - label: # status als er geen tabbladen zijn
+            id: sp_lijst_status
+            text_font: roboto14
+            text_color: 0x8792A8
+            x: 12
+            y: 102
+            width: 456
+            long_mode: DOT
+            text: ""
+
+        - button: !include { file: ../modules/spotify/rij.yaml, vars: {n: 0, y: 134 }}
+        - button: !include { file: ../modules/spotify/rij.yaml, vars: {n: 1, y: 182 }}
+        - button: !include { file: ../modules/spotify/rij.yaml, vars: {n: 2, y: 230 }}
+        - button: !include { file: ../modules/spotify/rij.yaml, vars: {n: 3, y: 278 }}
+        - button: !include { file: ../modules/spotify/rij.yaml, vars: {n: 4, y: 326 }}
+
+        - button:
+            x: 10
+            y: 376
+            width: 200
+            height: 40
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F04C3", align: left_mid }
+              - label:
+                  id: sp_chip_lijst
+                  text_font: roboto16
+                  align: left_mid
+                  x: 28
+                  text: "-"
+            on_click:
+              - script.execute: sp_volgende_speaker
+        - label:
+            id: sp_speel_status
+            text_font: roboto14
+            text_color: 0x8792A8
+            x: 222
+            y: 387
+            width: 248
+            long_mode: DOT
+            text: ""
+
+    # Zoeken met toetsenbord
+    - id: sp_zoek_page
+      styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
+      widgets:
+        - button:
+            x: 10
+            y: 40
+            width: 50
+            height: 44
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F004D", align: center }
+            on_click:
+              - lvgl.page.show: spotify_page
+        - textarea:
+            id: sp_zoekveld
+            x: 70
+            y: 40
+            width: 316
+            height: 44
+            one_line: true
+            text_font: roboto20
+            bg_color: 0x1B2333
+            text_color: 0xE9EDF4
+            border_color: 0xF4B740
+            border_width: 2
+            radius: 10
+            placeholder_text: "Zoek in Spotify"
+        - button:
+            x: 394
+            y: 40
+            width: 76
+            height: 44
+            bg_color: 0xF4B740
+            widgets:
+              - label:
+                  text_font: roboto16
+                  text_color: 0x2A1D00
+                  text: "Zoek"
+                  align: center
+            on_click:
+              - script.execute:
+                  id: sp_zoek
+                  q: !lambda 'return std::string(lv_textarea_get_text(id(sp_zoekveld)));'
+        - keyboard:
+            id: sp_toetsenbord
+            textarea: sp_zoekveld
+            mode: TEXT_LOWER
+            align: top_left # standaard staat het toetsenbord onderaan
+            x: 10
+            y: 92
+            width: 460
+            height: 324
+            bg_color: 0x1B2333
+            radius: 12
+            pad_all: 6
+            items:
+              bg_color: 0x263049
+              text_color: 0xE9EDF4
+              radius: 8
+              pressed:
+                bg_color: 0x324064
+              checked: # speciale toetsen (wissen, enter, 1#, ABC)
+                bg_color: 0x324064
+                text_color: 0xE9EDF4
+            on_ready:
+              - script.execute:
+                  id: sp_zoek
+                  q: !lambda 'return text;'
+
+    # Artiesten op letter
+    - id: sp_az_page
+      styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
+      widgets:
+        - button:
+            x: 10
+            y: 40
+            width: 50
+            height: 44
+            widgets:
+              - label: { text_font: mdi24, text: "\U000F004D", align: center }
+            on_click:
+              - lvgl.page.show: spotify_page
+        - label:
+            x: 70
+            y: 51
+            text: "Artiesten"
+        - buttonmatrix:
+            x: 10
+            y: 92
+            width: 460
+            height: 324
+            bg_opa: TRANSP
+            pad_all: 0
+            pad_row: 6
+            pad_column: 6
+            items:
+              bg_color: 0x263049
+              text_color: 0xE9EDF4
+              text_font: roboto20
+              radius: 8
+              pressed:
+                bg_color: 0x324064
+            rows:
+              - buttons:
+                - { id: sp_l_a, text: "A", on_press: [ { script.execute: { id: sp_artiesten, letter: "A" } } ] }
+                - { id: sp_l_b, text: "B", on_press: [ { script.execute: { id: sp_artiesten, letter: "B" } } ] }
+                - { id: sp_l_c, text: "C", on_press: [ { script.execute: { id: sp_artiesten, letter: "C" } } ] }
+                - { id: sp_l_d, text: "D", on_press: [ { script.execute: { id: sp_artiesten, letter: "D" } } ] }
+                - { id: sp_l_e, text: "E", on_press: [ { script.execute: { id: sp_artiesten, letter: "E" } } ] }
+                - { id: sp_l_f, text: "F", on_press: [ { script.execute: { id: sp_artiesten, letter: "F" } } ] }
+                - { id: sp_l_g, text: "G", on_press: [ { script.execute: { id: sp_artiesten, letter: "G" } } ] }
+              - buttons:
+                - { id: sp_l_h, text: "H", on_press: [ { script.execute: { id: sp_artiesten, letter: "H" } } ] }
+                - { id: sp_l_i, text: "I", on_press: [ { script.execute: { id: sp_artiesten, letter: "I" } } ] }
+                - { id: sp_l_j, text: "J", on_press: [ { script.execute: { id: sp_artiesten, letter: "J" } } ] }
+                - { id: sp_l_k, text: "K", on_press: [ { script.execute: { id: sp_artiesten, letter: "K" } } ] }
+                - { id: sp_l_l, text: "L", on_press: [ { script.execute: { id: sp_artiesten, letter: "L" } } ] }
+                - { id: sp_l_m, text: "M", on_press: [ { script.execute: { id: sp_artiesten, letter: "M" } } ] }
+                - { id: sp_l_n, text: "N", on_press: [ { script.execute: { id: sp_artiesten, letter: "N" } } ] }
+              - buttons:
+                - { id: sp_l_o, text: "O", on_press: [ { script.execute: { id: sp_artiesten, letter: "O" } } ] }
+                - { id: sp_l_p, text: "P", on_press: [ { script.execute: { id: sp_artiesten, letter: "P" } } ] }
+                - { id: sp_l_q, text: "Q", on_press: [ { script.execute: { id: sp_artiesten, letter: "Q" } } ] }
+                - { id: sp_l_r, text: "R", on_press: [ { script.execute: { id: sp_artiesten, letter: "R" } } ] }
+                - { id: sp_l_s, text: "S", on_press: [ { script.execute: { id: sp_artiesten, letter: "S" } } ] }
+                - { id: sp_l_t, text: "T", on_press: [ { script.execute: { id: sp_artiesten, letter: "T" } } ] }
+                - { id: sp_l_u, text: "U", on_press: [ { script.execute: { id: sp_artiesten, letter: "U" } } ] }
+              - buttons:
+                - { id: sp_l_v, text: "V", on_press: [ { script.execute: { id: sp_artiesten, letter: "V" } } ] }
+                - { id: sp_l_w, text: "W", on_press: [ { script.execute: { id: sp_artiesten, letter: "W" } } ] }
+                - { id: sp_l_x, text: "X", on_press: [ { script.execute: { id: sp_artiesten, letter: "X" } } ] }
+                - { id: sp_l_y, text: "Y", on_press: [ { script.execute: { id: sp_artiesten, letter: "Y" } } ] }
+                - { id: sp_l_z, text: "Z", on_press: [ { script.execute: { id: sp_artiesten, letter: "Z" } } ] }
+                - { id: sp_l_hash, text: "#", on_press: [ { script.execute: { id: sp_artiesten, letter: "#" } } ] }
+
+script:
+  # Tegel op het startscherm
+  - id: sp_tegel
+    parameters:
+      n: int
+    then:
+      - lambda: |-
+          switch (n) {
+            case 0: id(sp_bibliotheek)->execute("playlist", "name", "Playlists", ""); break;
+            case 1: id(sp_bibliotheek)->execute("track", "last_played_desc", "Recent gespeeld", ""); break;
+            case 2: sp_toon_pagina(id(sp_az_page)); break;
+            case 3: id(sp_bibliotheek)->execute("radio", "name", "Radio", ""); break;
+            case 4: id(sp_bibliotheek)->execute("podcast", "name", "Podcasts", ""); break;
+            case 5: sp_toon_pagina(id(sp_zoek_page)); break;
+          }
+
+  - id: sp_artiesten
+    parameters:
+      letter: string
+    then:
+      - script.execute:
+          id: sp_bibliotheek
+          media_type: "artist"
+          order: "sort_name"
+          titel: !lambda 'return "Artiesten " + letter;'
+          letter: !lambda 'return letter;'
+
+  # Lijst uit de bibliotheek van Music Assistant; letter filtert op beginletter (# = geen letter)
+  - id: sp_bibliotheek
+    parameters:
+      media_type: string
+      order: string
+      titel: string
+      letter: string
+    then:
+      - lambda: |-
+          id(sp_zoekmodus) = false;
+          id(sp_terug) = letter.empty() ? 0 : 1;
+          id(sp_lijsten).clear();
+          id(sp_tab) = 0;
+          id(sp_offset) = 0;
+          id(sp_status) = "Laden...";
+          lv_label_set_text(id(sp_lijst_titel), titel.c_str());
+      - script.execute: sp_toon
+      - lvgl.page.show: sp_lijst_page
+      - homeassistant.action:
+          action: music_assistant.get_library
+          data:
+            media_type: !lambda 'return media_type;'
+            order_by: !lambda 'return order;'
+            limit: !lambda 'return letter.empty() ? std::string("40") : std::string("1000");'
+            search: !lambda 'return (letter.empty() || letter == "#") ? std::string("") : letter;'
+          data_template:
+            config_entry_id: "{{ config_entry_id('${ma_woonkamer}') }}"
+          capture_response: true
+          response_template: !lambda |-
+            return std::string("{%- set L = '") + letter + "' -%}" + R"(
+            {#- strikte modus: elk veld met .get() ophalen -#}
+            {%- set ns = namespace(o=[]) -%}
+            {%- for i in response.get('items', []) -%}
+            {%- set naam = i.get('name') or '' -%}
+            {%- set eerste = (naam or ' ')[:1] | upper -%}
+            {%- if ns.o | length < 40 and (L == '' or eerste == L or (L == '#' and eerste not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')) -%}
+            {%- set a = (i.get('artists') or []) | map(attribute='name', default='') | join(', ') -%}
+            {%- set ns.o = ns.o + [[naam, a or (i.get('owner') or ''), i.get('uri') or '']] -%}
+            {%- endif -%}
+            {%- endfor -%}
+            {%- if 'items' not in response -%}
+            {%- set ns.o = [['Onverwacht antwoord: ' ~ (response.keys() | list | join(', ')), '', '']] -%}
+            {%- endif -%}
+            {{ [ns.o] | tojson }})";
+          on_success:
+            - lambda: |-
+                id(sp_lijsten) = sp_parse(response);
+                id(sp_status) = "";
+            - script.execute: sp_toon
+          on_error:
+            - lambda: |-
+                id(sp_status) = "Fout: " + error;
+                ESP_LOGW("spotify", "%s", error.c_str());
+            - script.execute: sp_toon
+
+  # Zoeken in Spotify via Music Assistant: nummers, artiesten, albums, playlists
+  - id: sp_zoek
+    parameters:
+      q: string
+    then:
+      - if:
+          condition:
+            lambda: 'return !q.empty();'
+          then:
+            - lambda: |-
+                id(sp_zoekmodus) = true;
+                id(sp_terug) = 2;
+                id(sp_lijsten).clear();
+                id(sp_tab) = 0;
+                id(sp_offset) = 0;
+                id(sp_status) = "Zoeken...";
+                std::string t = "\"" + q + "\"";
+                lv_label_set_text(id(sp_lijst_titel), t.c_str());
+            - script.execute: sp_toon
+            - lvgl.page.show: sp_lijst_page
+            - homeassistant.action:
+                action: music_assistant.search
+                data:
+                  name: !lambda 'return q;'
+                  limit: "20"
+                data_template:
+                  config_entry_id: "{{ config_entry_id('${ma_woonkamer}') }}"
+                capture_response: true
+                response_template: |-
+                  {#- strikte modus: elk veld met .get() ophalen -#}
+                  {%- set ns = namespace(c=[]) -%}
+                  {%- for cat in ['tracks', 'artists', 'albums', 'playlists'] -%}
+                  {%- set ns2 = namespace(o=[]) -%}
+                  {%- for i in (response.get(cat) or [])[:20] -%}
+                  {%- set a = (i.get('artists') or []) | map(attribute='name', default='') | join(', ') -%}
+                  {%- set ns2.o = ns2.o + [[i.get('name') or '', a or (i.get('owner') or ''), i.get('uri') or '']] -%}
+                  {%- endfor -%}
+                  {%- set ns.c = ns.c + [ns2.o] -%}
+                  {%- endfor -%}
+                  {%- if 'tracks' not in response -%}
+                  {%- set ns.c = [[['Onverwacht antwoord: ' ~ (response.keys() | list | join(', ')), '', '']], [], [], []] -%}
+                  {%- endif -%}
+                  {{ ns.c | tojson }}
+                on_success:
+                  - lambda: |-
+                      id(sp_lijsten) = sp_parse(response);
+                      id(sp_status) = "";
+                  - script.execute: sp_toon
+                on_error:
+                  - lambda: |-
+                      id(sp_status) = "Fout: " + error;
+                      ESP_LOGW("spotify", "%s", error.c_str());
+                  - script.execute: sp_toon
+
+  # Regels, tabbladen en knoppen van de lijstpagina bijwerken
+  - id: sp_toon
+    then:
+      - lambda: |-
+          static const std::vector<SpItem> leeg;
+          auto &lijsten = id(sp_lijsten);
+          int tab = id(sp_tab);
+          const auto &l = tab < (int) lijsten.size() ? lijsten[tab] : leeg;
+          int n = l.size();
+          if (id(sp_offset) >= n) id(sp_offset) = std::max(0, (n - 1) / 5 * 5);
+          int off = id(sp_offset);
+
+          lv_obj_t *rij[] = {id(sp_rij_0), id(sp_rij_1), id(sp_rij_2), id(sp_rij_3), id(sp_rij_4)};
+          lv_obj_t *naam[] = {id(sp_rij_naam_0), id(sp_rij_naam_1), id(sp_rij_naam_2), id(sp_rij_naam_3), id(sp_rij_naam_4)};
+          lv_obj_t *sub[] = {id(sp_rij_sub_0), id(sp_rij_sub_1), id(sp_rij_sub_2), id(sp_rij_sub_3), id(sp_rij_sub_4)};
+          for (int i = 0; i < 5; i++) {
+            if (off + i < n) {
+              lv_label_set_text(naam[i], l[off + i][SP_NAAM].c_str());
+              lv_label_set_text(sub[i], l[off + i][SP_SUB].c_str());
+              lv_obj_clear_flag(rij[i], LV_OBJ_FLAG_HIDDEN);
+            } else {
+              lv_obj_add_flag(rij[i], LV_OBJ_FLAG_HIDDEN);
+            }
+          }
+          if (off > 0) lv_obj_clear_state(id(sp_omhoog), LV_STATE_DISABLED);
+          else lv_obj_add_state(id(sp_omhoog), LV_STATE_DISABLED);
+          if (off + 5 < n) lv_obj_clear_state(id(sp_omlaag), LV_STATE_DISABLED);
+          else lv_obj_add_state(id(sp_omlaag), LV_STATE_DISABLED);
+
+          // tabbladen bij zoeken, anders een statusregel
+          bool tabs = id(sp_zoekmodus) && id(sp_status).empty();
+          if (tabs) {
+            lv_obj_clear_flag(id(sp_tabs)->obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(sp_lijst_status), LV_OBJ_FLAG_HIDDEN);
+            lv_buttonmatrix_clear_button_ctrl_all(id(sp_tabs)->obj, LV_BUTTONMATRIX_CTRL_CHECKED);
+            lv_buttonmatrix_set_button_ctrl(id(sp_tabs)->obj, tab, LV_BUTTONMATRIX_CTRL_CHECKED);
+          } else {
+            lv_obj_add_flag(id(sp_tabs)->obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_clear_flag(id(sp_lijst_status), LV_OBJ_FLAG_HIDDEN);
+          }
+          std::string status = id(sp_status);
+          if (status.empty()) {
+            if (n == 0) status = "Niets gevonden";
+            else status = std::to_string(n) + (n == 1 ? " resultaat" : " resultaten") + " - tik om af te spelen";
+          }
+          lv_label_set_text(id(sp_lijst_status), status.c_str());
+
+  - id: sp_speel_rij
+    parameters:
+      n: int
+    then:
+      - if:
+          condition:
+            lambda: |-
+              int i = id(sp_offset) + n, tab = id(sp_tab);
+              return tab < (int) id(sp_lijsten).size() && i < (int) id(sp_lijsten)[tab].size();
+          then:
+            # naam nu bewaren: de lijst kan veranderd zijn als het antwoord binnenkomt
+            - lambda: |-
+                const auto &item = id(sp_lijsten)[id(sp_tab)][id(sp_offset) + n];
+                id(sp_speelt) = item[SP_NAAM];
+                ESP_LOGI("spotify", "Afspelen op %s: %s (%s)", id(sp_ma)[id(sp_speaker)].c_str(), item[SP_NAAM].c_str(), item[SP_URI].c_str());
+            - homeassistant.action:
+                action: music_assistant.play_media
+                data:
+                  entity_id: !lambda 'return id(sp_ma)[id(sp_speaker)];'
+                  media_id: !lambda 'return id(sp_lijsten)[id(sp_tab)][id(sp_offset) + n][2];' # [2] = uri
+                  enqueue: "replace"
+                on_success:
+                  - lambda: |-
+                      std::string s = "Speelt: " + id(sp_speelt);
+                      lv_label_set_text(id(sp_speel_status), s.c_str());
+                on_error:
+                  - lambda: |-
+                      std::string s = "Fout: " + error;
+                      lv_label_set_text(id(sp_speel_status), s.c_str());
+
+  # Speaker kiezen: tik op de speakerknop wisselt naar de volgende kamer
+  - id: sp_volgende_speaker
+    then:
+      - lambda: 'id(sp_speaker) = (id(sp_speaker) + 1) % 4;'
+      - script.execute: sp_chip_update
+
+  - id: sp_chip_update
+    then:
+      - lambda: |-
+          static const char *namen[] = {"Woonkamer", "Keuken", "Studeerkamer", "Kluskamer"};
+          int s = id(sp_speaker);
+          lv_label_set_text(id(sp_chip_start), namen[s]);
+          lv_label_set_text(id(sp_chip_lijst), namen[s]);
+          text_sensor::TextSensor *titel[] = {id(sonos_woonkamer_media_title_text_sensor), id(sonos_keuken_media_title_text_sensor),
+                                              id(sonos_studeerkamer_media_title_text_sensor), id(sonos_kluskamer_media_title_text_sensor)};
+          text_sensor::TextSensor *artiest[] = {id(sonos_woonkamer_media_artist_text_sensor), id(sonos_keuken_media_artist_text_sensor),
+                                                id(sonos_studeerkamer_media_artist_text_sensor), id(sonos_kluskamer_media_artist_text_sensor)};
+          lv_label_set_text(id(sp_mini_titel), titel[s]->state.empty() ? "Niets aan het afspelen" : titel[s]->state.c_str());
+          lv_label_set_text(id(sp_mini_artiest), artiest[s]->state.c_str());

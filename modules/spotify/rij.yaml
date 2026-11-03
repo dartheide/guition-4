@@ -1,0 +1,42 @@
+# n: regelnummer 0..4 op de lijstpagina
+# y: positie
+# tekst gezet door sp_toon in packages/spotify.yaml; tik = afspelen
+
+id: sp_rij_${n}
+x: 10
+y: ${y}
+width: 460
+height: 44
+pad_all: 0
+hidden: true
+widgets:
+  - label:
+      id: sp_rij_naam_${n}
+      text_font: roboto16
+      align: top_left
+      x: 12
+      y: 3
+      width: 390
+      height: 20
+      long_mode: DOT
+      text: ""
+  - label:
+      id: sp_rij_sub_${n}
+      text_font: roboto14
+      text_opa: 70%
+      align: top_left
+      x: 12
+      y: 23
+      width: 390
+      height: 18
+      long_mode: DOT
+      text: ""
+  - label:
+      text_font: mdi24
+      text: "\U000F040A"
+      align: right_mid
+      x: -10
+on_click:
+  - script.execute:
+      id: sp_speel_rij
+      n: ${n}

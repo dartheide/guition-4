@@ -31,15 +31,21 @@ substitutions:
   bureau_studeerkamer: cover.desk_4728
 
   # Thermostaten
-  klimaat_woonkamer: climate.bosch_radiatorkraan_woonkamer_thermostat
-  klimaat_studeerkamer: climate.bosch_radiatorkraan_studeerkamer_thermostat
+  klimaat_woonkamer: climate.zone1
+  klimaat_studeerkamer: climate.airconditioner1
   klimaat_kluskamer: climate.bosch_radiatorkraan_kluskamer_thermostat
 
   # Media
   media_woonkamer: media_player.woonkamer
   media_studeerkamer: media_player.studeerkamer
-  media_keuken: media_player.keuken
+  media_keuken: media_player.woonkeuken
   media_kluskamer: media_player.kluskamer
+
+  # Music Assistant-spelers (Spotify afspelen), zelfde kamers als hierboven
+  ma_woonkamer: media_player.woonkamer_3
+  ma_keuken: media_player.keuken
+  ma_studeerkamer: media_player.studeerkamer_2
+  ma_kluskamer: media_player.kluskamer_2
 
   # Kopbalk
   sensor_stookwijzer: sensor.stookwijzer

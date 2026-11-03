@@ -1,32 +1,77 @@
 # n: volgnummer 0..3
-# naam, icoon
+# naam, icoon, entity_id
 # x, y: positie in de kaart
-# tik: speelt mee met de bron <-> los; status gezet door sonos_groep_update
+# tik op de tegel: speelt mee met de bron <-> los; status gezet door sonos_groep_update
+# -/+ onderin: volume van alleen deze speaker
 
 id: sonos_tegel_${n}
 align: top_left
 x: ${x}
 y: ${y}
 width: 215
-height: 62
+height: 84
+pad_all: 8
 widgets:
   - label:
       text_font: mdi24
       text: "${icoon}"
-      align: left_mid
+      align: top_left
   - label:
       text_font: roboto20
       text: "${naam}"
       align: top_left
-      x: 34
-      y: -2
+      x: 30
+      y: 1
   - label:
       id: sonos_tegel_status_${n}
       text_font: roboto14
       text_opa: 70%
       text: "-"
+      align: top_right
+      y: 5
+
+  - button: # zachter
+      id: sonos_tegel_min_${n}
       align: bottom_left
-      x: 34
+      width: 56
+      height: 32
+      bg_color: 0x10141D
+      bg_opa: 35%
+      radius: 8
+      widgets:
+        - label:
+            text_font: mdi24
+            text: "\U000F075E"
+            align: center
+      on_click:
+        - homeassistant.action:
+            action: media_player.volume_down
+            data:
+              entity_id: ${entity_id}
+  - label: # volume in %, gezet door groep_sensor.yaml
+      id: sonos_tegel_vol_${n}
+      text_font: roboto16
+      align: bottom_mid
+      y: -6
+      text: "-"
+  - button: # harder
+      id: sonos_tegel_plus_${n}
+      align: bottom_right
+      width: 56
+      height: 32
+      bg_color: 0x10141D
+      bg_opa: 35%
+      radius: 8
+      widgets:
+        - label:
+            text_font: mdi24
+            text: "\U000F075D"
+            align: center
+      on_click:
+        - homeassistant.action:
+            action: media_player.volume_up
+            data:
+              entity_id: ${entity_id}
 on_press:
   - script.execute:
       id: sonos_wissel
