@@ -207,6 +207,7 @@ font:
         $hammerscrewdriver, # mdi-hammer-screwdriver
         "\U000F181C", # mdi-countertop
         "\U000F04B9", # mdi-sofa
+        "\U000F0D38", # mdi-speaker-multiple
         "\U000F0EC0", # mdi-penguin
         $play_pause_icon, # mdi-play-pause
         $mute_icon, # mdi-volume-mute

@@ -17,26 +17,6 @@ sensor:
 
 
 
-binary_sensor:
-  - platform: homeassistant
-    id: sonos_${id}_mute
-    entity_id: ${entity_id}
-    attribute: is_volume_muted
-    trigger_on_initial_state: true
-    on_state:
-      then:
-        - if:
-            condition:
-              lambda: 'return id(sonos_${id}_mute).state == true;'  # Controleer of de media player gemute is
-            then:
-              - lvgl.label.update:
-                  id: sonos_${id}_mute_button
-                  text: "${mute_icon}"
-            else:
-              - lvgl.label.update:
-                  id: sonos_${id}_mute_button
-                  text: "${volume_icon}"
-
 text_sensor:
   - platform: homeassistant
     id: sonos_${id}_media_title_text_sensor
@@ -48,6 +28,7 @@ text_sensor:
             id: display_sonos_${id}_title
             text: !lambda |-
               return id(sonos_${id}_media_title_text_sensor).state.c_str();
+        - script.execute: sonos_groep_update # Sonos groeperen-scherm
 
   - platform: homeassistant
     id: sonos_${id}_media_artist_text_sensor
@@ -59,3 +40,4 @@ text_sensor:
             id: display_sonos_${id}_media_artist
             text: !lambda |-
               return id(sonos_${id}_media_artist_text_sensor).state.c_str();
+        - script.execute: sonos_groep_update # Sonos groeperen-scherm

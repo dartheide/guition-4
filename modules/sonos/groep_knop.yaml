@@ -1,0 +1,33 @@
+# n: volgnummer 0..3
+# naam, icoon
+# x, y: positie in de kaart
+# tik: speelt mee met de bron <-> los; status gezet door sonos_groep_update
+
+id: sonos_tegel_${n}
+align: top_left
+x: ${x}
+y: ${y}
+width: 215
+height: 62
+widgets:
+  - label:
+      text_font: mdi24
+      text: "${icoon}"
+      align: left_mid
+  - label:
+      text_font: roboto20
+      text: "${naam}"
+      align: top_left
+      x: 34
+      y: -2
+  - label:
+      id: sonos_tegel_status_${n}
+      text_font: roboto14
+      text_opa: 70%
+      text: "-"
+      align: bottom_left
+      x: 34
+on_press:
+  - script.execute:
+      id: sonos_wissel
+      n: ${n}

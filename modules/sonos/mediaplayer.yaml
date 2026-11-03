@@ -71,22 +71,21 @@
                 data:
                     entity_id: ${entity_id}
 
-    - button: # Mute
+    - button: # Sonos groeperen, met deze speler als uitgangspunt
         height: 40
         width: 50
         align: bottom_right
         widgets:
             - label:
-                id: sonos_${id}_mute_button
+                id: sonos_${id}_groep_button
                 text_font: mdi24
-                text: "${volume_icon}"
+                text: "\U000F0D38"
                 align: center
         on_click:
-            - homeassistant.action:
-                action: media_player.volume_mute
-                data:
-                    entity_id: ${entity_id}
-                    is_volume_muted: !lambda 'return !id(sonos_${id}_mute).state;'
+            - lambda: |-
+                auto &ent = id(sonos_ent);
+                id(sonos_kamer) = std::find(ent.begin(), ent.end(), "${entity_id}") - ent.begin();
+            - lvgl.page.show: sonos_page
 
     - button: # play/pause
         height: 40
@@ -94,7 +93,7 @@
         id: sonos_${id}_play_pause_button
         bg_color: 0x324064
         align_to:
-            id: sonos_${id}_mute_button
+            id: sonos_${id}_groep_button
             align: out_left_mid
             x: -23
         widgets:

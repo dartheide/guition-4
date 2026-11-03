@@ -1,0 +1,21 @@
+# n: volgnummer 0..3 (zelfde volgorde als sonos_ent in packages/sonos.yaml)
+# entity_id: media player
+
+text_sensor:
+  - platform: homeassistant
+    id: sonos_leden_${n}
+    entity_id: ${entity_id}
+    attribute: group_members
+    on_value:
+      - lambda: 'id(sonos_leden)[${n}] = x;'
+      - script.execute: sonos_groep_update
+
+  # Niet bereikbaar: tegel grijs en niet te bedienen
+  - platform: homeassistant
+    id: sonos_status_${n}
+    entity_id: ${entity_id}
+    on_value:
+      - lvgl.widget.update:
+          id: sonos_tegel_${n}
+          state:
+            disabled: !lambda 'return x == "unavailable" || x == "unknown";'

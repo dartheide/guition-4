@@ -1,0 +1,227 @@
+# Sonos groeperen: kies een bron en tik spelers aan om mee te laten spelen
+
+esphome:
+  includes:
+    - modules/sonos/sonos_groep.h
+
+packages:
+  groep0: !include { file: ../modules/sonos/groep_sensor.yaml, vars: {n: 0, entity_id: "${media_woonkamer}" }}
+  groep1: !include { file: ../modules/sonos/groep_sensor.yaml, vars: {n: 1, entity_id: "${media_keuken}" }}
+  groep2: !include { file: ../modules/sonos/groep_sensor.yaml, vars: {n: 2, entity_id: "${media_studeerkamer}" }}
+  groep3: !include { file: ../modules/sonos/groep_sensor.yaml, vars: {n: 3, entity_id: "${media_kluskamer}" }}
+
+globals:
+  - id: sonos_ent # volgorde = n van de tegels en de bronknoppen
+    type: std::vector<std::string>
+    initial_value: '{"${media_woonkamer}", "${media_keuken}", "${media_studeerkamer}", "${media_kluskamer}"}'
+  - id: sonos_leden # group_members per speler, gezet door groep_sensor.yaml
+    type: std::vector<std::string>
+    initial_value: '{"", "", "", ""}'
+  - id: sonos_bron
+    type: int
+    initial_value: '0'
+  - id: sonos_kamer # speler waarvan het scherm geopend is (knop in de mediakaart), -1 = onbekend
+    type: int
+    initial_value: '-1'
+
+lvgl:
+  pages:
+    - id: sonos_page
+      styles: bg_white
+      on_load:
+        - script.execute:
+            id: nav_actief
+            knop: -1
+        - lambda: |-
+            // Bron = de speler van de kamer waar je vandaan komt.
+            // Zit die in een groep, of is er geen kamer bekend, dan de coördinator (eerste in de lijst) van een groep.
+            int k = id(sonos_kamer);
+            id(sonos_kamer) = -1;
+            if (k >= 0 && k < 4) id(sonos_bron) = k;
+            for (int i = 0; i < 4; i++) {
+              if (k >= 0 && k < 4 && i != k) continue;
+              const std::string &leden = id(sonos_leden)[i];
+              if (sonos_aantal(leden) < 2) continue;
+              size_t eerste = std::string::npos;
+              for (int j = 0; j < 4; j++) {
+                size_t pos = leden.find(id(sonos_ent)[j]);
+                if (pos < eerste) { eerste = pos; id(sonos_bron) = j; }
+              }
+              break;
+            }
+        - script.execute: sonos_groep_update
+      widgets:
+        - obj:
+            x: 10
+            y: 40
+            width: 460
+            height: 370
+            pad_all: 10
+            styles: bg_white
+            widgets:
+              - label:
+                  styles: card_title
+                  text: "Sonos groeperen"
+              - label:
+                  styles: card_value
+                  id: sonos_groep_info
+                  text: ""
+
+              - buttonmatrix: # bron
+                  id: sonos_bron_matrix
+                  align: top_left
+                  y: 18
+                  width: 440
+                  height: 44
+                  bg_opa: TRANSP
+                  pad_all: 0
+                  pad_column: 6
+                  items:
+                    bg_color: 0x263049
+                    text_color: 0xE9EDF4
+                    text_font: roboto14
+                    radius: 8
+                    height: 44
+                    pressed:
+                      bg_color: 0x324064
+                      text_color: 0xE9EDF4
+                    checked:
+                      bg_color: 0xF4B740
+                      text_color: 0x2A1D00
+                  rows:
+                    - buttons:
+                      - id: sonos_bron_0
+                        text: "Woonkamer"
+                        on_press:
+                          - lambda: 'id(sonos_bron) = 0;'
+                          - script.execute: sonos_groep_update
+                      - id: sonos_bron_1
+                        text: "Keuken"
+                        on_press:
+                          - lambda: 'id(sonos_bron) = 1;'
+                          - script.execute: sonos_groep_update
+                      - id: sonos_bron_2
+                        text: "Studeerkamer"
+                        on_press:
+                          - lambda: 'id(sonos_bron) = 2;'
+                          - script.execute: sonos_groep_update
+                      - id: sonos_bron_3
+                        text: "Kluskamer"
+                        on_press:
+                          - lambda: 'id(sonos_bron) = 3;'
+                          - script.execute: sonos_groep_update
+
+              - label: # wat speelt de bron
+                  id: sonos_groep_titel
+                  align: top_left
+                  y: 72
+                  width: 440
+                  long_mode: DOT
+                  text: "-"
+              - label:
+                  id: sonos_groep_artiest
+                  text_font: roboto16
+                  text_color: 0x8792A8
+                  align: top_left
+                  y: 98
+                  width: 440
+                  long_mode: DOT
+                  text: ""
+
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 0, naam: "Woonkamer", icoon: "\U000F04B9", x: 0, y: 128 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 1, naam: "Keuken", icoon: "\U000F04DE", x: 225, y: 128 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 2, naam: "Studeerkamer", icoon: "\U000F095F", x: 0, y: 200 }}
+              - button: !include { file: ../modules/sonos/groep_knop.yaml, vars: {n: 3, naam: "Kluskamer", icoon: "${hammerscrewdriver}", x: 225, y: 200 }}
+
+              - button:
+                  align: bottom_left
+                  width: 215
+                  height: 44
+                  widgets:
+                    - label:
+                        text: "Alles samen"
+                        align: center
+                  on_press:
+                    - homeassistant.action:
+                        action: media_player.join
+                        data:
+                          entity_id: !lambda 'return id(sonos_ent)[id(sonos_bron)];'
+                          group_members: !lambda |-
+                            std::string lijst;
+                            for (int i = 0; i < 4; i++) {
+                              if (i == id(sonos_bron)) continue;
+                              if (!lijst.empty()) lijst += ",";
+                              lijst += id(sonos_ent)[i];
+                            }
+                            return lijst;
+              - button:
+                  align: bottom_right
+                  width: 215
+                  height: 44
+                  widgets:
+                    - label:
+                        text: "Alles los"
+                        align: center
+                  on_press:
+                    - homeassistant.action:
+                        action: media_player.unjoin
+                        data:
+                          entity_id: "${media_woonkamer},${media_keuken},${media_studeerkamer},${media_kluskamer}"
+
+script:
+  # Tegels, bronknoppen en "wat speelt er" bijwerken
+  - id: sonos_groep_update
+    then:
+      - lambda: |-
+          int b = id(sonos_bron);
+          const std::string &bron_leden = id(sonos_leden)[b];
+          lv_obj_t *tegel[4] = {id(sonos_tegel_0), id(sonos_tegel_1), id(sonos_tegel_2), id(sonos_tegel_3)};
+          lv_obj_t *status[4] = {id(sonos_tegel_status_0), id(sonos_tegel_status_1), id(sonos_tegel_status_2), id(sonos_tegel_status_3)};
+          int samen = 1;
+          for (int i = 0; i < 4; i++) {
+            bool mee = i != b && sonos_bevat(bron_leden, id(sonos_ent)[i]);
+            if (mee) samen++;
+            if (i == b || mee) lv_obj_add_state(tegel[i], LV_STATE_CHECKED);
+            else lv_obj_clear_state(tegel[i], LV_STATE_CHECKED);
+            lv_label_set_text(status[i], i == b ? "bron" : mee ? "speelt mee" : "los");
+          }
+
+          lv_buttonmatrix_clear_button_ctrl_all(id(sonos_bron_matrix)->obj, LV_BUTTONMATRIX_CTRL_CHECKED);
+          lv_buttonmatrix_set_button_ctrl(id(sonos_bron_matrix)->obj, b, LV_BUTTONMATRIX_CTRL_CHECKED);
+
+          static char info[16];
+          if (samen > 1) snprintf(info, sizeof(info), "%d samen", samen);
+          else info[0] = 0;
+          lv_label_set_text(id(sonos_groep_info), info);
+
+          text_sensor::TextSensor *titel[4] = {id(sonos_woonkamer_media_title_text_sensor), id(sonos_keuken_media_title_text_sensor),
+                                              id(sonos_studeerkamer_media_title_text_sensor), id(sonos_kluskamer_media_title_text_sensor)};
+          text_sensor::TextSensor *artiest[4] = {id(sonos_woonkamer_media_artist_text_sensor), id(sonos_keuken_media_artist_text_sensor),
+                                                id(sonos_studeerkamer_media_artist_text_sensor), id(sonos_kluskamer_media_artist_text_sensor)};
+          const std::string &t = titel[b]->state;
+          lv_label_set_text(id(sonos_groep_titel), t.empty() ? "Niets aan het afspelen" : t.c_str());
+          lv_label_set_text(id(sonos_groep_artiest), artiest[b]->state.c_str());
+
+  # Tik op een tegel: speler n laten meespelen met de bron, of juist los halen
+  - id: sonos_wissel
+    parameters:
+      n: int
+    then:
+      - if:
+          condition:
+            lambda: 'return n != id(sonos_bron);'
+          then:
+            - if:
+                condition:
+                  lambda: 'return sonos_bevat(id(sonos_leden)[id(sonos_bron)], id(sonos_ent)[n]);'
+                then:
+                  - homeassistant.action:
+                      action: media_player.unjoin
+                      data:
+                        entity_id: !lambda 'return id(sonos_ent)[n];'
+                else:
+                  - homeassistant.action:
+                      action: media_player.join
+                      data:
+                        entity_id: !lambda 'return id(sonos_ent)[id(sonos_bron)];'
+                        group_members: !lambda 'return id(sonos_ent)[n];'
