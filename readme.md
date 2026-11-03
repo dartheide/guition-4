@@ -43,17 +43,15 @@ Opened from the speaker button in a room's media player. Pick a source, then tap
 
 #### Spotify (via Music Assistant)  
 Opened from the Spotify button in a room's media player; that room's speaker is preselected (tap the speaker button to switch rooms).  
-- **Start:** Playlists, Recent, Artists (pick a letter), Radio, Podcasts and Search, plus what is playing now  
+- **Start:** Playlists, Albums, Artists, Radio, Podcasts and Search, plus what is playing now  
 - **Lists:** five rows per page with ▲/▼; tap a row to play it. Search results have tabs for tracks, artists, albums and playlists  
 - **Search:** on-screen keyboard  
 
 Lists come from `music_assistant.get_library` and `music_assistant.search`. A `response_template` lets Home Assistant reduce each item to name, artist and URI before it is sent to the display, so memory use stays small. Playback uses `music_assistant.play_media` on the Music Assistant players (`ma_*` in `settings.yaml`); grouping and volume keep using the Sonos entities. Spotify playback through Music Assistant needs a Spotify Premium account.
 
-| Start | Search results |
-|---|---|
-| ![Spotify start](images/spotify_start.png) | ![Spotify search results](images/spotify_zoekresultaten.png) |
-| **Search** | **Artists A–Z** |
-| ![Spotify search](images/spotify_zoeken.png) | ![Spotify artists](images/spotify_artiesten.png) |
+| Start | Search results | Search |
+|---|---|---|
+| ![Spotify start](images/spotify_start.png) | ![Spotify search results](images/spotify_zoekresultaten.png) | ![Spotify search](images/spotify_zoeken.png) |
 
 #### Weather Forecast  
 ![Weather](images/weer.png)

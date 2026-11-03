@@ -1,4 +1,4 @@
-# Spotify via Music Assistant: bladeren (playlists, recent, artiesten, radio, podcasts) en zoeken.
+# Spotify via Music Assistant: bladeren (playlists, albums, artiesten, radio, podcasts) en zoeken.
 # Lijsten komen uit music_assistant.get_library / music_assistant.search; Home Assistant maakt
 # ze met een response_template klein ([naam, sub, uri]) voordat ze naar het display gaan.
 # Afspelen gaat met music_assistant.play_media op de Music Assistant-speler (ma_* in settings.yaml).
@@ -25,7 +25,7 @@ globals:
   - id: sp_zoekmodus
     type: bool
     initial_value: 'false'
-  - id: sp_terug # 0 = start, 1 = artiesten A-Z, 2 = zoeken
+  - id: sp_terug # 0 = start, 1 = zoeken
     type: int
     initial_value: '0'
   - id: sp_status
@@ -45,8 +45,8 @@ lvgl:
         - script.execute: sp_chip_update
       widgets:
         - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 0, icoon: "\U000F0CB8", naam: "Playlists", sub: "Jouw lijsten", x: 10, y: 40 }}
-        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 1, icoon: "\U000F02DA", naam: "Recent", sub: "Laatst gespeeld", x: 166, y: 40 }}
-        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 2, icoon: "\U000F0803", naam: "Artiesten", sub: "Kies op letter", x: 322, y: 40 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 1, icoon: "\U000F0025", naam: "Albums", sub: "Jouw albums", x: 166, y: 40 }}
+        - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 2, icoon: "\U000F0803", naam: "Artiesten", sub: "Die je volgt", x: 322, y: 40 }}
         - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 3, icoon: "\U000F0439", naam: "Radio", sub: "Zenders", x: 10, y: 194 }}
         - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 4, icoon: "\U000F0994", naam: "Podcasts", sub: "Die je volgt", x: 166, y: 194 }}
         - button: !include { file: ../modules/spotify/tegel.yaml, vars: {n: 5, icoon: "\U000F0349", naam: "Zoeken", sub: "Met toetsenbord", x: 322, y: 194 }}
@@ -131,7 +131,7 @@ lvgl:
               - label: { text_font: mdi24, text: "\U000F004D", align: center }
             on_click:
               - lambda: |-
-                  LvPageType *terug[] = {id(spotify_page), id(sp_az_page), id(sp_zoek_page)};
+                  LvPageType *terug[] = {id(spotify_page), id(sp_zoek_page)};
                   sp_toon_pagina(terug[id(sp_terug)]);
         - label:
             id: sp_lijst_titel
@@ -320,76 +320,6 @@ lvgl:
                   id: sp_zoek
                   q: !lambda 'return text;'
 
-    # Artiesten op letter
-    - id: sp_az_page
-      styles: bg_white
-      on_load:
-        - script.execute:
-            id: nav_actief
-            knop: -1
-      widgets:
-        - button:
-            x: 10
-            y: 40
-            width: 50
-            height: 44
-            widgets:
-              - label: { text_font: mdi24, text: "\U000F004D", align: center }
-            on_click:
-              - lvgl.page.show: spotify_page
-        - label:
-            x: 70
-            y: 51
-            text: "Artiesten"
-        - buttonmatrix:
-            x: 10
-            y: 92
-            width: 460
-            height: 324
-            bg_opa: TRANSP
-            pad_all: 0
-            pad_row: 6
-            pad_column: 6
-            items:
-              bg_color: 0x263049
-              text_color: 0xE9EDF4
-              text_font: roboto20
-              radius: 8
-              pressed:
-                bg_color: 0x324064
-            rows:
-              - buttons:
-                - { id: sp_l_a, text: "A", on_press: [ { script.execute: { id: sp_artiesten, letter: "A" } } ] }
-                - { id: sp_l_b, text: "B", on_press: [ { script.execute: { id: sp_artiesten, letter: "B" } } ] }
-                - { id: sp_l_c, text: "C", on_press: [ { script.execute: { id: sp_artiesten, letter: "C" } } ] }
-                - { id: sp_l_d, text: "D", on_press: [ { script.execute: { id: sp_artiesten, letter: "D" } } ] }
-                - { id: sp_l_e, text: "E", on_press: [ { script.execute: { id: sp_artiesten, letter: "E" } } ] }
-                - { id: sp_l_f, text: "F", on_press: [ { script.execute: { id: sp_artiesten, letter: "F" } } ] }
-                - { id: sp_l_g, text: "G", on_press: [ { script.execute: { id: sp_artiesten, letter: "G" } } ] }
-              - buttons:
-                - { id: sp_l_h, text: "H", on_press: [ { script.execute: { id: sp_artiesten, letter: "H" } } ] }
-                - { id: sp_l_i, text: "I", on_press: [ { script.execute: { id: sp_artiesten, letter: "I" } } ] }
-                - { id: sp_l_j, text: "J", on_press: [ { script.execute: { id: sp_artiesten, letter: "J" } } ] }
-                - { id: sp_l_k, text: "K", on_press: [ { script.execute: { id: sp_artiesten, letter: "K" } } ] }
-                - { id: sp_l_l, text: "L", on_press: [ { script.execute: { id: sp_artiesten, letter: "L" } } ] }
-                - { id: sp_l_m, text: "M", on_press: [ { script.execute: { id: sp_artiesten, letter: "M" } } ] }
-                - { id: sp_l_n, text: "N", on_press: [ { script.execute: { id: sp_artiesten, letter: "N" } } ] }
-              - buttons:
-                - { id: sp_l_o, text: "O", on_press: [ { script.execute: { id: sp_artiesten, letter: "O" } } ] }
-                - { id: sp_l_p, text: "P", on_press: [ { script.execute: { id: sp_artiesten, letter: "P" } } ] }
-                - { id: sp_l_q, text: "Q", on_press: [ { script.execute: { id: sp_artiesten, letter: "Q" } } ] }
-                - { id: sp_l_r, text: "R", on_press: [ { script.execute: { id: sp_artiesten, letter: "R" } } ] }
-                - { id: sp_l_s, text: "S", on_press: [ { script.execute: { id: sp_artiesten, letter: "S" } } ] }
-                - { id: sp_l_t, text: "T", on_press: [ { script.execute: { id: sp_artiesten, letter: "T" } } ] }
-                - { id: sp_l_u, text: "U", on_press: [ { script.execute: { id: sp_artiesten, letter: "U" } } ] }
-              - buttons:
-                - { id: sp_l_v, text: "V", on_press: [ { script.execute: { id: sp_artiesten, letter: "V" } } ] }
-                - { id: sp_l_w, text: "W", on_press: [ { script.execute: { id: sp_artiesten, letter: "W" } } ] }
-                - { id: sp_l_x, text: "X", on_press: [ { script.execute: { id: sp_artiesten, letter: "X" } } ] }
-                - { id: sp_l_y, text: "Y", on_press: [ { script.execute: { id: sp_artiesten, letter: "Y" } } ] }
-                - { id: sp_l_z, text: "Z", on_press: [ { script.execute: { id: sp_artiesten, letter: "Z" } } ] }
-                - { id: sp_l_hash, text: "#", on_press: [ { script.execute: { id: sp_artiesten, letter: "#" } } ] }
-
 script:
   # Tegel op het startscherm
   - id: sp_tegel
@@ -398,36 +328,24 @@ script:
     then:
       - lambda: |-
           switch (n) {
-            case 0: id(sp_bibliotheek)->execute("playlist", "name", "Playlists", ""); break;
-            case 1: id(sp_bibliotheek)->execute("track", "last_played_desc", "Recent gespeeld", ""); break;
-            case 2: sp_toon_pagina(id(sp_az_page)); break;
-            case 3: id(sp_bibliotheek)->execute("radio", "name", "Radio", ""); break;
-            case 4: id(sp_bibliotheek)->execute("podcast", "name", "Podcasts", ""); break;
+            case 0: id(sp_bibliotheek)->execute("playlist", "name", "Playlists"); break;
+            case 1: id(sp_bibliotheek)->execute("album", "name", "Albums"); break;
+            case 2: id(sp_bibliotheek)->execute("artist", "sort_name", "Artiesten"); break;
+            case 3: id(sp_bibliotheek)->execute("radio", "name", "Radio"); break;
+            case 4: id(sp_bibliotheek)->execute("podcast", "name", "Podcasts"); break;
             case 5: sp_toon_pagina(id(sp_zoek_page)); break;
           }
 
-  - id: sp_artiesten
-    parameters:
-      letter: string
-    then:
-      - script.execute:
-          id: sp_bibliotheek
-          media_type: "artist"
-          order: "sort_name"
-          titel: !lambda 'return "Artiesten " + letter;'
-          letter: !lambda 'return letter;'
-
-  # Lijst uit de bibliotheek van Music Assistant; letter filtert op beginletter (# = geen letter)
+  # Lijst uit de bibliotheek van Music Assistant (maximaal 100 items)
   - id: sp_bibliotheek
     parameters:
       media_type: string
       order: string
       titel: string
-      letter: string
     then:
       - lambda: |-
           id(sp_zoekmodus) = false;
-          id(sp_terug) = letter.empty() ? 0 : 1;
+          id(sp_terug) = 0;
           id(sp_lijsten).clear();
           id(sp_tab) = 0;
           id(sp_offset) = 0;
@@ -440,27 +358,21 @@ script:
           data:
             media_type: !lambda 'return media_type;'
             order_by: !lambda 'return order;'
-            limit: !lambda 'return letter.empty() ? std::string("40") : std::string("1000");'
-            search: !lambda 'return (letter.empty() || letter == "#") ? std::string("") : letter;'
+            limit: "100"
           data_template:
             config_entry_id: "{{ config_entry_id('${ma_woonkamer}') }}"
           capture_response: true
-          response_template: !lambda |-
-            return std::string("{%- set L = '") + letter + "' -%}" + R"(
+          response_template: |-
             {#- strikte modus: elk veld met .get() ophalen -#}
             {%- set ns = namespace(o=[]) -%}
-            {%- for i in response.get('items', []) -%}
-            {%- set naam = i.get('name') or '' -%}
-            {%- set eerste = (naam or ' ')[:1] | upper -%}
-            {%- if ns.o | length < 40 and (L == '' or eerste == L or (L == '#' and eerste not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')) -%}
+            {%- for i in response.get('items', [])[:100] -%}
             {%- set a = (i.get('artists') or []) | map(attribute='name', default='') | join(', ') -%}
-            {%- set ns.o = ns.o + [[naam, a or (i.get('owner') or ''), i.get('uri') or '']] -%}
-            {%- endif -%}
+            {%- set ns.o = ns.o + [[i.get('name') or '', a or (i.get('owner') or ''), i.get('uri') or '']] -%}
             {%- endfor -%}
             {%- if 'items' not in response -%}
             {%- set ns.o = [['Onverwacht antwoord: ' ~ (response.keys() | list | join(', ')), '', '']] -%}
             {%- endif -%}
-            {{ [ns.o] | tojson }})";
+            {{ [ns.o] | tojson }}
           on_success:
             - lambda: |-
                 id(sp_lijsten) = sp_parse(response);
@@ -483,7 +395,7 @@ script:
           then:
             - lambda: |-
                 id(sp_zoekmodus) = true;
-                id(sp_terug) = 2;
+                id(sp_terug) = 1;
                 id(sp_lijsten).clear();
                 id(sp_tab) = 0;
                 id(sp_offset) = 0;

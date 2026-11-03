@@ -54,8 +54,8 @@ substitutions:
   # Energie
   sensor_vermogen_totaal: sensor.sum_power_total
   sensor_gas_dag: sensor.gas_per_dag
-  sensor_airco_dag: sensor.panasonic_ac_total_daily_energy
-  sensor_warmtepomp_dag: sensor.warmtepomp2
+  sensor_airco_dag: sensor.airco_energy_today
+  sensor_warmtepomp_dag: sensor.kelder_kwh_meter_dagverbruik_energy_import
   sensor_lever_tarief_1: sensor.dag_lever_energie_tarief_1
   sensor_lever_tarief_2: sensor.dag_lever_energie_tarief_2
   sensor_verbruik_tarief_1: sensor.dag_verbruik_energie_tarief_1
