@@ -241,6 +241,8 @@ font:
         "\U000F004D", # mdi-arrow-left
         "\U000F0025", # mdi-album
         "\U000F0387", # mdi-music-note
+        "\U000F0425", # mdi-power
+        "\U000F0717", # mdi-snowflake
       ]
 
 

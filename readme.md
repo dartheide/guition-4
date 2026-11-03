@@ -27,13 +27,14 @@ Each room page has the same layout:
 - **Lights:** up to three toggle buttons, highlighted when on  
 - **Curtains:** position bar with open, stop and close buttons  
 - **Temperature:** set point with + and –; changes are sent to the thermostat once you stop tapping  
+- **Airco (studeerkamer):** the temperature card controls an air conditioner instead. The middle button cycles off → cool → heat → off (`climate.set_hvac_mode`), its icon shows the mode, and the mode is shown below the set point. The range is set with `airco_min` / `airco_max` in `settings.yaml`  
 
 Devices that are unavailable in Home Assistant are shown greyed out (or as "offline") and cannot be operated.
 
 | Woonkamer | Keuken |
 |---|---|
 | ![Woonkamer](images/woonkamer.png) | ![Keuken](images/keuken.png) |
-| **Studeerkamer** | **Kluskamer** (thermostat offline) |
+| **Studeerkamer** (airco) | **Kluskamer** (thermostat offline) |
 | ![Studeerkamer](images/studeerkamer.png) | ![Kluskamer](images/kluskamer.png) |
 
 #### Sonos Grouping  

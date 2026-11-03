@@ -12,6 +12,10 @@ substitutions:
   thermostaat_min: "12"
   thermostaat_max: "25"
 
+  # Bereik van de airco (°C)
+  airco_min: "16"
+  airco_max: "30"
+
   # Lampen
   licht_woonkamer: light.woonkamer
   licht_erker: light.erker

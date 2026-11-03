@@ -1,7 +1,7 @@
 packages:
   mediaplayer_studeerkamer: !include { file: ../modules/sonos/mediaplayersensors.yaml, vars: {id: studeerkamer, entity_id: "${media_studeerkamer}" }}
   cover1: !include { file: ../modules/cover/co_sensor.yaml, vars: {id: studeerkamer, entity_id: "${gordijn_studeerkamer}" }}
-  temp1: !include { file: ../modules/temp/temp_sensor.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
+  temp1: !include { file: ../modules/temp/airco_sensor.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
 
 
 # LVGL configuration
@@ -48,7 +48,7 @@ lvgl:
 
         - obj: !include { file: ../modules/cover/gui_cover.yaml, vars: {id: studeerkamer, entity_id: "${gordijn_studeerkamer}", title: "Rolgordijnen", x: 10 }}
 
-        - obj: !include { file: ../modules/temp/gui_temp.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
+        - obj: !include { file: ../modules/temp/gui_airco.yaml, vars: {id: studeerkamer, entity_id: "${klimaat_studeerkamer}" }}
 
 sensor:
   - platform: homeassistant

@@ -1,0 +1,91 @@
+#id
+# entity_id
+# als gui_temp.yaml, met een modusknop in het midden (uit -> koelen -> verwarmen -> uit)
+#- obj: # Airco
+        x: 245
+        y: 280
+        width: 225
+        height: 140
+        pad_all: 10
+        styles: bg_white
+        widgets:
+            - label:
+                styles: card_title
+                text: "Airco"
+            - label: # gemeten temperatuur, gezet door airco_sensor.yaml
+                styles: card_value
+                id: temp_cur_${id}
+                text_color: 0x8792A8
+                text: "nu -"
+            - spinbox:
+                id: spinbox_${id}
+                align: top_mid
+                y: 10
+                width: 120
+                text_font: roboto32
+                text_align: CENTER
+                text_color: 0xE9EDF4
+                bg_opa: TRANSP
+                border_width: 0
+                range_from: ${airco_min}
+                range_to: ${airco_max}
+                selected_digit: 1 # stappen van 1 graad
+                rollover: false
+                digits: 3
+                decimal_places: 1
+                value: 21
+                on_value: # versturen gebeurt vertraagd door airco_sensor.yaml
+                    then:
+                        - script.execute:
+                            id: ${id}_temp_zetten
+                            temp: !lambda return x;
+            - label: # modus, gezet door airco_sensor.yaml
+                id: ${id}_airco_modus
+                text_font: roboto14
+                text_color: 0x8792A8
+                align: top_mid
+                y: 57
+                text: "-"
+            - button:
+                width: 60
+                height: 44
+                align: bottom_left
+                id: ${id}_spin_down
+                on_click:
+                    - lvgl.spinbox.decrement: spinbox_${id}
+                widgets:
+                    - label:
+                        text_font: roboto32
+                        text: "-"
+                        align: center
+            - button: # modus wisselen; geel als de airco aan staat
+                width: 60
+                height: 44
+                align: bottom_mid
+                id: ${id}_airco_aan
+                on_click:
+                    - homeassistant.action:
+                        action: climate.set_hvac_mode
+                        data:
+                          entity_id: ${entity_id}
+                          hvac_mode: !lambda |-
+                            const std::string &nu = id(${id}_airco_status).state;
+                            return std::string(nu == "off" ? "cool" : nu == "cool" ? "heat" : "off");
+                widgets:
+                    - label: # icoon volgt de modus, gezet door airco_sensor.yaml
+                        id: ${id}_airco_icoon
+                        text_font: mdi24
+                        text: "\U000F0425"
+                        align: center
+            - button:
+                width: 60
+                height: 44
+                align: bottom_right
+                id: ${id}_spin_up
+                on_click:
+                    - lvgl.spinbox.increment: spinbox_${id}
+                widgets:
+                    - label:
+                        text_font: roboto32
+                        text: "+"
+                        align: center

@@ -1,0 +1,80 @@
+#id
+# entity_id
+# als temp_sensor.yaml, plus aan/uit en modus voor gui_airco.yaml
+
+sensor:
+  - platform: homeassistant
+    id: ${id}_thermostat
+    entity_id: ${entity_id}
+    attribute: temperature
+    on_value:
+      - if: # uit: soms geen ingestelde temperatuur
+          condition:
+            lambda: 'return !std::isnan(x);'
+          then:
+            - lvgl.spinbox.update:
+                id: spinbox_${id}
+                value: !lambda return x;
+
+  - platform: homeassistant
+    id: ${id}_temp_huidig
+    entity_id: ${entity_id}
+    attribute: current_temperature
+    on_value:
+      - lvgl.label.update:
+          id: temp_cur_${id}
+          text:
+            format: "nu %.1f°"
+            args: [ 'x' ]
+
+text_sensor:
+  # Toestand = modus (off, cool, heat, ...): aan/uit-knop, modus en knoppen bijwerken
+  - platform: homeassistant
+    id: ${id}_airco_status
+    entity_id: ${entity_id}
+    on_value:
+      - lambda: |-
+          bool weg = x == "unavailable" || x == "unknown";
+          bool aan = !weg && x != "off";
+          struct Modus { const char *ha, *tekst; };
+          static const Modus modi[] = {
+            {"cool", "Koelen"}, {"heat", "Verwarmen"}, {"heat_cool", "Automatisch"}, {"auto", "Automatisch"},
+            {"dry", "Drogen"}, {"fan_only", "Ventileren"}, {"off", "Uit"},
+          };
+          const char *tekst = weg ? "offline" : x.c_str();
+          for (const auto &m : modi)
+            if (x == m.ha) tekst = m.tekst;
+          lv_label_set_text(id(${id}_airco_modus), tekst);
+
+          // icoon: sneeuwvlok bij koelen, vlam bij verwarmen, anders aan/uit
+          lv_label_set_text(id(${id}_airco_icoon), x == "cool" ? "\U000F0717" : x == "heat" ? "\U000F0238" : "\U000F0425");
+          if (aan) lv_obj_add_state(id(${id}_airco_aan), LV_STATE_CHECKED);
+          else lv_obj_clear_state(id(${id}_airco_aan), LV_STATE_CHECKED);
+          // uit: temperatuur gedimd en -/+ uitgeschakeld; offline: alles uitgeschakeld
+          for (lv_obj_t *knop : {id(${id}_spin_down), id(${id}_spin_up)}) {
+            if (aan) lv_obj_clear_state(knop, LV_STATE_DISABLED);
+            else lv_obj_add_state(knop, LV_STATE_DISABLED);
+          }
+          if (weg) lv_obj_add_state(id(${id}_airco_aan), LV_STATE_DISABLED);
+          else lv_obj_clear_state(id(${id}_airco_aan), LV_STATE_DISABLED);
+          lv_obj_set_style_text_opa(id(spinbox_${id}),aan ? LV_OPA_COVER : LV_OPA_40, LV_PART_MAIN);
+          if (weg) lv_label_set_text(id(temp_cur_${id}), "offline");
+
+script:
+  # Wacht tot er even niet op +/- getikt is en stuur dan alleen de laatste waarde.
+  # Een waarde die net uit Home Assistant kwam wordt niet teruggestuurd.
+  - id: ${id}_temp_zetten
+    mode: restart
+    parameters:
+      temp: float
+    then:
+      - delay: 1500ms
+      - if:
+          condition:
+            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - id(${id}_thermostat).state) > 0.05;'
+          then:
+            - homeassistant.action:
+                action: climate.set_temperature
+                data:
+                  temperature: !lambda return temp;
+                  entity_id: ${entity_id}
