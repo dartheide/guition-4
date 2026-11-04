@@ -7,9 +7,9 @@ sensor:
     entity_id: ${entity_id}
     attribute: temperature
     on_value:
-      - lvgl.spinbox.update:
+      - lvgl.spinbox.update: # afgerond op hele graden
           id: spinbox_${id}
-          value: !lambda return x;
+          value: !lambda return std::round(x);
 
   - platform: homeassistant
     id: ${id}_temp_huidig
@@ -42,7 +42,7 @@ text_sensor:
 
 script:
   # Wacht tot er even niet op +/- getikt is en stuur dan alleen de laatste waarde.
-  # Een waarde die net uit Home Assistant kwam wordt niet teruggestuurd.
+  # Een waarde die net uit Home Assistant kwam wordt niet teruggestuurd (ook niet afgerond: 20.5 blijft 20.5).
   - id: ${id}_temp_zetten
     mode: restart
     parameters:
@@ -51,7 +51,7 @@ script:
       - delay: 1500ms
       - if:
           condition:
-            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - id(${id}_thermostat).state) > 0.05;'
+            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - std::round(id(${id}_thermostat).state)) > 0.05;'
           then:
             - homeassistant.action:
                 action: climate.set_temperature

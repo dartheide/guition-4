@@ -29,10 +29,13 @@
                 border_width: 0
                 range_from: ${airco_min}
                 range_to: ${airco_max}
-                selected_digit: 1 # stappen van 1 graad
+                selected_digit: 0 # hele graden
+                cursor: # geen gekleurd vlak achter het cijfer
+                    bg_opa: TRANSP
+                    text_color: 0xE9EDF4
                 rollover: false
-                digits: 3
-                decimal_places: 1
+                digits: 2
+                decimal_places: 0
                 value: 21
                 on_value: # versturen gebeurt vertraagd door airco_sensor.yaml
                     then:

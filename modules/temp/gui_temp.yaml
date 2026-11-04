@@ -28,11 +28,14 @@
                 border_width: 0
                 range_from: ${thermostaat_min}
                 range_to: ${thermostaat_max}
-                selected_digit: 0
+                selected_digit: 0 # hele graden
+                cursor: # geen gekleurd vlak achter het cijfer
+                    bg_opa: TRANSP
+                    text_color: 0xE9EDF4
                 rollover: false
-                digits: 3
-                decimal_places: 1
-                value: 22
+                digits: 2
+                decimal_places: 0
+                value: 20
                 on_value: # versturen gebeurt vertraagd door temp_sensor.yaml
                     then:
                         - script.execute:

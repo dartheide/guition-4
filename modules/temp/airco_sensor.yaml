@@ -12,9 +12,9 @@ sensor:
           condition:
             lambda: 'return !std::isnan(x);'
           then:
-            - lvgl.spinbox.update:
+            - lvgl.spinbox.update: # afgerond op hele graden
                 id: spinbox_${id}
-                value: !lambda return x;
+                value: !lambda return std::round(x);
 
   - platform: homeassistant
     id: ${id}_temp_huidig
@@ -71,7 +71,7 @@ script:
       - delay: 1500ms
       - if:
           condition:
-            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - id(${id}_thermostat).state) > 0.05;'
+            lambda: 'return std::isnan(id(${id}_thermostat).state) || std::abs(temp - std::round(id(${id}_thermostat).state)) > 0.05;'
           then:
             - homeassistant.action:
                 action: climate.set_temperature
